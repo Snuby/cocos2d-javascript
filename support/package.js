@@ -4,18 +4,29 @@
  * @fileOverview Generates a Windows installer .exe and a .zip
  */
 
-var sys = require('sys'),
-    fs  = require('fs'),
-    path = require('path'),
-    spawn = require('child_process').spawn;
+var path = require('path');
 
 // Include cocos2d because it has some useful modules
 require.paths.unshift(path.join(__dirname, '../lib'));
 
-var Template = require('cocos2d/template').Template;
+var sys = require('sys'),
+    fs  = require('fs'),
+    spawn = require('child_process').spawn,
+    opts = require('cocos2d/opts'),
+    Template = require('cocos2d/template').Template;
 
-var VERSION = JSON.parse(fs.readFileSync(__dirname + '/../package.json')).version;
 
+var OPTS = [
+    {long: 'package-version', description: 'Override version inside package.json', required: false, value: true}
+];
+opts.parse(OPTS, [], true);
+
+
+
+var VERSION = opts.get('package-version') || JSON.parse(fs.readFileSync(__dirname + '/../package.json')).version;
+sys.puts(VERSION);
+
+return;
 sys.puts('Packaging Cocos2D JavaScript version ' + VERSION);
 
 /**
