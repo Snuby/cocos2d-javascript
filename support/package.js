@@ -26,7 +26,6 @@ opts.parse(OPTS, [], true);
 var VERSION = opts.get('package-version') || JSON.parse(fs.readFileSync(__dirname + '/../package.json')).version;
 sys.puts(VERSION);
 
-return;
 sys.puts('Packaging Cocos2D JavaScript version ' + VERSION);
 
 /**
