@@ -12,7 +12,7 @@ var sys = require('sys'),
 // Include cocos2d because it has some useful modules
 require.paths.unshift(path.join(__dirname, '../lib'));
 
-var Template = require('cocos2d/Template').Template;
+var Template = require('cocos2d/template').Template;
 
 var VERSION = JSON.parse(fs.readFileSync(__dirname + '/../package.json')).version;
 
@@ -89,7 +89,7 @@ function findFilesToPackage(dir, callback) {
 
     var gitls = spawn('git', ['ls-files']),
         // This gets the full path to each file in each submodule
-        subls = spawn('git', ['submodule', 'foreach', 'for file in `git ls-files`; do echo "$path/$file"; done'])
+        subls = spawn('git', ['submodule', 'foreach', 'for file in `git ls-files`; do echo "$path/$file"; done']);
 
 
     var mainFileList = '';
@@ -131,7 +131,7 @@ function findFilesToPackage(dir, callback) {
 
             
             return file;
-        }).sort()
+        }).sort();
 
         callback(fileList);
     }
@@ -176,7 +176,7 @@ function generateGZip(files, zipName) {
 
 
 (function main() {
-    var dir = path.join(__dirname, '../')
+    var dir = path.join(__dirname, '../');
     findFilesToPackage(dir, function(filesToPackage) {
         generateNSISScript(filesToPackage, function(nsis) {
 
