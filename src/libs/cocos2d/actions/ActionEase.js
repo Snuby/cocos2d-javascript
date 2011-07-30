@@ -15,7 +15,7 @@ var ActionEase = ActionInterval.extend(/** @lends cocos.actions.ActionEase# */{
      *
      * @memberOf cocos.actions
      * @constructs
-     * @extends cocos.actions.ActionEase
+     * @extends cocos.actions.ActionInterval
      *
      * @opt {cocos.actions.ActionInterval} action
      */
@@ -59,7 +59,7 @@ var EaseRate = ActionEase.extend(/** @lends cocos.actions.EaseRate# */{
     rate: 0,
     
     /**
-    * @class EaseRate Base class for Easing actions with rate parameter
+    * @class Base class for Easing actions with rate parameter
     *
     * @memberOf cocos.actions
     * @constructs
@@ -83,10 +83,10 @@ var EaseRate = ActionEase.extend(/** @lends cocos.actions.EaseRate# */{
     }
 });
 
+/**
+ * @class EaseIn action with a rate
+ */
 var EaseIn = EaseRate.extend(/** @lends cocos.actions.EaseIn# */{
-    /**
-     * @class EaseIn EaseIn action with a rate
-     */
     update: function(t) {
         this.other.update(Math.pow(t, this.rate));
     },
@@ -100,10 +100,10 @@ var EaseIn = EaseRate.extend(/** @lends cocos.actions.EaseIn# */{
     }
 });
 
+/**
+ * @class EaseOut action with a rate
+ */
 var EaseOut = EaseRate.extend(/** @lends cocos.actions.EaseOut# */{
-    /**
-     * @class EaseOut EaseOut action with a rate
-     */
     update: function(t) {
         this.other.update(Math.pow(t, 1/this.rate));
     },
@@ -117,10 +117,10 @@ var EaseOut = EaseRate.extend(/** @lends cocos.actions.EaseOut# */{
     }
 });
 
+/**
+ * @class EaseInOut action with a rate
+ */
 var EaseInOut = EaseRate.extend(/** @lends cocos.actions.EaseInOut# */{
-    /**
-     * @class EaseInOut EaseInOut action with a rate
-     */
     update: function(t) {
         var sign = 1;
         var r = Math.floor(this.rate);
@@ -144,10 +144,10 @@ var EaseInOut = EaseRate.extend(/** @lends cocos.actions.EaseInOut# */{
     }
 });
 
+/**
+ * @class EaseExponentialIn action
+ */
 var EaseExponentialIn = ActionEase.extend(/** @lends cocos.actions.EaseExponentialIn# */{
-    /**
-     * @class EaseExponentialIn EaseExponentialIn action
-     */
     update: function(t) {
         this.other.update((t == 0) ? 0 : (Math.pow(2, 10 * (t/1 - 1)) - 1 * 0.001));
     },
@@ -161,10 +161,10 @@ var EaseExponentialIn = ActionEase.extend(/** @lends cocos.actions.EaseExponenti
     }
 });
 
+/**
+ * @class EaseExponentialOut action
+ */
 var EaseExponentialOut = ActionEase.extend(/** @lends cocos.actions.EaseExponentialOut# */{
-    /**
-     * @class EaseExponentialOut EaseExponentialOut action
-     */
     update: function(t) {
         this.other.update((t == 1) ? 1 : (-Math.pow(2, -10 * t/1) + 1));
     },
@@ -178,10 +178,10 @@ var EaseExponentialOut = ActionEase.extend(/** @lends cocos.actions.EaseExponent
     }
 });
 
+/**
+ * @class EaseExponentialInOut action
+ */
 var EaseExponentialInOut = ActionEase.extend(/** @lends cocos.actions.EaseExponentialInOut# */{
-    /**
-     * @class EaseExponentialInOut EaseExponentialInOut action
-     */
     update: function(t) {
         t /= 0.5;
         if (t < 1) {
@@ -201,10 +201,10 @@ var EaseExponentialInOut = ActionEase.extend(/** @lends cocos.actions.EaseExpone
     }
 });
 
+/**
+ * @class EaseSineIn action
+ */
 var EaseSineIn = ActionEase.extend(/** @lends cocos.actions.EaseSineIn# */{
-    /**
-     * @class EaseSineIn EaseSineIn action
-     */
     update: function(t) {
         this.other.update(-1 * Math.cos(t * Math.PI_2) + 1);
     },
@@ -218,10 +218,10 @@ var EaseSineIn = ActionEase.extend(/** @lends cocos.actions.EaseSineIn# */{
     }
 });
 
+/**
+ * @class EaseSineOut action
+ */
 var EaseSineOut = ActionEase.extend(/** @lends cocos.actions.EaseSineOut# */{
-    /**
-     * @class EaseSineOut EaseSineOut action
-     */
     update: function(t) {
         this.other.update(Math.sin(t * Math.PI_2));
     },
@@ -235,10 +235,10 @@ var EaseSineOut = ActionEase.extend(/** @lends cocos.actions.EaseSineOut# */{
     }
 });
 
+/**
+ * @class EaseSineInOut action
+ */
 var EaseSineInOut = ActionEase.extend(/** @lends cocos.actions.EaseSineInOut# */{
-    /**
-     * @class EaseSineInOut EaseSineInOut action
-     */
     update: function(t) {
         this.other.update(-0.5 * (Math.cos(t * Math.PI) - 1));
     },
