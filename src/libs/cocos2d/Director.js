@@ -15,7 +15,6 @@ var util = require('util'),
  * requestAnimationFrame for smart animating
  * @see http://paulirish.com/2011/requestanimationframe-for-smart-animating/
  */
-
 window.requestAnimFrame = (function (){
     return  window.requestAnimationFrame       || 
             window.webkitRequestAnimationFrame || 
@@ -69,151 +68,86 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      *
      * @param {HTMLElement} view Any HTML element to add the application to
      */
-
     attachInView: function (view) {
-		if (!view.tagName) {
-			throw "Director.attachInView must be given a HTML DOM Node";
-		}
+        if (!view.tagName) {
+            throw "Director.attachInView must be given a HTML DOM Node";
+        }
 
-		while (view.firstChild) {
-			view.removeChild(view.firstChild);
-		}
+        while (view.firstChild) {
+            view.removeChild(view.firstChild);
+        }
 
-		var canvas = document.createElement('canvas');
-		this.set('canvas', canvas);
-		canvas.setAttribute('width', view.clientWidth);
-		canvas.setAttribute('height', view.clientHeight);
 
-		var context = canvas.getContext('2d');
-		this.set('context', context);
+        var canvas = document.createElement('canvas');
+        this.set('canvas', canvas);
+        canvas.setAttribute('width', view.clientWidth);
+        canvas.setAttribute('height', view.clientHeight);
 
-		if (FLIP_Y_AXIS) {
-			context.translate(0, view.clientHeight);
-			context.scale(1, -1);
-		}
+        var context = canvas.getContext('2d');
+        this.set('context', context);
 
-		view.appendChild(canvas);
+        if (FLIP_Y_AXIS) {
+            context.translate(0, view.clientHeight);
+            context.scale(1, -1);
+        }
 
-		this.set('winSize', {width: view.clientWidth, height: view.clientHeight});
+        view.appendChild(canvas);
 
-		// Setup event handling
+        this.set('winSize', {width: view.clientWidth, height: view.clientHeight});
 
-		// Mouse events
-		var eventDispatcher = EventDispatcher.get('sharedDispatcher');
-		var self = this;
-		function mouseDown(evt) {
-			evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-			evt.locationInCanvas = self.convertEventToCanvas(evt);
 
-			function mouseDragged(evt) {
-				evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-				evt.locationInCanvas = self.convertEventToCanvas(evt);
+        // Setup event handling
 
-				eventDispatcher.mouseDragged(evt);
-			}
-			function mouseUp(evt) {
-				evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-				evt.locationInCanvas = self.convertEventToCanvas(evt);
+        // Mouse events
+        var eventDispatcher = EventDispatcher.get('sharedDispatcher');
+        var self = this;
+        function mouseDown(evt) {
+            evt.locationInWindow = ccp(evt.clientX, evt.clientY);
+            evt.locationInCanvas = self.convertEventToCanvas(evt);
 
-				document.body.removeEventListener('mousemove', mouseDragged, false);
-				document.body.removeEventListener('mouseup',   mouseUp,   false);
+            function mouseDragged(evt) {
+                evt.locationInWindow = ccp(evt.clientX, evt.clientY);
+                evt.locationInCanvas = self.convertEventToCanvas(evt);
 
-				eventDispatcher.mouseUp(evt);
-			}
+                eventDispatcher.mouseDragged(evt);
+            }
+            function mouseUp(evt) {
+                evt.locationInWindow = ccp(evt.clientX, evt.clientY);
+                evt.locationInCanvas = self.convertEventToCanvas(evt);
 
-			document.body.addEventListener('mousemove', mouseDragged, false);
-			document.body.addEventListener('mouseup',   mouseUp,   false);
+                document.body.removeEventListener('mousemove', mouseDragged, false);
+                document.body.removeEventListener('mouseup',   mouseUp,   false);
 
-			eventDispatcher.mouseDown(evt);
-		}
-		function mouseMoved(evt) {
-			evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-			evt.locationInCanvas = self.convertEventToCanvas(evt);
 
-			eventDispatcher.mouseMoved(evt);
-		}
+                eventDispatcher.mouseUp(evt);
+            }
 
-		canvas.addEventListener('mousedown', mouseDown, false);
-		canvas.addEventListener('mousemove', mouseMoved, false);
+            document.body.addEventListener('mousemove', mouseDragged, false);
+            document.body.addEventListener('mouseup',   mouseUp,   false);
 
-		// Add handlers for touch events.
+            eventDispatcher.mouseDown(evt);
+        }
+        function mouseMoved(evt) {
+            evt.locationInWindow = ccp(evt.clientX, evt.clientY);
+            evt.locationInCanvas = self.convertEventToCanvas(evt);
 
-		// for touchcancel event - can be fired anytime so must be defined outside 
-		// touchStart()
-		function touchEnd(evt) {
-			if (!evt) evt = event;
-			evt.preventDefault();
+            eventDispatcher.mouseMoved(evt);
+        }
+        canvas.addEventListener('mousedown', mouseDown, false);
+        canvas.addEventListener('mousemove', mouseMoved, false);
 
-			// evt.changedTouches should have the last touch point
-			if (evt.changedTouches.length == 1) {
-				evt.locationInWindow = ccp(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY);
-				evt.locationInCanvas = self.convertEventToCanvas(evt);
-			}
-			eventDispatcher.mouseUp(evt);
-		}
+        // Keyboard events
+        function keyDown(evt) {
+            this._keysDown = this._keysDown || {};
+            eventDispatcher.keyDown(evt);
+        }
+        function keyUp(evt) {
+            eventDispatcher.keyUp(evt);
+        }
 
-		function touchStart(evt) {
-			if (!evt) evt = event;
-
-			if (evt.touches.length == 1) {
-				evt.locationInWindow = ccp(evt.touches[0].pageX, evt.touches[0].pageY);
-				evt.locationInCanvas = self.convertEventToCanvas(evt);
-			} else {
-				// TODO: multitouch support??
-			}
-
-			function touchMoved(evt) {
-				if (!evt) evt = event;
-				evt.preventDefault();
-
-				if (evt.touches.length == 1) {
-					evt.locationInWindow = ccp(evt.touches[0].pageX, evt.touches[0].pageY);
-					evt.locationInCanvas = self.convertEventToCanvas(evt);
-
-					eventDispatcher.mouseDragged(evt);
-				} else {
-					// TODO: multitouch support??
-				}
-			}
-
-			function touchUp(evt) {
-				if (!evt) evt = event;
-				evt.preventDefault();
-
-				// evt.changedTouches should have the last touch point
-				if (evt.changedTouches.length == 1) {
-					evt.locationInWindow = ccp(evt.changedTouches[0].pageX, evt.changedTouches[0].pageY);
-					evt.locationInCanvas = self.convertEventToCanvas(evt);
-
-					canvas.removeEventListener('touchmove', touchMoved, false);
-					canvas.removeEventListener('touchend', touchUp, false);
-
-					eventDispatcher.mouseUp(evt);
-				}
-			}
-
-			canvas.addEventListener('touchmove', touchMoved, false);
-			canvas.addEventListener('touchend', touchUp, false);
-
-			eventDispatcher.mouseDown(evt);
-		}
-
-		canvas.addEventListener('touchstart', touchStart, false);
-		// touchcancel must be bound to the body
-		document.body.addEventListener('touchcancel', touchEnd, false);
-
-		// Keyboard events
-		function keyDown(evt) {
-			this._keysDown = this._keysDown || {};
-			eventDispatcher.keyDown(evt);
-		}
-		function keyUp(evt) {
-			eventDispatcher.keyUp(evt);
-		}
-		
-		document.documentElement.addEventListener('keydown', keyDown, false);
-		document.documentElement.addEventListener('keyup', keyUp, false);
-	},
+        document.documentElement.addEventListener('keydown', keyDown, false);
+        document.documentElement.addEventListener('keyup', keyUp, false);
+    },
 
     runPreloadScene: function () {
         var preloader = this.get('preloadScene');
@@ -294,7 +228,6 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      */
     startAnimation: function () {
         this.animate();
-
     },
 
     animate: function() {
@@ -459,12 +392,49 @@ util.extend(Director, /** @lends cocos.Director */{
      * @type cocos.Director
      */
     get_sharedDirector: function (key) {
-        if (!this._instance) {
-            this._instance = this.create();
+        if (!Director._instance) {
+            Director._instance = this.create();
         }
 
-        return this._instance;
+        return Director._instance;
     }
 });
 
+/**
+ * @memberOf cocos
+ * @class Pretends to run at a constant frame rate even if it slows down
+ * @extends cocos.Director
+ */
+var DirectorFixedSpeed = Director.extend(/** @lends cocos.DirectorFixedSpeed */{
+    /**
+     * Frames per second to draw.
+     * @type Integer
+     */
+    frameRate: 60,
+
+    /**
+     * Calculate time since last call
+     * @private
+     */
+    calculateDeltaTime: function () {
+        if (this.nextDeltaTimeZero) {
+            this.dt = 0;
+            this.nextDeltaTimeZero = false;
+        }
+
+        this.dt = 1.0 / this.get('frameRate');
+    },
+
+    /**
+     * The main loop is triggered again. Call this function only if
+     * cocos.Directory#stopAnimation was called earlier.
+     */
+    startAnimation: function () {
+        this._animationTimer = setInterval(util.callback(this, 'drawScene'), 1000 / this.get('frameRate'));
+        this.drawScene();
+    }
+
+});
+
 exports.Director = Director;
+exports.DirectorFixedSpeed = DirectorFixedSpeed;
