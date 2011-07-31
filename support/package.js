@@ -192,21 +192,12 @@ function generateGZip(files, zipName) {
     findFilesToPackage(dir, function(filesToPackage) {
         generateNSISScript(filesToPackage, function(nsis) {
 
-            // Write out installer file
-            var output = path.join(__dirname, 'windows-installer.nsi');
-            fs.writeFileSync(output, nsis);
-
             // Generate installer
             sys.puts('Generating windows installer .EXE');
-            var makensis = spawn('makensis', [output, '-NOCD'], {cwd: OUTPUT_PATH});
-            makensis.stderr.on('data', function (data) {
-                sys.print(data);
-            });
+            var makensis = spawn('makensis', ['-NOCD', '-'], {cwd: OUTPUT_PATH});
+            makensis.stderr.on('data', function (data) { sys.print(data); });
             makensis.on('exit', function (data) {
                 sys.puts('Windows installer generated');
-
-                fs.unlink(output);
-
 
                 var cwd = process.cwd();
                 process.chdir(dir);
@@ -236,6 +227,10 @@ function generateGZip(files, zipName) {
                 // Solaris
                 generateGZip(removeNodeBuilds(filesToPackage, 'sol'), 'cocos2d-javascript-v' + VERSION + '-solaris');
             });
+
+            // Write NSIS script to stdin of makensis
+            makensis.stdin.write(nsis);
+            makensis.stdin.end();
         });
     });
 })();
