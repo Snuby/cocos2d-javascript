@@ -17,14 +17,15 @@ var sys = require('sys'),
 
 
 var OPTS = [
-    {long: 'package-version', description: 'Override version inside package.json', required: false, value: true}
+    {long: 'package-version', description: 'Override version inside package.json', required: false, value: true},
+    {long: 'output', description: 'Directory to write packages to. Default is current directory', required: false, value: true}
 ];
 opts.parse(OPTS, [], true);
 
 
 
 var VERSION = opts.get('package-version') || JSON.parse(fs.readFileSync(__dirname + '/../package.json')).version;
-sys.puts(VERSION);
+var OUTPUT_PATH = opts.get('output') || process.cwd();
 
 sys.puts('Packaging Cocos2D JavaScript version ' + VERSION);
 
@@ -77,6 +78,7 @@ function generateNSISScript(files, callback) {
     var tmp = new Template(fs.readFileSync(path.join(__dirname, 'installer_nsi.template'), 'utf8'));
     var data = tmp.substitute({
         root_path: '..',
+        output_path: OUTPUT_PATH,
         version: 'v' + VERSION,
         install_file_list: installFileList,
         remove_file_list: removeFileList,
@@ -156,7 +158,7 @@ function generateZip(files, zipName) {
         fs.unlink(zipName);
     }
 
-    var tar = spawn('zip', ['-9', zipName].concat(files));
+    var tar = spawn('zip', ['-9', path.join(OUTPUT_PATH, zipName)].concat(files));
 
     tar.stderr.on('data', function(data) {
         sys.print(data);
@@ -173,7 +175,7 @@ function generateGZip(files, zipName) {
         fs.unlink(zipName);
     }
 
-    var tar = spawn('tar', ['-czf', zipName].concat(files));
+    var tar = spawn('tar', ['-czf', path.join(OUTPUT_PATH, zipName)].concat(files));
 
     tar.stderr.on('data', function(data) {
         sys.print(data);
@@ -196,7 +198,7 @@ function generateGZip(files, zipName) {
 
             // Generate installer
             sys.puts('Generating windows installer .EXE');
-            var makensis = spawn('makensis', [output]);
+            var makensis = spawn('makensis', [output, '-NOCD'], {cwd: OUTPUT_PATH});
             makensis.stderr.on('data', function (data) {
                 sys.print(data);
             });

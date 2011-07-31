@@ -2,6 +2,7 @@
 
 RequestExecutionLevel admin
 
+!define OUTPUT_PATH "$output_path$"
 !define ROOT_PATH "$root_path$"
 !define PRODUCT_NAME "Cocos2D JavaScript"
 !define PRODUCT_VERSION "$version$"
@@ -39,7 +40,7 @@ RequestExecutionLevel admin
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "${ROOT_PATH}\cocos2d-javascript-${PRODUCT_VERSION}-windows-installer.exe"
+OutFile "${OUTPUT_PATH}\cocos2d-javascript-${PRODUCT_VERSION}-windows-installer.exe"
 InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
