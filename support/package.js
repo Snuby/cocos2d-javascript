@@ -77,7 +77,7 @@ function generateNSISScript(files, callback) {
 
     var tmp = new Template(fs.readFileSync(path.join(__dirname, 'installer_nsi.template'), 'utf8'));
     var data = tmp.substitute({
-        root_path: '..',
+        root_path: path.join(__dirname, '..'),
         output_path: OUTPUT_PATH,
         version: 'v' + VERSION,
         install_file_list: installFileList,
