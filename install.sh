@@ -2,7 +2,7 @@
 
 if which npm &> /dev/null
 then
-    echo "NPM is installed. You should probably install cocos2d-javascript as an npm package using this command instead:\n    npm install .\n"
+    echo "NPM is installed. You should probably install cocos2d-javascript as an npm package using this command instead:\n\n    npm install -g .\n"
 
     read -p "Continue anyway? (y/n) : " yn
     case $yn in
