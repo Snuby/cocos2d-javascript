@@ -5,8 +5,11 @@ support/
 *~
 jsdocs/
 docs/
+bin/*.exe
+bin/*.bat
 public/cocos2d.js
 public/tests.js
 cocos2d-*.exe
 cocos2d-*.gz
 cocos2d-*.zip
+tests/build/
