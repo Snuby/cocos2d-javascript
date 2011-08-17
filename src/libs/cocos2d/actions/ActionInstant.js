@@ -41,10 +41,13 @@ var ActionInstant = act.FiniteTimeAction.extend(/** @lends cocos.actions.ActionI
     }
 });
 
+/** 
+ * @class Show a node
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionInstant
+ */
 var Show = ActionInstant.extend(/** @lends cocos.actions.Show# */{
-    /** 
-    * @class Show Show the node
-    **/
     startWithTarget: function(target) {
         Show.superclass.startWithTarget.call(this, target);
         this.target.set('visible', true);
@@ -59,12 +62,15 @@ var Show = ActionInstant.extend(/** @lends cocos.actions.Show# */{
     }
 });
 
+/** 
+ * @class Hide a node
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionInstant
+ */
 var Hide = ActionInstant.extend(/** @lends cocos.actions.Hide# */{
-    /** 
-    * @class Hide Hide the node
-    **/
     startWithTarget: function(target) {
-        Show.superclass.startWithTarget.call(this, target);
+        Hide.superclass.startWithTarget.call(this, target);
         this.target.set('visible', false);
     },
 
@@ -77,10 +83,13 @@ var Hide = ActionInstant.extend(/** @lends cocos.actions.Hide# */{
     }
 });
 
+/** 
+ * @class Toggles the visibility of a node
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionInstant
+ */
 var ToggleVisibility = ActionInstant.extend(/** @lends cocos.actions.ToggleVisibility# */{
-    /** 
-    * @class ToggleVisibility Toggles the visibility of a node
-    **/
     startWithTarget: function(target) {
         ToggleVisibility.superclass.startWithTarget.call(this, target);
         var vis = this.target.get('visible');
@@ -96,7 +105,7 @@ var FlipX = ActionInstant.extend(/** @lends cocos.actions.FlipX# */{
     flipX: false,
 
     /**
-     * @class FlipX Flips a sprite horizontally
+     * @class Flips a sprite horizontally
      *
      * @memberOf cocos.actions
      * @extends cocos.actions.ActionInstant
@@ -129,7 +138,7 @@ var FlipY = ActionInstant.extend(/** @lends cocos.actions.FlipY# */{
     flipY: false,
 
     /**
-     * @class FlipY Flips a sprite vertically
+     * @class Flips a sprite vertically
      *
      * @memberOf cocos.actions
      * @extends cocos.actions.ActionInstant
@@ -162,8 +171,8 @@ var Place = ActionInstant.extend(/** @lends cocos.actions.Place# */{
     position: null,
     
     /**
-	 * @class Place Places the node in a certain position
-	 *
+     * @class Places the node in a certain position
+     *
      * @memberOf cocos.actions
      * @extends cocos.actions.ActionInstant
      * @constructs
@@ -186,13 +195,13 @@ var Place = ActionInstant.extend(/** @lends cocos.actions.Place# */{
 });
 
 var CallFunc = ActionInstant.extend(/** @lends cocos.actions.CallFunc# */{
-	callback: null,
+    callback: null,
     target: null,
     method: null,
     
-	/**
-	 * @class CallFunc Calls a 'callback'
-	 *
+    /**
+     * @class Calls a 'callback'
+     *
      * @memberOf cocos.actions
      * @extends cocos.actions.ActionInstant
      * @constructs
@@ -200,28 +209,28 @@ var CallFunc = ActionInstant.extend(/** @lends cocos.actions.CallFunc# */{
      * @opt {BObject} target
      * @opt {String|Function} method
      */
-	init: function(opts) {
-		CallFunc.superclass.init.call(this, opts);
-		
-		// Save target & method so that copy() can recreate callback
-		this.target = opts.target;
-		this.method = opts.method;
-		this.callback = util.callback(this.target, this.method);
-	},
-	
-	startWithTarget: function(target) {
-		CallFunc.superclass.startWithTarget.call(this, target);
-		this.execute(target);
-	},
-	
-	execute: function(target) {
-	    // Pass target to callback
-		this.callback.call(this, target);
-	},
-	
-	copy: function() {
-	    return CallFunc.create({target: this.target, method: this.method});
-	}
+    init: function(opts) {
+        CallFunc.superclass.init.call(this, opts);
+        
+        // Save target & method so that copy() can recreate callback
+        this.target = opts.target;
+        this.method = opts.method;
+        this.callback = util.callback(this.target, this.method);
+    },
+    
+    startWithTarget: function(target) {
+        CallFunc.superclass.startWithTarget.call(this, target);
+        this.execute(target);
+    },
+    
+    execute: function(target) {
+        // Pass target to callback
+        this.callback.call(this, target);
+    },
+    
+    copy: function() {
+        return CallFunc.create({target: this.target, method: this.method});
+    }
 });
 
 exports.ActionInstant = ActionInstant;

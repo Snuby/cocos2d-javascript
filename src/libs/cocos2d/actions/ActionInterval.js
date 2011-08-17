@@ -484,14 +484,13 @@ var JumpBy = ActionInterval.extend(/** @lends cocos.actions.JumpBy# */{
     }
 });
 
+/**
+ * @class Moves a Node to a parabolic position simulating a jump movement by modifying its position attribute.
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.JumpBy
+ */
 var JumpTo = JumpBy.extend(/** @lends cocos.actions.JumpTo# */{
-    /**
-     * @class JumpTo Moves a Node object to a parabolic position simulating a jump 
-     * movement by modifying it's position attribute.
-     *
-     * @memberOf cocos.actions
-     * @extends cocos.actions.JumpBy
-     */
     startWithTarget: function(target) {
         JumpTo.superclass.startWithTarget.call(this, target);
         this.delta = geo.ccp(this.delta.x - this.startPosition.x, this.delta.y - this.startPosition.y);
@@ -507,14 +506,14 @@ var BezierBy = ActionInterval.extend(/** @lends cocos.actions.BezierBy# */{
     startPosition: null,
     
     /**
-     * @class BezierBy An action that moves the target with a cubic Bezier curve by a certain distance.
+     * @class An action that moves the target with a cubic Bezier curve by a certain distance.
      *
      * @memberOf cocos.actions
      * @constructs
      * @extends cocos.actions.ActionInterval
      *
-     * @opts {geometry.BezierConfig} bezier Bezier control points object
-     * @opts {Float} duration
+     * @opt {geometry.BezierConfig} bezier Bezier control points object
+     * @opt {Float} duration
      */
     init: function(opts) {
         BezierBy.superclass.init.call(this, opts);
@@ -560,7 +559,7 @@ var BezierBy = ActionInterval.extend(/** @lends cocos.actions.BezierBy# */{
     }
 });
 
-util.extend(BezierBy, {
+util.extend(BezierBy, /** @lends cocos.actions.BezierBy */{
     /**
      * Bezier cubic formula
      * ((1 - t) + t)3 = 1 
@@ -573,13 +572,13 @@ util.extend(BezierBy, {
     }
 });
 
+/**
+ * @class An action that moves the target with a cubic Bezier curve to a destination point.
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.BezierBy
+ */
 var BezierTo = BezierBy.extend(/** @lends cocos.actions.BezierTo# */{
-    /**
-     * @class BezierTo An action that moves the target with a cubic Bezier curve to a destination point.
-     *
-     * @memberOf cocos.actions
-     * @extends cocos.actions.BezierBy
-     */
     startWithTarget: function(target) {
         BezierTo.superclass.startWithTarget.call(this, target);
         
@@ -597,7 +596,7 @@ var Blink = ActionInterval.extend(/** @lends cocos.actions.Blink# */{
     times: 1,
     
     /**
-     * @class Blink Blinks a Node object by modifying it's visible attribute
+     * @class Blinks a Node object by modifying it's visible attribute
      *
      * @memberOf cocos.actions
      * @constructs
@@ -628,13 +627,13 @@ var Blink = ActionInterval.extend(/** @lends cocos.actions.Blink# */{
     }
 });
 
+/**
+ * @class Fades out a cocos.nodes.Node to zero opacity
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionInterval
+ */     
 var FadeOut = ActionInterval.extend(/** @lends cocos.actions.FadeOut# */{
-   /**
-    * @class FadeOut Fades out a cocos.nodes.Node to zero opacity
-    *
-    * @memberOf cocos.actions
-    * @extends cocos.actions.ActionInterval
-    */     
     update: function (t) {
         var target = this.get('target');
         if (!target) return;
@@ -651,13 +650,13 @@ var FadeOut = ActionInterval.extend(/** @lends cocos.actions.FadeOut# */{
 });
 
 
+/**
+ * @class Fades in a cocos.nodes.Node to 100% opacity
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionInterval
+ */
 var FadeIn = ActionInterval.extend(/** @lends cocos.actions.FadeIn# */{
-    /**
-     * @class FadeIn Fades in a cocos.nodes.Node to 100% opacity
-     *
-     * @memberOf cocos.actions
-     * @extends cocos.actions.ActionInterval
-     */
     update: function (t) {
         var target = this.get('target');
         if (!target) return;
@@ -687,10 +686,10 @@ var FadeTo = ActionInterval.extend(/** @lends cocos.actions.FadeTo# */{
     fromOpacity: null,
 
     /**
-     * @class FadeTo Fades a cocos.nodes.Node to a given opacity
+     * @class Fades a cocos.nodes.Node to a given opacity
      *
      * @memberOf cocos.actions
-     * @constructor
+     * @constructs
      * @extends cocos.actions.ActionInterval
      */
     init: function (opts) {
@@ -726,7 +725,7 @@ var Sequence = ActionInterval.extend(/** @lends cocos.actions.Sequence# */{
     last: 0,
     
     /**
-     * Runs a pair of actions sequentially, one after another
+     * @class Runs a pair of actions sequentially, one after another
      *
      * @memberOf cocos.actions
      * @constructs
@@ -811,7 +810,7 @@ var Sequence = ActionInterval.extend(/** @lends cocos.actions.Sequence# */{
     }
 });
 
-util.extend(Sequence, {
+util.extend(Sequence, /** @lends cocos.actions.Sequence */{
     /** 
      * Override BObject.create in order to implement recursive construction
      * of actions array
@@ -849,7 +848,7 @@ var Repeat = ActionInterval.extend(/** @lends cocos.actions.Repeat# */{
     other: null,
     
     /**
-     * @class Repeat Repeats an action a number of times.
+     * @class Repeats an action a number of times.
      *
      * @memberOf cocos.actions
      * @constructs
@@ -927,7 +926,7 @@ var Spawn = ActionInterval.extend(/** @lends cocos.actions.Spawn# */{
     two: null,
 
     /**
-     * @class Spawn Executes multiple actions simultaneously
+     * @class Executes multiple actions simultaneously
      *
      * @memberOf cocos.actions
      * @constructs
@@ -1001,7 +1000,7 @@ var Spawn = ActionInterval.extend(/** @lends cocos.actions.Spawn# */{
     }
 });
 
-util.extend(Spawn, {
+util.extend(Spawn, /** @lends cocos.actions.Spawn */{
     /**
      * Helper class function to create Spawn object from array of actions
      *
@@ -1028,7 +1027,7 @@ var Animate = ActionInterval.extend(/** @lends cocos.actions.Animate# */{
 
 
     /**
-     * Animates a sprite given the name of an Animation
+     * @class Animates a sprite given the name of an Animation
      *
      * @memberOf cocos.actions
      * @constructs

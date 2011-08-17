@@ -1,4 +1,4 @@
-/**
+/** @ignore
  * XML Node types
  */
 var ELEMENT_NODE                = 1,

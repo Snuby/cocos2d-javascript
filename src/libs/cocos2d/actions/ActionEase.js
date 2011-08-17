@@ -85,6 +85,9 @@ var EaseRate = ActionEase.extend(/** @lends cocos.actions.EaseRate# */{
 
 /**
  * @class EaseIn action with a rate
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseRate
  */
 var EaseIn = EaseRate.extend(/** @lends cocos.actions.EaseIn# */{
     update: function(t) {
@@ -102,6 +105,9 @@ var EaseIn = EaseRate.extend(/** @lends cocos.actions.EaseIn# */{
 
 /**
  * @class EaseOut action with a rate
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseRate
  */
 var EaseOut = EaseRate.extend(/** @lends cocos.actions.EaseOut# */{
     update: function(t) {
@@ -119,6 +125,9 @@ var EaseOut = EaseRate.extend(/** @lends cocos.actions.EaseOut# */{
 
 /**
  * @class EaseInOut action with a rate
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseRate
  */
 var EaseInOut = EaseRate.extend(/** @lends cocos.actions.EaseInOut# */{
     update: function(t) {
@@ -146,6 +155,9 @@ var EaseInOut = EaseRate.extend(/** @lends cocos.actions.EaseInOut# */{
 
 /**
  * @class EaseExponentialIn action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
  */
 var EaseExponentialIn = ActionEase.extend(/** @lends cocos.actions.EaseExponentialIn# */{
     update: function(t) {
@@ -163,6 +175,9 @@ var EaseExponentialIn = ActionEase.extend(/** @lends cocos.actions.EaseExponenti
 
 /**
  * @class EaseExponentialOut action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
  */
 var EaseExponentialOut = ActionEase.extend(/** @lends cocos.actions.EaseExponentialOut# */{
     update: function(t) {
@@ -180,6 +195,9 @@ var EaseExponentialOut = ActionEase.extend(/** @lends cocos.actions.EaseExponent
 
 /**
  * @class EaseExponentialInOut action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
  */
 var EaseExponentialInOut = ActionEase.extend(/** @lends cocos.actions.EaseExponentialInOut# */{
     update: function(t) {
@@ -203,6 +221,9 @@ var EaseExponentialInOut = ActionEase.extend(/** @lends cocos.actions.EaseExpone
 
 /**
  * @class EaseSineIn action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
  */
 var EaseSineIn = ActionEase.extend(/** @lends cocos.actions.EaseSineIn# */{
     update: function(t) {
@@ -220,6 +241,9 @@ var EaseSineIn = ActionEase.extend(/** @lends cocos.actions.EaseSineIn# */{
 
 /**
  * @class EaseSineOut action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
  */
 var EaseSineOut = ActionEase.extend(/** @lends cocos.actions.EaseSineOut# */{
     update: function(t) {
@@ -237,6 +261,9 @@ var EaseSineOut = ActionEase.extend(/** @lends cocos.actions.EaseSineOut# */{
 
 /**
  * @class EaseSineInOut action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
  */
 var EaseSineInOut = ActionEase.extend(/** @lends cocos.actions.EaseSineInOut# */{
     update: function(t) {
@@ -254,21 +281,21 @@ var EaseSineInOut = ActionEase.extend(/** @lends cocos.actions.EaseSineInOut# */
 
 var EaseElastic = ActionEase.extend(/** @lends cocos.actions.EaseElastic# */{
     /**
-    * period of the wave in radians. default is 0.3
-    * @type {Float}
-    */
+     * period of the wave in radians. default is 0.3
+     * @type {Float}
+     */
     period: 0.3,
 
     /**
-    * @class EaseElastic Ease Elastic abstract class
-    *
-    * @memberOf cocos.actions
-    * @constructs
-    * @extends cocos.actions.ActionEase
-    *
-    * @opt {cocos.actions.ActionInterval} action
-    * @opt {Float} period
-    */
+     * @class Ease Elastic abstract class
+     *
+     * @memberOf cocos.actions
+     * @constructs
+     * @extends cocos.actions.ActionEase
+     *
+     * @opt {cocos.actions.ActionInterval} action
+     * @opt {Float} period
+     */
     init: function(opts) {
         EaseElastic.superclass.init.call(this, {action: opts.action});
 
@@ -287,10 +314,13 @@ var EaseElastic = ActionEase.extend(/** @lends cocos.actions.EaseElastic# */{
     }
 });
 
+/** 
+ * @class Ease Elastic In action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseElastic
+ */
 var EaseElasticIn = EaseElastic.extend(/** @lends cocos.actions.EaseElasticIn# */{
-    /** 
-     * @class EaseElasticIn Ease Elastic In action
-     */
     update: function(t) {
         var newT = 0;
         if (t == 0 || t == 1) {
@@ -313,10 +343,13 @@ var EaseElasticIn = EaseElastic.extend(/** @lends cocos.actions.EaseElasticIn# *
     }
 });
 
+/** 
+ * @class Ease Elastic Out action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseElastic
+ */
 var EaseElasticOut = EaseElastic.extend(/** @lends cocos.actions.EaseElasticOut# */{
-    /** 
-     * @class EaseElasticOut Ease Elastic Out action
-     */
     update: function(t) {
         var newT = 0;
         if (t == 0 || t == 1) {
@@ -337,10 +370,13 @@ var EaseElasticOut = EaseElastic.extend(/** @lends cocos.actions.EaseElasticOut#
     }
 });
 
+/** 
+ * @class Ease Elastic In Out action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseElastic
+ */
 var EaseElasticInOut = EaseElastic.extend(/** @lends cocos.actions.EaseElasticInOut# */{
-    /** 
-     * @class EaseElasticInOut Ease Elastic InOut action
-     */
     update: function(t) {
         var newT = 0;
         if (t == 0 || t == 1) {
@@ -371,10 +407,13 @@ var EaseElasticInOut = EaseElastic.extend(/** @lends cocos.actions.EaseElasticIn
     }
 });
 
+/** 
+ * @class Ease Bounce abstract class
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
+ */
 var EaseBounce = ActionEase.extend(/** @lends cocos.actions.EaseBounce# */{
-    /** 
-     * @class EaseBounce abstract class
-     */
     bounceTime: function(t) {
         // Direct cut & paste from CCActionEase.m, obviously.
         // Glad someone else figured out all this math...
@@ -395,10 +434,13 @@ var EaseBounce = ActionEase.extend(/** @lends cocos.actions.EaseBounce# */{
     }
 });
 
+/** 
+ * @class Ease Bounce In action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseBounce
+ */
 var EaseBounceIn = EaseBounce.extend(/** @lends cocos.actions.EaseBounceIn# */{
-    /** 
-     * @class EaseBounceIn EaseBounceIn action
-     */
     update: function(t) {
         var newT = 1 - this.bounceTime(1-t);
         this.other.update(newT);
@@ -413,10 +455,13 @@ var EaseBounceIn = EaseBounce.extend(/** @lends cocos.actions.EaseBounceIn# */{
     }
 });
 
+/** 
+ * @class Ease Bounce Out action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseBounce
+ */
 var EaseBounceOut = EaseBounce.extend(/** @lends cocos.actions.EaseBounceOut# */{
-    /** 
-     * @class EaseBounceOut EaseBounceOut action
-     */
     update: function(t) {
         var newT = this.bounceTime(t);
         this.other.update(newT);
@@ -431,10 +476,13 @@ var EaseBounceOut = EaseBounce.extend(/** @lends cocos.actions.EaseBounceOut# */
     }
 });
 
+/** 
+ * @class Ease Bounce In Out action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.EaseBounce
+ */
 var EaseBounceInOut = EaseBounce.extend(/** @lends cocos.actions.EaseBounceInOut# */{
-    /** 
-     * @class EaseBounceInOut EaseBounceInOut action
-     */
     update: function(t) {
         var newT = 0;
         if (t < 0.5) {
@@ -455,10 +503,13 @@ var EaseBounceInOut = EaseBounce.extend(/** @lends cocos.actions.EaseBounceInOut
     }
 });
 
+/** 
+ * @class Ease Back In action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
+ */
 var EaseBackIn = ActionEase.extend(/** @lends cocos.actions.EaseBackIn# */{
-    /** 
-     * @class EaseBackIn EaseBackIn action
-     */
     update: function(t) {
         var overshoot = 1.70158;
         this.other.update(t * t * ((overshoot + 1) * t - overshoot));
@@ -473,10 +524,13 @@ var EaseBackIn = ActionEase.extend(/** @lends cocos.actions.EaseBackIn# */{
     }
 });
 
+/** 
+ * @class Ease Back Out action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
+ */
 var EaseBackOut = ActionEase.extend(/** @lends cocos.actions.EaseBackOut# */{
-    /** 
-     * @class EaseBackOut EaseBackOut action
-     */
     update: function(t) {
         var overshoot = 1.70158;
         t -= 1;
@@ -492,10 +546,13 @@ var EaseBackOut = ActionEase.extend(/** @lends cocos.actions.EaseBackOut# */{
     }
 });
 
+/** 
+ * @class Ease Back In Out action
+ *
+ * @memberOf cocos.actions
+ * @extends cocos.actions.ActionEase
+ */
 var EaseBackInOut = ActionEase.extend(/** @lends cocos.actions.EaseBackInOut# */{
-    /** 
-     * @class EaseBackInOut EaseBackInOut action
-     */
     update: function(t) {
         // Where do these constants come from?
         var overshoot = 1.70158 * 1.525;

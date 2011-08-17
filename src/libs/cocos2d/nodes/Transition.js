@@ -10,7 +10,8 @@ var geo             = require('geometry'),
     EventDispatcher = require('../EventDispatcher').EventDispatcher,
     Scheduler       = require('../Scheduler').Scheduler;
 
-/** Orientation Type used by some transitions
+/** @ignore
+ * Orientation Type used by some transitions
  */
 var tOrientation = {
     kOrientationLeftOver: 0,
@@ -19,9 +20,7 @@ var tOrientation = {
     kOrientationDownOver: 1
 };
 
-/**
- */
-var TransitionScene = Scene.extend(/** @lends cocos.nodes.TransitionScene */{
+var TransitionScene = Scene.extend(/** @lends cocos.nodes.TransitionScene# */{
     /**
      * Incoming scene
      * @type {cocos.nodes.Scene}
@@ -45,6 +44,7 @@ var TransitionScene = Scene.extend(/** @lends cocos.nodes.TransitionScene */{
 
     /**
      * @class Base class for Transition scenes
+     *
      * @memberOf cocos.nodes
      * @extends cocos.nodes.Scene
      * @constructs
@@ -160,10 +160,11 @@ var TransitionScene = Scene.extend(/** @lends cocos.nodes.TransitionScene */{
 
 /**
  * @class Rotate and zoom out the outgoing scene, and then rotate and zoom in the incoming 
+ *
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionScene
  */
-var TransitionRotoZoom = TransitionScene.extend(/** @lends cocos.nodes.TransitionRotoZoom */{
+var TransitionRotoZoom = TransitionScene.extend(/** @lends cocos.nodes.TransitionRotoZoom# */{
     onEnter: function() {
         TransitionRotoZoom.superclass.onEnter.call(this);
         
@@ -207,7 +208,7 @@ var TransitionRotoZoom = TransitionScene.extend(/** @lends cocos.nodes.Transitio
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionScene
  */
-var TransitionMoveInL = TransitionScene.extend(/** @lends cocos.nodes.TransitionMoveInL */{
+var TransitionMoveInL = TransitionScene.extend(/** @lends cocos.nodes.TransitionMoveInL# */{
     onEnter: function () {
         TransitionMoveInL.superclass.onEnter.call(this);
 
@@ -240,7 +241,7 @@ var TransitionMoveInL = TransitionScene.extend(/** @lends cocos.nodes.Transition
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionMoveInL
  */
-var TransitionMoveInR = TransitionMoveInL.extend(/** @lends cocos.nodes.TransitionMoveInR */{
+var TransitionMoveInR = TransitionMoveInL.extend(/** @lends cocos.nodes.TransitionMoveInR# */{
     initScenes: function () {
         var s = Director.get('sharedDirector').get('winSize');
         this.get('inScene').set('position', geo.ccp(s.width, 0));
@@ -252,7 +253,7 @@ var TransitionMoveInR = TransitionMoveInL.extend(/** @lends cocos.nodes.Transiti
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionMoveInL
  */
-var TransitionMoveInT = TransitionMoveInL.extend(/** @lends cocos.nodes.TransitionMoveInT */{
+var TransitionMoveInT = TransitionMoveInL.extend(/** @lends cocos.nodes.TransitionMoveInT# */{
     initScenes: function () {
         var s = Director.get('sharedDirector').get('winSize');
         this.get('inScene').set('position', geo.ccp(0, s.height));
@@ -264,7 +265,7 @@ var TransitionMoveInT = TransitionMoveInL.extend(/** @lends cocos.nodes.Transiti
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionMoveInL
  */
-var TransitionMoveInB = TransitionMoveInL.extend(/** @lends cocos.nodes.TransitionMoveInB */{
+var TransitionMoveInB = TransitionMoveInL.extend(/** @lends cocos.nodes.TransitionMoveInB# */{
     initScenes: function () {
         var s = Director.get('sharedDirector').get('winSize');
         this.get('inScene').set('position', geo.ccp(0, -s.height));
@@ -276,7 +277,7 @@ var TransitionMoveInB = TransitionMoveInL.extend(/** @lends cocos.nodes.Transiti
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionScene
  */
-var TransitionSlideInL = TransitionScene.extend(/** @lends cocos.nodes.TransitionSlideInL */{
+var TransitionSlideInL = TransitionScene.extend(/** @lends cocos.nodes.TransitionSlideInL# */{
     onEnter: function () {
         TransitionSlideInL.superclass.onEnter.call(this);
 
@@ -319,7 +320,7 @@ var TransitionSlideInL = TransitionScene.extend(/** @lends cocos.nodes.Transitio
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionSlideInL
  */
-var TransitionSlideInR = TransitionSlideInL.extend(/** @lends cocos.nodes.TransitionSlideInR */{
+var TransitionSlideInR = TransitionSlideInL.extend(/** @lends cocos.nodes.TransitionSlideInR# */{
     sceneOrder: function () {
         this.set('inSceneOnTop', true);
     },
@@ -343,7 +344,7 @@ var TransitionSlideInR = TransitionSlideInL.extend(/** @lends cocos.nodes.Transi
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionSlideInL
  */
-var TransitionSlideInT = TransitionSlideInL.extend(/** @lends cocos.nodes.TransitionSlideInT */{
+var TransitionSlideInT = TransitionSlideInL.extend(/** @lends cocos.nodes.TransitionSlideInT# */{
     sceneOrder: function () {
         this.set('inSceneOnTop', false);
     },
@@ -367,7 +368,7 @@ var TransitionSlideInT = TransitionSlideInL.extend(/** @lends cocos.nodes.Transi
  * @memberOf cocos.nodes
  * @extends cocos.nodes.TransitionSlideInL
  */
-var TransitionSlideInB = TransitionSlideInL.extend(/** @lends cocos.nodes.TransitionSlideInB */{
+var TransitionSlideInB = TransitionSlideInL.extend(/** @lends cocos.nodes.TransitionSlideInB# */{
     sceneOrder: function () {
         this.set('inSceneOnTop', true);
     },
