@@ -2,13 +2,12 @@
     "name": "cocos2d",
     "author": "Ryan Williams <ryan@cocos2d-javascript.org>",
     "description": "Port of the Cocos2D graphics engine to HTML5",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "homepage": "http://cocos2d-javascript.org/",
 
     "engines": {
         "node": ">= 0.2.0"
     },
-    "main": "bin/cocos",
 
     "repository": {
         "type" : "git" ,
@@ -22,5 +21,7 @@
     "licenses": [{
         "type": "MIT",
         "url": "https://github.com/ryanwilliams/cocos2d-javascript/blob/master/LICENSE"
-    }]
+    }],
+
+    "preferGlobal": true
 }
