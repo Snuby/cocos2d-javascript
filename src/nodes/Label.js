@@ -28,7 +28,7 @@ var Label = Node.extend(/** @lends cocos.nodes.Label# */{
     init: function (opts) {
         Label.superclass.init.call(this, opts);
 
-        util.each('fontSize fontName fontColor string'.w(), util.callback(this, function (name) {
+        util.each('fontSize fontName fontColor string'.split(' '), util.callback(this, function (name) {
             // Set property on init
             if (opts[name]) {
                 this.set(name, opts[name]);

@@ -6,8 +6,8 @@ var Scene       = require('./Scene').Scene,
     Director    = require('../Director').Director,
     Label       = require('./Label').Label,
     ProgressBar = require('./ProgressBar').ProgressBar,
-    Preloader   = require('../Preloader').Preloader,
-    RemoteResource = require('../RemoteResource').RemoteResource,
+    Preloader   = require('preloader').Preloader,
+    RemoteResource = require('remote_resources').RemoteResource,
     geo         = require('geometry'),
     util        = require('util'),
     events      = require('events');
@@ -17,8 +17,8 @@ var PreloadScene = Scene.extend(/** @lends cocos.nodes.PreloadScene# */{
     label: null,
     preloader: null,
     isReady: false, // True when both progress bar images have loaded
-    emptyImage: "/__builtin__/libs/cocos2d/resources/progress-bar-empty.png",
-    fullImage:  "/__builtin__/libs/cocos2d/resources/progress-bar-full.png",
+    emptyImage: "/libs/cocos2d/resources/progress-bar-empty.png",
+    fullImage:  "/libs/cocos2d/resources/progress-bar-full.png",
 
     /**
      * @memberOf cocos.nodes
@@ -41,60 +41,38 @@ var PreloadScene = Scene.extend(/** @lends cocos.nodes.PreloadScene# */{
         this.addChild({child: label});
 
         // Setup preloader
-        var preloader = Preloader.create();
+        var preloader = new Preloader();    // The main preloader
+        preloader.addEverythingToQueue()
         this.set('preloader', preloader);
-        var self = this;
 
         // Listen for preload events
-        events.addListener(preloader, 'load', function (uri, preloader) {
-            var loaded = preloader.get('loaded'),
-                count = preloader.get('count');
-            //console.log("Loaded: %d%% -- %d of %d -- %s", (loaded / count) * 100, loaded, count, uri);
-            events.trigger(self, 'load', uri, preloader);
-        });
+        events.addListener(preloader, 'load', function (preloader, uri) {
+            var loaded = preloader.loaded,
+                count = preloader.count;
+            events.trigger(this, 'load', preloader, uri);
+        }.bind(this));
 
         events.addListener(preloader, 'complete', function (preloader) {
-            events.trigger(self, 'complete', preloader);
-        });
+            events.trigger(this, 'complete', preloader);
+        }.bind(this));
 
 
-        // Load the images used by the progress bar
-        var emptyImage = resource(this.get('emptyImage')),
-            fullImage  = resource(this.get('fullImage'));
 
 
-        var loaded = 0;
-        function imageLoaded() {
-            if (loaded == 2) {
-                this.isReady = true;
-                this.createProgressBar();
-                if (this.get('isRunning')) {
-                    preloader.load();
-                }
+        // Preloader for the loading screen resources
+        var loadingPreloader = new Preloader([this.get('emptyImage'), this.get('fullImage')])
+
+        // When loading screen resources have loaded then draw them
+        events.addListener(loadingPreloader, 'complete', function (preloader) {
+            this.createProgressBar();
+            if (this.get('isRunning')) {
+                this.get('preloader').load();
             }
-        }
 
-        if (emptyImage instanceof RemoteResource) {
-            events.addListener(emptyImage, 'load', util.callback(this, function() {
-                loaded++;
-                imageLoaded.call(this);
-            }));
-            emptyImage.load();
-        } else {
-            loaded++;
-            imageLoaded.call(this);
-        }
-        if (fullImage instanceof RemoteResource) {
-            events.addListener(fullImage, 'load', util.callback(this, function() {
-                loaded++;
-                imageLoaded.call(this);
-            }));
-            fullImage.load();
-        } else {
-            loaded++;
-            imageLoaded.call(this);
-        }
+            this.isReady = true;
+        }.bind(this));
 
+        loadingPreloader.load()
     },
 
     createProgressBar: function () {
@@ -102,8 +80,8 @@ var PreloadScene = Scene.extend(/** @lends cocos.nodes.PreloadScene# */{
             size = Director.get('sharedDirector').get('winSize');
 
         var progressBar = ProgressBar.create({
-            emptyImage: "/__builtin__/libs/cocos2d/resources/progress-bar-empty.png",
-            fullImage:  "/__builtin__/libs/cocos2d/resources/progress-bar-full.png"
+            emptyImage: "/libs/cocos2d/resources/progress-bar-empty.png",
+            fullImage:  "/libs/cocos2d/resources/progress-bar-full.png"
         });
 
         progressBar.set('position', new geo.Point(size.width / 2, size.height / 2));
@@ -111,8 +89,10 @@ var PreloadScene = Scene.extend(/** @lends cocos.nodes.PreloadScene# */{
         this.set('progressBar', progressBar);
         this.addChild({child: progressBar});
 
-        progressBar.bindTo('maxValue', preloader, 'count');
-        progressBar.bindTo('value',    preloader, 'loaded');
+        events.addListener(preloader, 'load', function (preloader, uri) {
+            progressBar.set('maxValue', preloader.count);
+            progressBar.set('value', preloader.loaded);
+        })
     },
 
     onEnter: function () {

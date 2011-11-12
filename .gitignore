@@ -11,3 +11,4 @@ cocos2d-*.zip
 .DS_Store
 nbproject
 tests/build/
+node_modules/

@@ -4,7 +4,7 @@
 
 var util = require('util'),
     events = require('events'),
-    RemoteResource = require('./RemoteResource').RemoteResource;
+    RemoteResource = require('remote_resources').RemoteResource;
 
 var Texture2D = BObject.extend(/** @lends cocos.Texture2D# */{
     imgElement: null,

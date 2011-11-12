@@ -47,7 +47,7 @@ var util = {
         if (obj instanceof Array) {
             copy = [];
             for (var i = 0, len = obj.length; i < len; i++) {
-                copy[i] = arguments.callee(obj[i]);
+                copy[i] = util.copy(obj[i]);
             }
         } else if (typeof(obj) == 'object') {
             if (typeof(obj.copy) == 'function') {
@@ -57,7 +57,7 @@ var util = {
 
                 var o, x;
                 for (x in obj) {
-                    copy[x] = arguments.callee(obj[x]);
+                    copy[x] = util.copy(obj[x]);
                 }
             }
         } else {
