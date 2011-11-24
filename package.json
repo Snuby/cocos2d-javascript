@@ -2,7 +2,7 @@
     "name": "cocos2d",
     "author": "Ryan Williams <ryan@cocos2d-javascript.org>",
     "description": "Port of the Cocos2D graphics engine to HTML5",
-    "version": "0.2.0-alpha",
+    "version": "0.2.0",
     "homepage": "http://cocos2d-javascript.org/",
 
     "engines": {
@@ -24,6 +24,10 @@
     }],
 
   "dependencies": {
-    "jah": ">= 0.0.1"
-  }
+    "jah": "0.0.3"
+  },
+
+  "bundleDependencies": [
+    "jah"
+  ]
 }
