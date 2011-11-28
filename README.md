@@ -1,7 +1,10 @@
-Overview
-========
+What is Cocos2D JavaScript?
+===========================
 
-Cocos2D JavaScript is an HTML5 port of the popular iPhone 2D graphics engine Cocos2D. It allows rapid development of 2D games and graphical applications which can run in any modern Web browser.
+Cocos2D JavaScript is an HTML5 port of Cocos2D for iPhone.
+It is a 2D graphics engine which allows rapid development of 2D games and
+graphical applications which can run in any modern Web browser without the need
+for third-party plugins such as Adobe Flash.
 
 Installation
 ============
@@ -16,8 +19,8 @@ Download and launch the installer.
 
 <http://cocos2d-javascript.org/downloads>
 
-Linux or Mac OS X using npm
----------------------------
+Linux or Mac OS X using Node.js and NPM
+---------------------------------------
 
 If you have [Node.js][nodejs] and [npm][npm] installed you can install Cocos2D
 JavaScript as a package.
@@ -43,12 +46,12 @@ You don't need to use the installer if you don't want to. You can download the
 latest ZIP or checkout the latest version from github. 
 
 If you checkout from github and don't have Node.js installed, be sure to also
-get the submodules as they include precompiled Node.js binaries.
+get the git submodule as it includes precompiled Node.js binaries.
 
     git submodule update --init
 
-With all the code read you can copy it to any place you want and from there use
-the 'cocos.sh', 'cocos.bat' or .EXEs in _bin/_ as you would normally.
+You can put Cocs2D JavaScript anywhere you want and from there use
+the 'cocos.sh', 'cocos.bat' or .EXEs in _bin/_ to launch the various commands.
 
 Creating your first project
 ===========================
@@ -76,14 +79,18 @@ Now visit http://localhost:4000 and with a bit of luck you'll have something sho
 Developing
 ==========
 
-Everything you write will be in separate JavaScript files. These will be
-compiled into a single file which also includes all your other resources
-including images, sound files, map files, etc.
+Cocos2D JavaScript uses a package called [Jah][jah] to handle development and compilation.
+All the code you write will be in separate JavaScript files which you can
+organise any way you wish. When it comes to deploying your application, Jah
+will compile these files down into a small number of JavaScript files for you
+to put on your webserver.
 
-The entry point for the code is the file _src/main.js_ which has an
-`exports.main` function that is called on startup.
+The entry point for the code is the file _src/main.js_ where you'll find an
+`exports.main` function which will be called when your application starts.
 
-The HTML for your page is in _public/index.html_.
+The HTML for your page sent by the development server is at
+_public/index.html.template_ and can be customised if you need any special
+additions to it.
 
 Compiling your application
 ==========================
@@ -121,7 +128,7 @@ If you wish to generate the documentation yourself you need to follow these step
 Download JsDoc 2.3 (or 2.4) from <http://code.google.com/p/jsdoc-toolkit/>.
 
 Copy that to /usr/local/jsdoc-toolkit or wherever you like and then run:
-    
+
     JSDOC_HOME=/usr/local/jsdoc-toolkit ./bin/jsdoc
 
 The documentation will appear in the 'docs' directory.
@@ -141,7 +148,9 @@ Links
 * Documentation: <http://cocos2d-javascript.org/documentation>
 * Forum: <http://cocos2d-javascript.org/forum>
 * Email: <ryan@cocos2d-javascript.org>
+* GitHub: <https://github.com/ryanwilliams/cocos2d-javascript>
 
 
+[jah]: https://github.com/ryanwilliams/jah
 [nodejs]: http://nodejs.org
 [npm]: http://npmjs.org
