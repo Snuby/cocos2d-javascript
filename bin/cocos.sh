@@ -7,7 +7,7 @@ else
     DIR=$(dirname $0)
 fi
 
-if which node &> /dev/null
+if which node > /dev/null
 then
     # User has node installed, use that
     node "$DIR/cocos.js" "$@"
@@ -15,27 +15,27 @@ else
     # User doesn't have node installed, fallback to precompiled binaries
     case `uname -a` in
     Linux*x86_64*)
-        "$DIR/../support/node-builds/lin64/node" "$DIR/cocos.js" "$@" 
+        "$DIR/../support/node-builds/node-linux64" "$DIR/cocos.js" "$@" 
         ;;
 
     Linux*i686*)
-        "$DIR/../support/node-builds/lin32/node" "$DIR/cocos.js" "$@"
+        "$DIR/../support/node-builds/node-linux32" "$DIR/cocos.js" "$@"
         ;;
         
     Darwin*)
-        "$DIR/../support/node-builds/osx64/node" "$DIR/cocos.js" "$@"
+        "$DIR/../support/node-builds/node-darwin" "$DIR/cocos.js" "$@"
         ;;
         
     SunOS*)
-        "$DIR/../support/node-builds/sol32/node" "$DIR/cocos.js" "$@"
+        "$DIR/../support/node-builds/node-sunos" "$DIR/cocos.js" "$@"
         ;;
 
     CYGWIN*)
-        "$DIR/../support/node-builds/win32/node.exe" "$DIR/cocos.js" "$@"
+        "$DIR/../support/node-builds/node-cygwin.exe" "$DIR/cocos.js" "$@"
         ;;
 
     MING*)
-        "$DIR/../support/node-builds/win32/node.exe" "$DIR/cocos.js" "$@"
+        "$DIR/../support/node-builds/node-cygwin.exe" "$DIR/cocos.js" "$@"
         ;;    
 
     *) echo "Unknown OS and Node isn't installed. Can't continue."
