@@ -2,7 +2,6 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        $scripts$
         <title>Cocos2D -- Tests</title>
         <style type="text/css" media="screen">
             body {
@@ -234,6 +233,7 @@
         </style>
     </head>
     <body>
+        ${scripts}
         <h1>Tests</h1>
         <p>Select a test suite to run:</p>
         <ul>
