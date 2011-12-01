@@ -1,8 +1,9 @@
 "use strict"  // Use strict JavaScript mode
 
-var cocos = require('cocos2d')   // Import the cocos2d module
-  , geo   = require('geometry')  // Import the geometry module
-  , ccp   = geo.ccp              // Short hand to create points
+var cocos  = require('cocos2d')   // Import the cocos2d module
+  , events = require('events')    // Import the events module
+  , geo    = require('geometry')  // Import the geometry module
+  , ccp    = geo.ccp              // Short hand to create points
 
 var ${classname} = cocos.nodes.Layer.extend(/** @lends ${classname}# */{
     /**
@@ -40,12 +41,18 @@ exports.main = function () {
     // Attach director to our <div> element
     director.attachInView(document.getElementById('${filename}_app'))
 
-    // Create a scene
-    var scene = cocos.nodes.Scene.create()
+    // Wait for the director to finish preloading our assets
+    events.addListener(director, 'ready', function (director) {
+        // Create a scene
+        var scene = cocos.nodes.Scene.create()
 
-    // Add our layer to the scene
-    scene.addChild({ child: ${classname}.create() })
+        // Add our layer to the scene
+        scene.addChild({ child: ${classname}.create() })
 
-    // Run the scene
-    director.runWithScene(scene)
+        // Run the scene
+        director.replaceScene(scene)
+    })
+
+    // Preload our assets
+    director.runPreloadScene()
 }
