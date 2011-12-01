@@ -50,8 +50,8 @@ get the git submodule as it includes precompiled Node.js binaries.
 
     git submodule update --init
 
-You can put Cocs2D JavaScript anywhere you want and from there use
-the 'cocos.sh', 'cocos.bat' or .EXEs in _bin/_ to launch the various commands.
+You can put Cocos2D JavaScript anywhere you want and from there use
+the 'cocos', 'cocos.bat' or .EXEs in _bin/_ to launch the various commands.
 
 Creating your first project
 ===========================

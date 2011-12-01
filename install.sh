@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if which npm &> /dev/null
+if which npm > /dev/null
 then
-    echo "NPM is installed. You should probably install cocos2d-javascript as an npm package using this command instead:\n\n    npm install -g .\n"
+    echo "NPM is installed. You should probably install Cocos2D JavaScript as an npm package using this command instead:\n\n    npm install -g .\n"
 
     read -p "Continue anyway? (y/n) : " yn
     case $yn in
@@ -44,7 +44,7 @@ cd -
 
 echo "All files copied."
 
-ln -s "$install_to/bin/cocos.sh" "/usr/local/bin/cocos"
+ln -s "$install_to/bin/cocos" "/usr/local/bin/cocos"
 
 echo "Symlinked 'cocos' executable to /usr/local/bin/cocos\n"
 
