@@ -44,7 +44,7 @@ function generateNSISScript(files, callback) {
 
     files = files.filter(function(file) {
         // Ignore node-builds for other platforms
-        if (~file.indexOf('node-builds') && !~file.indexOf('win') && !~file.indexOf('tmp') && !~file.indexOf('etc')) {
+        if (~file.indexOf('node-builds') && !~file.indexOf('cyg') && !~file.indexOf('tmp') && !~file.indexOf('etc')) {
             return;
         }
 
@@ -102,6 +102,8 @@ function findFilesToPackage(dir, callback) {
     var gitls = spawn('git', ['ls-files']),
         // This gets the full path to each file in each submodule
         subls = spawn('git', ['submodule', 'foreach', 'for file in `git ls-files`; do echo "$path/$file"; done']);
+        // List all node_modules
+        modls = spawn('find', ['node_modules']);
 
 
     var mainFileList = '';
@@ -115,17 +117,23 @@ function findFilesToPackage(dir, callback) {
         subFileList += data;
     });
     subls.on('exit', returnFileList);
+    
+    var modFileList = '';
+    modls.stdout.on('data', function (data) {
+        modFileList += data;
+    });
+    modls.on('exit', returnFileList);
 
     var lsCount = 0;
     function returnFileList(code) {
         lsCount++;
-        if (lsCount < 2) {
+        if (lsCount < 3) {
             return;
         }
         process.chdir(cwd);
 
         // Convert \n separated list of filenames into a sorted array
-        var fileList = (mainFileList.trim() + '\n' + subFileList.trim()).split('\n').filter(function(file) {
+        var fileList = (mainFileList.trim() + '\n' + subFileList.trim() + '\n' + modFileList.trim()).split('\n').filter(function(file) {
             // Ignore entering submodule messages
             if (file.indexOf('Entering ') === 0) {
                 return;
@@ -216,16 +224,16 @@ function generateGZip(files, zipName) {
                 }
 
                 // Mac OS X
-                generateGZip(removeNodeBuilds(filesToPackage, 'osx'), 'cocos2d-javascript-v' + VERSION + '-mac');
+                generateGZip(removeNodeBuilds(filesToPackage, 'darwin'), 'cocos2d-javascript-v' + VERSION + '-mac');
 
                 // Linux
-                generateGZip(removeNodeBuilds(filesToPackage, 'lin'), 'cocos2d-javascript-v' + VERSION + '-linux');
+                generateGZip(removeNodeBuilds(filesToPackage, 'linux'), 'cocos2d-javascript-v' + VERSION + '-linux');
 
                 // Windows
-                generateZip(removeNodeBuilds(filesToPackage, 'win'), 'cocos2d-javascript-v' + VERSION + '-windows');
+                generateZip(removeNodeBuilds(filesToPackage, 'cyg'), 'cocos2d-javascript-v' + VERSION + '-windows');
 
                 // Solaris
-                generateGZip(removeNodeBuilds(filesToPackage, 'sol'), 'cocos2d-javascript-v' + VERSION + '-solaris');
+                generateGZip(removeNodeBuilds(filesToPackage, 'sunos'), 'cocos2d-javascript-v' + VERSION + '-solaris');
             });
 
             // Write NSIS script to stdin of makensis
