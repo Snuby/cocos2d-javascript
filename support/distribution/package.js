@@ -7,7 +7,7 @@
 var path = require('path');
 
 // Include cocos2d because it has some useful modules
-require.paths.unshift(path.join(__dirname, '../lib'));
+require.paths.unshift(path.join(__dirname, '../../lib'));
 
 var sys = require('sys'),
     fs  = require('fs'),
@@ -24,10 +24,11 @@ opts.parse(OPTS, [], true);
 
 
 
-var VERSION = opts.get('package-version') || JSON.parse(fs.readFileSync(__dirname + '/../package.json')).version;
-var OUTPUT_PATH = opts.get('output') || process.cwd();
+var VERSION = opts.get('package-version') || JSON.parse(fs.readFileSync(path.join(__dirname, '../../package.json'))).version;
+var OUTPUT_PATH = opts.get('output') || path.join(__dirname, 'build');
 
-sys.puts('Packaging Cocos2D JavaScript version ' + VERSION);
+sys.puts('Packaging Cocos2D JavaScript version: ' + VERSION);
+sys.puts('Writing packages to: ' + OUTPUT_PATH);
 
 /**
  * Generates an NSIS installer script to install the contents of a given
@@ -77,7 +78,7 @@ function generateNSISScript(files, callback) {
 
     var tmp = new Template(fs.readFileSync(path.join(__dirname, 'installer_nsi.template'), 'utf8'));
     var data = tmp.substitute({
-        root_path: path.join(__dirname, '..'),
+        root_path: path.join(__dirname, '../..'),
         output_path: OUTPUT_PATH,
         version: 'v' + VERSION,
         install_file_list: installFileList,
@@ -194,9 +195,26 @@ function generateGZip(files, zipName) {
     });
 }
 
+function mkdir(dir, mode) {
+    mode = mode || 511; // Octal = 0777;
+    var paths = [dir];
+    var d = dir;
+    while ((d = path.dirname(d)) && d != '/') {
+        paths.unshift(d);
+    }
+
+    for (var i = 0, len = paths.length; i < len; i++) {
+        var p = paths[i];
+        if (!path.existsSync(p)) {
+            fs.mkdirSync(p, mode);
+        }
+    }
+}
 
 (function main() {
-    var dir = path.join(__dirname, '../');
+    mkdir(OUTPUT_PATH);
+
+    var dir = path.join(__dirname, '../../');
     findFilesToPackage(dir, function(filesToPackage) {
         generateNSISScript(filesToPackage, function(nsis) {
 

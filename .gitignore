@@ -12,3 +12,4 @@ cocos2d-*.zip
 nbproject
 tests/build/
 node_modules/
+support/distribution/build/
