@@ -177,13 +177,20 @@ function generateZip(files, zipName) {
         sys.puts('Generated ' + zipName + ' archive');
     });
 }
-function generateGZip(files, zipName) {
-    zipName += '.tar.gz';
+function generateGZip(files, name) {
+    var zipName = name + '.tar.gz';
+
     sys.puts('Generating .tar.gz archive : ' + zipName);
-    if (path.exists(zipName)) {
+    if (path.existsSync(zipName)) {
         fs.unlink(zipName);
     }
 
+    var pathPrefix = path.join('.', name);
+    if (!path.existsSync(pathPrefix)) {
+        fs.symlinkSync('.', pathPrefix);
+    }
+
+    files = files.map(function (file) { return path.join(pathPrefix, file) })
     var tar = spawn('tar', ['-czf', path.join(OUTPUT_PATH, zipName)].concat(files));
 
     tar.stderr.on('data', function(data) {
@@ -192,6 +199,7 @@ function generateGZip(files, zipName) {
     
     tar.on('exit', function() {
         sys.puts('Generated ' + zipName + ' archive');
+        fs.unlink(pathPrefix);
     });
 }
 
@@ -242,16 +250,16 @@ function mkdir(dir, mode) {
                 }
 
                 // Mac OS X
-                generateGZip(removeNodeBuilds(filesToPackage, 'darwin'), 'cocos2d-javascript-v' + VERSION + '-mac');
+                generateGZip(removeNodeBuilds(filesToPackage, 'darwin'), 'Cocos2D JavaScript v' + VERSION + ' for Mac');
 
                 // Linux
                 generateGZip(removeNodeBuilds(filesToPackage, 'linux'), 'cocos2d-javascript-v' + VERSION + '-linux');
 
                 // Windows
-                generateZip(removeNodeBuilds(filesToPackage, 'cyg'), 'cocos2d-javascript-v' + VERSION + '-windows');
+                generateZip(removeNodeBuilds(filesToPackage, 'cyg'), 'Cocos2D JavaScript v' + VERSION + ' for Windows');
 
                 // Solaris
-                generateGZip(removeNodeBuilds(filesToPackage, 'sunos'), 'cocos2d-javascript-v' + VERSION + '-solaris');
+                //generateGZip(removeNodeBuilds(filesToPackage, 'sunos'), 'cocos2d-javascript-v' + VERSION + '-solaris');
             });
 
             // Write NSIS script to stdin of makensis
