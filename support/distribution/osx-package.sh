@@ -19,17 +19,21 @@ fi
 
 # Create the .pkg
 /Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker \
-    -d "OSX Package.pmdoc" \
     -v \
+    -d "OSX Package.pmdoc" \
     -o "build/dmg/$1.pkg" \
     -x /\.DS_Store$ \
     -x \.swp$ \
     -x \.swo$ \
+    -x /\._.* \
     -x /\.git$ \
     -x /\.gitmodules$ \
-    -x /\.gitignore \
-    -x /\.npmignore \
-    -x /support/distribution/ \
+    -x /\.gitignore$ \
+    -x /\.npmignore$ \
+    -x /bin/.*\.exe$ \
+    -x /bin/.*\.bat$ \
+    -x /support/distribution \
+    -x /support/win32 \
     -x /support/node-builds/node-\(linux\|cygwin\|sunos\) \
     -x /support/node-builds/.*\.dll \
     -x /docs \
