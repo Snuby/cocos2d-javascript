@@ -24,7 +24,7 @@
     }],
 
   "dependencies": {
-    "jah": "0.0.3"
+    "jah": "0.0.4"
   },
 
   "bundleDependencies": [
