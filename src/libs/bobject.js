@@ -254,21 +254,21 @@ BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
         return this._id;
     }
 });
-Object.defineProperty(Function.prototype, 'super', {
+Object.defineProperty(Function.prototype, 'superclass', {
     get: function () {
         return Object.getPrototypeOf(this.prototype)
     },
 
     /**
-     * Allow overwriting of 'super' property
+     * Allow overwriting of 'superclass' property
      */
     set: function (x) {
-        Object.defineProperty(this, 'super', {
+        Object.defineProperty(this, 'superclass', {
             configurable: true,
             writable: true
         })
 
-        this.super = x
+        this.superclass = x
     }
 })
 Object.defineProperty(Function.prototype, '__super__', {
@@ -323,8 +323,6 @@ BObject.extend = function (parentOrProperties, properties) {
     // Add given properties to the prototype
     newObj.prototype = Object.create(parent.prototype);
     util.extend(newObj.prototype, properties)
-
-    newObj.superclass = parent.prototype;
 
     // Create new instance
     return newObj;
