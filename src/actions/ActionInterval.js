@@ -824,21 +824,12 @@ util.extend(Sequence, /** @lends cocos.actions.Sequence */{
         for (var i=1; i<actions.length; i++) {
             var now = actions[i].copy();
             if (now) {
-                prev = this.initFromPair(prev, now);
+                prev = new this({one: prev, two: now});;
             } else {
                 break;
             }
         }
         return prev;
-    },
-    
-    /** 
-     * Create sequence object from a pair of actions
-     */
-    initFromPair: function(a1, a2) {
-        var ret = new this();
-        ret.init.apply(ret, [{one: a1, two: a2}]);
-        return ret;
     }
 });
 

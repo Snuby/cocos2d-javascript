@@ -50,7 +50,9 @@ var objectID = 0;
  * @class
  * A bindable object. Allows observing and binding to its properties.
  */
-var BObject = function () {};
+function BObject () {
+    this.init.apply(this, arguments)
+}
 BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
     /**
      * Unique ID
@@ -252,6 +254,28 @@ BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
         return this._id;
     }
 });
+Object.defineProperty(Function.prototype, 'super', {
+    get: function () {
+        return Object.getPrototypeOf(this.prototype)
+    },
+
+    /**
+     * Allow overwriting of 'super' property
+     */
+    set: function (x) {
+        Object.defineProperty(this, 'super', {
+            configurable: true,
+            writable: true
+        })
+
+        this.super = x
+    }
+})
+Object.defineProperty(Function.prototype, '__super__', {
+    get: function () {
+        return Object.getPrototypeOf(this.prototype)
+    }
+})
 
 
 /**
@@ -259,8 +283,8 @@ BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
  * @returns {BObject} New instance of this object
  */
 BObject.create = function () {
-    var ret = new this();
-    ret.init.apply(ret, arguments);
+    var ret = Object.create(this.prototype);
+    ret.constructor.apply(ret, arguments);
     return ret;
 };
 
@@ -268,29 +292,40 @@ BObject.create = function () {
  * Create a new subclass by extending this one
  * @returns {Object} A new subclass of this object
  */
-BObject.extend = function() {
-    var newObj = function() {},
-        args = [],
-        i,
-        x;
+BObject.extend = function (parentOrProperties, properties) {
+    var parent
+    if (arguments.length < 2) {
+        parent = this
+        properties = parentOrProperties
+    } else {
+        parent = parentOrProperties
+    }
 
-    // Copy 'class' methods
-    for (x in this) {
-        if (this.hasOwnProperty(x)) {
-            newObj[x] = this[x];
+    if (arguments.length > 1 && this !== BObject) {
+        throw new Error("extend only accepts 1 argument")
+    }
+
+
+    var newObj = function () { 
+        BObject.apply(this, arguments);
+    }
+
+    var args = [], i, x;
+
+    // Copy 'static' properties
+    for (x in parent) {
+        if (parent.hasOwnProperty(x)) {
+            newObj[x] = parent[x];
         }
     }
 
 
     // Add given properties to the prototype
-    newObj.prototype = util.beget(this.prototype);
-    args.push(newObj.prototype);
-    for (i = 0; i<arguments.length; i++) {
-        args.push(arguments[i]);
-    }
-    util.extend.apply(null, args);
+    newObj.prototype = Object.create(parent.prototype);
+    util.extend(newObj.prototype, properties)
 
-    newObj.superclass = this.prototype;
+    newObj.superclass = parent.prototype;
+
     // Create new instance
     return newObj;
 };
