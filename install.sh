@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# vim:ff=unix
+
 if which npm > /dev/null
 then
     echo "NPM is installed. You should probably install Cocos2D JavaScript as an npm package using this command instead:\n\n    npm install -g .\n"
@@ -27,7 +29,9 @@ mkdir -p "$install_to"
 
 cd $DIR
 
-IFS=$'\n'
+# Set Internal Field Separator to new lines only
+IFS=$'
+'
 for file in `find * \( ! -regex '.*/\..*' \) -type f`
 do
     dst="$install_to/$file"
@@ -39,6 +43,7 @@ do
 
     cp "$file" "$dst"
 done
+unset IFS
 
 cd -
 
