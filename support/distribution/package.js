@@ -250,7 +250,7 @@ function mkdir(dir, mode) {
                 }
 
                 // Mac OS X
-                generateGZip(removeNodeBuilds(filesToPackage, 'darwin'), 'Cocos2D JavaScript v' + VERSION + ' for Mac');
+                generateZip(removeNodeBuilds(filesToPackage, 'darwin'), 'Cocos2D JavaScript v' + VERSION + ' for Mac');
 
                 // Linux
                 generateGZip(removeNodeBuilds(filesToPackage, 'linux'), 'cocos2d-javascript-v' + VERSION + '-linux');
