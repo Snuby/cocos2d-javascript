@@ -23,15 +23,21 @@ Linux or Mac OS X using Node.js and NPM
 ---------------------------------------
 
 If you have [Node.js][nodejs] and [npm][npm] installed you can install Cocos2D
-JavaScript as a package.
+JavaScript as a global package.
 
-    npm install cocos2d
+For the latest stable release:
 
-Linux or Mac OS X using ZIP archive
+    npm install -g cocos2d
+
+For the latest unstable:
+
+    npm install -g cocos2d@unstable
+
+Linux or Mac OS X using Zip archive
 -----------------------------------
 
 If you don't have, or don't want to use npm, you can install by downloading the
-latest ZIP.
+latest Zip.
 
 <http://cocos2d-javascript.org/downloads>
 
@@ -74,7 +80,7 @@ On Linux and Mac OS X from your terminal run:
     cd ~/my_first_project
     cocos server
 
-Now visit http://localhost:4000 and with a bit of luck you'll have something
+Now visit http://127.0.0.1:4000 and with a bit of luck you'll have something
 showing.
 
 Developing
@@ -118,7 +124,7 @@ reduction in size if your Web server is configured to gzip JavaScript files.
 Browser Support
 ===============
 
-Everything is designed to work in Firefox 3, Chrome, Safari, Opera and IE9+. If
+Everything is designed to work in Firefox 4, Chrome, Safari, Opera and IE9+. If
 that is not the case then please file a bug report.
 
 Documentation
