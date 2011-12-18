@@ -6,6 +6,21 @@ It is a 2D graphics engine which allows rapid development of 2D games and
 graphical applications which can run in any modern Web browser without the need
 for third-party plug-ins such as Adobe Flash.
 
+Upgrading
+=========
+
+We don't currently support running multiple versions of Cocos2D JavaScript on
+the same machine so you should first uninstall the old version before installing
+a new version.
+
+If you really do want to run multiple versions on the same machine you will
+have to do a manual install and launch the appropriate 'cocos' command
+directly.
+
+To upgrade your project from v0.1 you should create a new project using the
+'cocos' command and then copy the _src_ folder from your old project into the
+new one. There may be backwards incompatibilities will you'll need to debug.
+
 Installation
 ============
 
@@ -16,6 +31,13 @@ Windows
 -------
 
 Download and launch the installer.
+
+<http://cocos2d-javascript.org/downloads>
+
+Mac OS X
+--------
+
+Download the DMG and launch the installer.
 
 <http://cocos2d-javascript.org/downloads>
 
@@ -69,7 +91,7 @@ On Linux and Mac OS X open your terminal and run:
 
     cocos new ~/my_first_project
 
-This will create a barebones project which simply draws the project name in the
+This will create a bare-bones project which simply draws the project name in the
 centre of the screen.
 
 To test that it's working, on Windows double click the 'Serve project' shortcut

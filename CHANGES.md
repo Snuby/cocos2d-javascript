@@ -4,7 +4,8 @@ v0.2
 New Features
 ------------
 
-* Optionally load resources (images, tile maps, etc.) externally rather than embedding.
+* Completely rewrote and separated the build system into a new project called [Jah][jah]
+* Optionally load resources (images, tile maps, etc.) externally rather than embedding
 * ProgressBar while preloading external resources
 * Parse TMX Map properties
 * Opacity property for all Nodes
@@ -64,3 +65,5 @@ v0.1
 ====
 
 Everything
+
+[jah]: https://github.com/ryanwilliams/jah
