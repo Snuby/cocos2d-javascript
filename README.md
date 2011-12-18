@@ -19,7 +19,7 @@ directly.
 
 To upgrade your project from v0.1 you should create a new project using the
 'cocos' command and then copy the _src_ folder from your old project into the
-new one. There may be backwards incompatibilities will you'll need to debug.
+new one. There may be backwards incompatibilities which you'll need to debug.
 
 Installation
 ============
