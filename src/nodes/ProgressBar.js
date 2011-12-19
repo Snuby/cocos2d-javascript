@@ -38,8 +38,8 @@ var ProgressBar = Node.extend(/** @lends cocos.nodes.ProgressBar# */{
             this.addChild({child: s});
         }
 
-        events.addListener(this, 'maxvalue_changed', util.callback(this, 'updateImages'));
-        events.addListener(this, 'value_changed', util.callback(this, 'updateImages'));
+        events.addListener(this, 'maxvalue_changed', this.updateImages.bind(this));
+        events.addListener(this, 'value_changed', this.updateImages.bind(this));
 
         this.updateImages();
     },

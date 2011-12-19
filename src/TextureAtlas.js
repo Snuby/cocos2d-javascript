@@ -61,13 +61,10 @@ var TextureAtlas = BObject.extend(/** @lends cocos.TextureAtlas# */{
 
 
     drawQuads: function (ctx) {
-        util.each(this.quads, util.callback(this, function (quad) {
-            if (!quad) {
-                return;
-            }
-
+        this.quads.forEach(function (quad) {
+            if (!quad) return;
             this.drawQuad(ctx, quad);
-        }));
+        }.bind(this));
     },
 
     drawQuad: function (ctx, quad) {

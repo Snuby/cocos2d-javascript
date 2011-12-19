@@ -36,7 +36,7 @@ var Texture2D = BObject.extend(/** @lends cocos.Texture2D# */{
         this.size = {width: 0, height: 0};
 
         if (data instanceof RemoteResource) {
-            events.addListener(data, 'load', util.callback(this, this.dataDidLoad));
+            events.addListener(data, 'load', this.dataDidLoad.bind(this));
             this.set('imgElement', data.load());
         } else {
             this.set('imgElement', data);

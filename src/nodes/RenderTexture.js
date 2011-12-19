@@ -31,7 +31,7 @@ var RenderTexture = Node.extend(/** @lends cocos.nodes.RenderTexture# */{
         var width = opts.width,
             height = opts.height;
 
-        evt.addListener(this, 'contentsize_changed', util.callback(this, this._resizeCanvas));
+        evt.addListener(this, 'contentsize_changed', this._resizeCanvas.bind(this));
 
         this.canvas = document.createElement('canvas');
         this.context = this.canvas.getContext('2d');

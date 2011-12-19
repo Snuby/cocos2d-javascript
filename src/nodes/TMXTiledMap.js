@@ -45,7 +45,7 @@ var TMXTiledMap = Node.extend(/** @lends cocos.nodes.TMXTiledMap# */{
 
         // Add layers to map
         var idx = 0;
-        util.each(mapInfo.layers, util.callback(this, function (layerInfo) {
+        util.each(mapInfo.layers, function (layerInfo) {
             if (layerInfo.get('visible')) {
                 var child = this.parseLayer({layerInfo: layerInfo, mapInfo: mapInfo});
                 this.addChild({child: child, z: idx, tag: idx});
@@ -58,7 +58,7 @@ var TMXTiledMap = Node.extend(/** @lends cocos.nodes.TMXTiledMap# */{
 
                 idx++;
             }
-        }));
+        }.bind(this));
     },
     
     parseLayer: function (opts) {

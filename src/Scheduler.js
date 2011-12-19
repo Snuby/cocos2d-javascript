@@ -111,7 +111,7 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
             throw "cocos.Scheduler. Trying to schedule a method with a pause value different than the target";
         }
 
-        var timer = Timer.create({callback: util.callback(target, method), interval: interval});
+        var timer = Timer.create({callback: target[method].bind(target), interval: interval});
         element.timers.push(timer);
     },
 
@@ -221,7 +221,7 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
         if (element) {
             for (var i=0; i<element.timers.length; i++) {
                 // Compare callback function
-                if (element.timers[i].callback == util.callback(opts.target, opts.method)) {
+                if (element.timers[i].callback == opts.target[opts.method].bind(opts.target)) {
                     var timer = element.timers.splice(i, 1);
                     timer = null;
                 }

@@ -53,10 +53,10 @@ var Sprite = Node.extend(/** @lends cocos.nodes.Sprite# */{
             rect    = frame.get('rect');
         }
 
-        util.each(['scale', 'scaleX', 'scaleY', 'rect', 'flipX', 'flipY', 'contentSize'], util.callback(this, function (key) {
-            evt.addListener(this, key.toLowerCase() + '_changed', util.callback(this, this._updateQuad));
-        }));
-        evt.addListener(this, 'textureatlas_changed', util.callback(this, this._updateTextureQuad));
+        util.each(['scale', 'scaleX', 'scaleY', 'rect', 'flipX', 'flipY', 'contentSize'], function (key) {
+            evt.addListener(this, key.toLowerCase() + '_changed', this._updateQuad.bind(this));
+        }.bind(this));
+        evt.addListener(this, 'textureatlas_changed', this._updateTextureQuad.bind(this));
 
         if (file || texture) {
             textureAtlas = TextureAtlas.create({file: file, texture: texture});

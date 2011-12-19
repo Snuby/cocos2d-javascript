@@ -47,9 +47,7 @@ var Preloader = BObject.extend(/** @lends cocos.Preloader# */{
                 var file = resource(uri);
 
                 // Notify when a resource has loaded
-                this._listeners[uri] = events.addListener(file, 'load', util.callback(this, (function(uri) {
-                    return function () { this.didLoadResource(uri); };
-                })(uri)));
+                this._listeners[uri] = events.addListener(file, 'load', this.didLoadResource.bind(this, uri));
 
                 file.load()
             }

@@ -47,7 +47,7 @@ var BatchNode = Node.extend(/** @lends cocos.nodes.BatchNode# */{
         var size = opts.size || geo.sizeMake(1, 1);
         this.set('partialDraw', opts.partialDraw);
 
-        evt.addListener(this, 'contentsize_changed', util.callback(this, this._resizeCanvas));
+        evt.addListener(this, 'contentsize_changed', this._resizeCanvas.bind(this));
         
         this._dirtyRects = [];
         this.set('contentRect', geo.rectMake(0, 0, size.width, size.height));
@@ -76,9 +76,9 @@ var BatchNode = Node.extend(/** @lends cocos.nodes.BatchNode# */{
                            'anchorpoint_before_changed',
                            'opacity_before_changed',
                            'visible_before_changed'];
-        evt.addListener(child, watchEvents, util.callback(this, function () {
+        evt.addListener(child, watchEvents, function () {
             this.addDirtyRegion(child.get('boundingBox'));
-        }));
+        }.bind(this));
 
         this.addDirtyRegion(child.get('boundingBox'));
     },
@@ -203,10 +203,10 @@ var BatchNode = Node.extend(/** @lends cocos.nodes.BatchNode# */{
 
     onEnter: function () {
         if (this.get('partialDraw')) {
-            evt.addListener(this.get('parent'), 'istransformdirty_changed', util.callback(this, function () {
+            evt.addListener(this.get('parent'), 'istransformdirty_changed', function () {
                 var box = this.get('visibleRect');
                 this.addDirtyRegion(box);
-            }));
+            }.bind(this));
         }
     }
 });

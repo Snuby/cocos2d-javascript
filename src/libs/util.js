@@ -178,6 +178,7 @@ var util = {
     },
 
     callback: function(target, method) {
+        console.warn("cocos.util.callback is deprecated. Use the built-in Function.bind instead")
         if (typeof(method) == 'string') {
             var methodName = method;
             method = target[method];

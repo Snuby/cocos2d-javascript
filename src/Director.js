@@ -157,10 +157,10 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
             this.set('preloadScene', preloader);
         }
 
-        events.addListener(preloader, 'complete', util.callback(this, function (preloader) {
+        events.addListener(preloader, 'complete', function (preloader) {
             this.isReady = true;
             events.trigger(this, 'ready', this);
-        }));
+        }.bind(this));
 
         this.pushScene(preloader);
         this.startAnimation();
@@ -232,7 +232,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
     animate: function() {
         this.drawScene();
-        window.requestAnimFrame(util.callback(this, 'animate'), this.canvas);
+        window.requestAnimFrame(this.animate.bind(this), this.canvas);
     },
 
     /**
@@ -430,7 +430,7 @@ var DirectorFixedSpeed = Director.extend(/** @lends cocos.DirectorFixedSpeed */{
      * cocos.Directory#stopAnimation was called earlier.
      */
     startAnimation: function () {
-        this._animationTimer = setInterval(util.callback(this, 'drawScene'), 1000 / this.get('frameRate'));
+        this._animationTimer = setInterval(this.drawScene.bind(this), 1000 / this.get('frameRate'));
         this.drawScene();
     }
 

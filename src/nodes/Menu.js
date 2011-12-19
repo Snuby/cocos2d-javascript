@@ -54,9 +54,9 @@ var Menu = Layer.extend(/** @lends cocos.nodes.Menu# */{
 
         if (items) {
             var z = 0;
-            util.each(items, util.callback(this, function (item) {
+            items.forEach(function (item) {
                 this.addChild({child: item, z: z++});
-            }));
+            }.bind(this));
         }
 
         
