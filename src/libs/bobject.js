@@ -292,40 +292,36 @@ BObject.create = function () {
  * Create a new subclass by extending this one
  * @returns {Object} A new subclass of this object
  */
-BObject.extend = function (parentOrProperties, properties) {
-    var parent
+BObject.extend = function (targetOrProperties, parent) {
+    var target, properties
     if (arguments.length < 2) {
+        properties = targetOrProperties
         parent = this
-        properties = parentOrProperties
     } else {
-        parent = parentOrProperties
+        target = targetOrProperties
     }
 
     if (arguments.length > 1 && this !== BObject) {
         throw new Error("extend only accepts 1 argument")
     }
 
-
-    var newObj = function () { 
-        BObject.apply(this, arguments);
+    target = target || function () {
+        this.init.apply(this, arguments)
     }
 
     var args = [], i, x;
 
     // Copy 'static' properties
-    for (x in parent) {
-        if (parent.hasOwnProperty(x)) {
-            newObj[x] = parent[x];
-        }
-    }
-
+    util.extend(target, parent)
 
     // Add given properties to the prototype
-    newObj.prototype = Object.create(parent.prototype);
-    util.extend(newObj.prototype, properties)
+    target.prototype = Object.create(parent.prototype)
+    if (properties) {
+        util.extend(target.prototype, properties)
+    }
 
     // Create new instance
-    return newObj;
+    return target
 };
 
 /**

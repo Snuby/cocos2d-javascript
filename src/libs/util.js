@@ -109,7 +109,7 @@ var util = {
             throw "You must provide at least a target and 1 object to extend from"
         }
 
-        var i, j, obj, key, val;
+        var i, j, obj, key, val, descriptor;
 
         for (i = 1; i < arguments.length; i++) {
             obj = arguments[i];
@@ -119,7 +119,16 @@ var util = {
                     continue;
                 }
 
-                val = obj[key];
+                descriptor = Object.getOwnPropertyDescriptor(obj, key)
+
+                // Accessor descriptories are copied as is
+                if (descriptor.get || descriptor.set) {
+                    Object.defineProperty(target, key, descriptor);
+                    continue;
+                }
+
+                val = descriptor.value;
+
                 // Don't copy undefineds or references to target (would cause infinite loop)
                 if (val === undefined || val === target) {
                     continue;
@@ -130,7 +139,6 @@ var util = {
                     val.base = target[key];
                     val._isProperty = val.base._isProperty;
                 }
-                target[key] = val;
 
                 if (val instanceof Function) {
                     // If this function observes make a reference to it so we can set
@@ -160,21 +168,16 @@ var util = {
 
                         target._computedProperties.push(key)
                     }
-                }
-        
-            }
-        }
+                } // if (val instanceof Function)
+
+                descriptor.value = val;
+
+                Object.defineProperty(target, key, descriptor);
+            } // for (key in obj)
+        } // for (i = 1; i < arguments.length; i++)
 
 
         return target;
-    },
-
-    beget: function(o) {
-        var F = function(){};
-        F.prototype = o;
-        var ret  = new F();
-        F.prototype = null;
-        return ret;
     },
 
     callback: function(target, method) {

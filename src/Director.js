@@ -10,22 +10,6 @@ var util = require('util'),
     EventDispatcher = require('./EventDispatcher').EventDispatcher,
     Scene = require('./nodes/Scene').Scene;
 
-
-/**
- * requestAnimationFrame for smart animating
- * @see http://paulirish.com/2011/requestanimationframe-for-smart-animating/
- */
-window.requestAnimFrame = (function (){
-    return  window.requestAnimationFrame       || 
-            window.webkitRequestAnimationFrame || 
-            window.mozRequestAnimationFrame    || 
-            window.oRequestAnimationFrame      || 
-            window.msRequestAnimationFrame     || 
-            function (callback) {
-                window.setTimeout(callback, 1000 / 30);
-            };
-})();
-
 var Director = BObject.extend(/** @lends cocos.Director# */{
     backgroundColor: 'rgb(0, 0, 0)',
     canvas: null,
@@ -231,7 +215,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
     animate: function() {
         this.drawScene();
-        window.requestAnimFrame(this.animate.bind(this), this.canvas);
+        window.requestAnimationFrame(this.animate.bind(this), this.canvas);
     },
 
     /**
@@ -380,17 +364,17 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
 });
 
-/**
- * Class methods
- */
-util.extend(Director, /** @lends cocos.Director */{
+Object.defineProperty(Director, 'sharedDirector', {
+    enumerable: true,
+
     /**
      * A shared singleton instance of cocos.Director
      *
+     * @memberOf cocos.Director
      * @getter sharedDirector
      * @type cocos.Director
      */
-    get_sharedDirector: function (key) {
+    get: function () {
         if (!Director._instance) {
             Director._instance = this.create();
         }
