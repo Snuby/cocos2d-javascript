@@ -214,8 +214,8 @@ var CallFunc = ActionInstant.extend(/** @lends cocos.actions.CallFunc# */{
         
         // Save target & method so that copy() can recreate callback
         this.target = opts.target;
-        this.method = opts.method;
-        this.callback = this.target[this.method].bind(this.target);
+        this.method = (typeof opts.method == 'function') ? opts.method : this.target[opts.method];
+        this.callback = this.method.bind(this.target);
     },
     
     startWithTarget: function(target) {
