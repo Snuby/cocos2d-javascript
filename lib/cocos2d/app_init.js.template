@@ -1,0 +1,54 @@
+(function (window) {
+    var scripts = ${scriptArray}
+      , containerID = "${containerID}"
+
+
+
+
+
+
+
+
+
+    function initializeApplication () {
+        if (window.document.readyState != 'complete') return
+        window.document.removeEventListener(listener)
+
+        var container = window.document.getElementById(containerID)
+          , frame = window.document.createElement('iframe')
+        frame.style.width = container.clientWidth + 'px'
+        frame.style.height = container.clientHeight + 'px'
+        frame.style.border = '0'
+        frame.style.display = 'block'
+        frame.style.padding = '0'
+        frame.style.margin = '0'
+
+        container.innerHTML = ''
+        container.appendChild(frame)
+
+        var frameBody = frame.contentWindow.document.body
+        frameBody.style.padding = '0'
+        frameBody.style.margin = '0'
+        frameBody.style.background = 'transparent'
+
+        var i = 0
+        ;(function nextScript () {
+            if (scripts.length > i) {
+                addScript(frameBody, scripts[i], nextScript)
+            }
+            i++
+        })()
+    }
+
+    function addScript (body, script, callback) {
+        s = document.createElement('script')
+        s.type = 'text/javascript'
+        s.defer = true
+        s.src = script
+        s.onload = callback
+        body.appendChild(s)
+    }
+
+    var listener = window.document.addEventListener('readystatechange', initializeApplication)
+    initializeApplication()
+})(window)

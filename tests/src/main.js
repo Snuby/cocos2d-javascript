@@ -2,12 +2,13 @@
 /*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
 "use strict";
 
-var params = window.location.search;
+var params = top.window.location.search;
 if (params) {
     var mod = params.split('=')[1];
     require('./' + mod).main();
 } else {
-    var c = document.getElementById('cocos2d-tests');
+    var c = document.body;
+    c.style.fontFamily = 'sans-serif';
     c.style.textAlign = 'center';
     c.style.fontSize = '20pt';
     c.style.lineHeight = c.clientHeight + 'px';

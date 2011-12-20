@@ -69,9 +69,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      * @param {HTMLElement} view Any HTML element to add the application to
      */
     attachInView: function (view) {
-        if (!view.tagName) {
-            throw "Director.attachInView must be given a HTML DOM Node";
-        }
+        view = view || document.body;
 
         while (view.firstChild) {
             view.removeChild(view.firstChild);
@@ -79,6 +77,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
 
         var canvas = document.createElement('canvas');
+        canvas.style.verticalAlign = 'bottom';
         this.set('canvas', canvas);
         canvas.setAttribute('width', view.clientWidth);
         canvas.setAttribute('height', view.clientHeight);

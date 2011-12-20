@@ -39,7 +39,7 @@ exports.main = function () {
     var director = cocos.Director.get('sharedDirector')
 
     // Attach director to our <div> element
-    director.attachInView(document.getElementById('${filename}_app'))
+    director.attachInView()
 
     // Wait for the director to finish preloading our assets
     events.addListener(director, 'ready', function (director) {
