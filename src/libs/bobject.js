@@ -254,28 +254,6 @@ BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
         return this._id;
     }
 });
-Object.defineProperty(Function.prototype, 'superclass', {
-    get: function () {
-        return Object.getPrototypeOf(this.prototype)
-    },
-
-    /**
-     * Allow overwriting of 'superclass' property
-     */
-    set: function (x) {
-        Object.defineProperty(this, 'superclass', {
-            configurable: true,
-            writable: true
-        })
-
-        this.superclass = x
-    }
-})
-Object.defineProperty(Function.prototype, '__super__', {
-    get: function () {
-        return Object.getPrototypeOf(this.prototype)
-    }
-})
 
 
 /**
