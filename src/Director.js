@@ -210,12 +210,16 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      * cocos.Directory#stopAnimation was called earlier.
      */
     startAnimation: function () {
+        this._animating = true;
         this.animate();
     },
 
     animate: function() {
-        this.drawScene();
-        window.requestAnimationFrame(this.animate.bind(this), this.canvas);
+        if (this._animating) {
+            this.drawScene();
+            this.animate._bound = this.animate._bound || this.animate.bind(this);
+            window.requestAnimationFrame(this.animate._bound, this.canvas);
+        }
     },
 
     /**
@@ -228,6 +232,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
             clearInterval(this._animationTimer);
             this._animationTimer = null;
         }
+        this._animating = false;
     },
 
     /**
