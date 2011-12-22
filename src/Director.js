@@ -133,6 +133,10 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
     },
 
     runPreloadScene: function () {
+        if (!this.canvas) {
+            this.attachInView();
+        }
+
         var preloader = this.get('preloadScene');
         if (!preloader) {
             var PreloadScene = require('./nodes/PreloadScene').PreloadScene;
@@ -210,6 +214,10 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      * cocos.Directory#stopAnimation was called earlier.
      */
     startAnimation: function () {
+        if (!this.canvas) {
+            this.attachInView();
+        }
+
         this._animating = true;
         this.animate();
     },
