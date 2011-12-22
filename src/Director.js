@@ -371,8 +371,7 @@ Object.defineProperty(Director, 'sharedDirector', {
      * A shared singleton instance of cocos.Director
      *
      * @memberOf cocos.Director
-     * @getter sharedDirector
-     * @type cocos.Director
+     * @getter {cocos.Director} sharedDirector
      */
     get: function () {
         if (!Director._instance) {
