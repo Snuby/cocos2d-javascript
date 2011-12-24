@@ -111,11 +111,8 @@ var Node = BObject.extend(/** @lends cocos.nodes.Node# */{
         this.position = ccp(0, 0);
         this.children = [];
 
-        util.each(['scaleX', 'scaleY', 'rotation', 'position', 'anchorPoint', 'contentSize', 'isRelativeAnchorPoint'], function (key) {
-            evt.addListener(this, key.toLowerCase() + '_changed', this._dirtyTransform.bind(this));
-        }.bind(this));
-        evt.addListener(this, 'anchorpoint_changed', this._updateAnchorPointInPixels.bind(this));
-        evt.addListener(this, 'contentsize_changed', this._updateAnchorPointInPixels.bind(this));
+        evt.addPropertyListener(this, 'scaleX scaleY rotation position anchorPoint contentSize isRelativeAnchorPoint'.split(' '), 'change', this._dirtyTransform.bind(this));
+        evt.addPropertyListener(this, ['anchorPoint', 'contentSize'], 'change', this._updateAnchorPointInPixels.bind(this));
     },
 
     /**

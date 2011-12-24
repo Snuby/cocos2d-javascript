@@ -31,7 +31,7 @@ var Layer = Node.extend(/** @lends cocos.nodes.Layer# */{
         this.anchorPoint = ccp(0.5, 0.5);
         this.set('contentSize', s);
 
-        evt.addListener(this, 'ismouseenabled_changed', function () {
+        evt.addPropertyListener(this, 'isMouseEnabled', 'change', function () {
             if (this.isRunning) {
                 if (this.isMouseEnabled) {
                     EventDispatcher.get('sharedDispatcher').addMouseDelegate({delegate: this, priority: this.get('mouseDelegatePriority')});
@@ -42,7 +42,7 @@ var Layer = Node.extend(/** @lends cocos.nodes.Layer# */{
         }.bind(this));
 
 
-        evt.addListener(this, 'iskeyboardenabled_changed', function () {
+        evt.addPropertyListener(this, 'isKeyboardEnabled', 'change', function () {
             if (this.isRunning) {
                 if (this.isKeyboardEnabled) {
                     EventDispatcher.get('sharedDispatcher').addKeyboardDelegate({delegate: this, priority: this.get('keyboardDelegatePriority')});

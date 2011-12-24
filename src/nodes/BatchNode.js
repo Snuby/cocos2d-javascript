@@ -47,7 +47,7 @@ var BatchNode = Node.extend(/** @lends cocos.nodes.BatchNode# */{
         var size = opts.size || geo.sizeMake(1, 1);
         this.set('partialDraw', opts.partialDraw);
 
-        evt.addListener(this, 'contentsize_changed', this._resizeCanvas.bind(this));
+        evt.addPropertyListener(this, 'contentSize', 'change', this._resizeCanvas.bind(this));
         
         this._dirtyRects = [];
         this.set('contentRect', geo.rectMake(0, 0, size.width, size.height));
@@ -69,14 +69,8 @@ var BatchNode = Node.extend(/** @lends cocos.nodes.BatchNode# */{
         // TODO handle texture resize
 
         // Watch for changes in child
-        var watchEvents = ['position_before_changed',
-                           'scalex_before_changed',
-                           'scaley_before_changed',
-                           'rotation_before_changed',
-                           'anchorpoint_before_changed',
-                           'opacity_before_changed',
-                           'visible_before_changed'];
-        evt.addListener(child, watchEvents, function () {
+        var watchProperties = 'position scaleX scaleY rotation anchorPoint opacity visible'.split(' ');
+        evt.addPropertyListener(child, watchProperties, 'beforechange', function () {
             this.addDirtyRegion(child.get('boundingBox'));
         }.bind(this));
 
@@ -86,7 +80,7 @@ var BatchNode = Node.extend(/** @lends cocos.nodes.BatchNode# */{
     removeChild: function (opts) {
         BatchNode.superclass.removeChild.call(this, opts);
 
-        // TODO remove istransformdirty_changed and visible_changed listeners
+        // TODO remove isTransformDirty and visible property listeners
 
         this.set('dirty', true);
     },
@@ -202,8 +196,8 @@ var BatchNode = Node.extend(/** @lends cocos.nodes.BatchNode# */{
     },
 
     onEnter: function () {
-        if (this.get('partialDraw')) {
-            evt.addListener(this.get('parent'), 'istransformdirty_changed', function () {
+        if (this.partialDraw) {
+            evt.addPropertyListener(this.parent, 'isTransformDirty', 'change', function () {
                 var box = this.get('visibleRect');
                 this.addDirtyRegion(box);
             }.bind(this));
