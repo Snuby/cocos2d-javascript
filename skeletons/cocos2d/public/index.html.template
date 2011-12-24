@@ -15,8 +15,9 @@
             }
             #${containerID} {
                 border: 1px solid #000;
-                width: 480px;
-                height: 320px;
+                width: 640px;
+                height: 480px;
+                display: block;
                 margin: 0 auto;
                 -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.75);
                 -moz-box-shadow:    0 3px 10px rgba(0, 0, 0, 0.75);
@@ -28,6 +29,6 @@
     <body>
         ${scripts}
         <h1>${appname}</h1>
-        <div id="${containerID}">${appname} is loading...</div>
+        <div id="${containerID}"></div>
     </body>
 </html>

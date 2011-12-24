@@ -1,53 +1,62 @@
 "use strict"  // Use strict JavaScript mode
 
+// Pull in the modules we're going to use
 var cocos  = require('cocos2d')   // Import the cocos2d module
+  , nodes  = cocos.nodes          // Convenient access to 'nodes'
   , events = require('events')    // Import the events module
   , geo    = require('geometry')  // Import the geometry module
   , ccp    = geo.ccp              // Short hand to create points
 
-var ${classname} = cocos.nodes.Layer.extend(/** @lends ${classname}# */{
-    /**
-     * @class Initial application layer
-     * @extends cocos.nodes.Layer
-     * @constructs
-     */
-    init: function () {
-        // You must always call the super class version of init
-        ${classname}.superclass.init.call(this)
+// Convenient access to some constructors
+var Layer    = nodes.Layer
+  , Scene    = nodes.Scene
+  , Label    = nodes.Label
+  , Director = cocos.Director
 
-        // Get size of canvas
-        var s = cocos.Director.get('sharedDirector.winSize')
+/**
+ * @class Initial application layer
+ * @extends cocos.nodes.Layer
+ */
+function ${classname} () {
+    // You must always call the super class constructor
+    ${classname}.superclass.constructor.call(this)
 
-        // Create label
-        var label = cocos.nodes.Label.create({ string: '${appname}', fontName: 'Arial', fontSize: 76 })
+    // Get size of canvas
+    var s = Director.sharedDirector.winSize
 
-        // Add label to layer
-        this.addChild({ child: label, z:1 })
+    // Create label
+    var label = new Label({ string:   '${appname}'
+                          , fontName: 'Arial'
+                          , fontSize: 76
+                          })
 
-        // Position the label in the centre of the view
-        label.set('position', ccp(s.width / 2, s.height / 2))
-    }
-})
+    // Position the label in the centre of the view
+    label.position = ccp(s.width / 2, s.height / 2)
+
+    // Add label to layer
+    this.addChild(label)
+}
+
+// Inherit from cocos.nodes.Layer
+${classname}.inherit(Layer)
 
 /**
  * Entry point for the application
  */
-exports.main = function () {
+function main () {
     // Initialise application
 
-    // Get director
-    var director = cocos.Director.get('sharedDirector')
-
-    // Attach director to our <div> element
-    director.attachInView()
+    // Get director singleton
+    var director = Director.sharedDirector
 
     // Wait for the director to finish preloading our assets
     events.addListener(director, 'ready', function (director) {
-        // Create a scene
-        var scene = cocos.nodes.Scene.create()
+        // Create a scene and layer
+        var scene = new Scene()
+          , layer = new ${classname}()
 
         // Add our layer to the scene
-        scene.addChild({ child: ${classname}.create() })
+        scene.addChild(layer)
 
         // Run the scene
         director.replaceScene(scene)
@@ -56,3 +65,6 @@ exports.main = function () {
     // Preload our assets
     director.runPreloadScene()
 }
+
+
+exports.main = main
