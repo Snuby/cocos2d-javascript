@@ -83,9 +83,18 @@ var SpriteDemo = nodes.Layer.extend({
         }
 
 
-        var item1 = nodes.MenuItemImage.create({normalImage: module.dirname + "/resources/b1.png", selectedImage: module.dirname + "/resources/b2.png", callback: util.callback(this, 'backCallback')});
-        var item2 = nodes.MenuItemImage.create({normalImage: module.dirname + "/resources/r1.png", selectedImage: module.dirname + "/resources/r2.png", callback: util.callback(this, 'restartCallback')});
-        var item3 = nodes.MenuItemImage.create({normalImage: module.dirname + "/resources/f1.png", selectedImage: module.dirname + "/resources/f2.png", callback: util.callback(this, 'nextCallback')});
+        var item1 = nodes.MenuItemImage.create({ normalImage: module.dirname + "/resources/b1.png"
+                                               , selectedImage: module.dirname + "/resources/b2.png"
+                                               , callback: this.backCallback.bind(this)
+                                               });
+        var item2 = nodes.MenuItemImage.create({ normalImage: module.dirname + "/resources/r1.png"
+                                               , selectedImage: module.dirname + "/resources/r2.png"
+                                               , callback: this.restartCallback.bind(this)
+                                               });
+        var item3 = nodes.MenuItemImage.create({ normalImage: module.dirname + "/resources/f1.png"
+                                               , selectedImage: module.dirname + "/resources/f2.png"
+                                               , callback: this.nextCallback.bind(this)
+                                               });
 
         var menu = nodes.Menu.create({items: [item1, item2, item3]});
 
