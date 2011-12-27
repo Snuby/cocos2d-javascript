@@ -3,8 +3,7 @@
 "use strict";
 
 var util = require('util'),
-    path = require('path'),
-    legacy = require('./legacy')
+    path = require('path')
 
 var modules = 'TextureAtlas Texture2D Preloader SpriteFrame SpriteFrameCache Director Animation AnimationCache Scheduler ActionManager TMXXMLParser'.split(' ');
 
@@ -19,7 +18,5 @@ var cocos = {
 util.each(modules, function (mod, i) {
     util.extend(cocos, require('./' + mod));
 });
-
-legacy.applyAccessors(require('./Director').Director);
 
 module.exports = cocos;

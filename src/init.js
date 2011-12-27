@@ -4,6 +4,8 @@ exports.main = function () {
     require.paths.push(path.join(__dirname, 'libs'))
 
     require('./js_extensions')
+    require('./legacy')
+
 
     // Load default cocos2d config
     var config = require('./config')
