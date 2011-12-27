@@ -1,58 +1,131 @@
-/*globals module exports resource require BObject BArray FLIP_Y_AXIS SHOW_REDRAW_REGIONS*/
-/*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
-"use strict";
+'use strict'
 
-var util = require('util'),
-    geo = require('geometry'),
-    ccp = geo.ccp,
-    events    = require('events'),
-    Scheduler = require('./Scheduler').Scheduler,
-    EventDispatcher = require('./EventDispatcher').EventDispatcher,
-    Scene = require('./nodes/Scene').Scene;
+var util   = require('util')
+  , events = require('events')
+  , geo    = require('geometry')
+  , ccp    = geo.ccp
 
-var Director = BObject.extend(/** @lends cocos.Director# */{
-    backgroundColor: 'rgb(0, 0, 0)',
-    canvas: null,
-    context: null,
-    sceneStack: null,
-    winSize: null,
-    isPaused: false,
-    maxFrameRate: 30,
-    displayFPS: false,
-    preloadScene: null,
-    isReady: false,
+var Scene           = require('./nodes/Scene').Scene
+  , EventDispatcher = require('./EventDispatcher').EventDispatcher
+  , Scheduler       = require('./Scheduler').Scheduler
 
-    // Time delta
-    dt: 0,
-    nextDeltaTimeZero: false,
-    lastUpdate: 0,
+/**
+ * @class
+ * Creates and handles the main view and manages how and when to execute the
+ * Scenes.
+ *
+ * This class is a singleton so don't instantiate it yourself, instead use
+ * cocos.Director.sharedDirector to return the instance.
+ *
+ * @memberOf cocos
+ * @singleton
+ */
+function Director () {
+    Director.superclass.constructor.call(this)
+    this.sceneStack = []
 
-    _nextScene: null,
+    // Prevent writing to some properties
+    util.makeReadonly(this, 'canvas context sceneStack winSize isReady'.w)
+}
 
-    /**
-     * <p>Creates and handles the main view and manages how and when to execute the
-     * Scenes.</p>
-     *
-     * <p>This class is a singleton so don't instantiate it yourself, instead use
-     * cocos.Director.get('sharedDirector') to return the instance.</p>
-     *
-     * @memberOf cocos
-     * @constructs
-     * @extends BObject
-     * @singleton
+Director.prototype = /** @lends cocos.Director# */
+  { /**
+     * Background colour of the canvas. It can be any valid CSS colour.
+     * @type String
      */
-    init: function () {
-        Director.superclass.init.call(this);
-
-        this.set('sceneStack', []);
-    },
+    backgroundColor: 'rgb(0, 0, 0)'
 
     /**
-     * Append to a HTML element. It will create a canvas tag
+     * Canvas HTML element
+     * @type HTMLCanvasElement
+     * @readonly
+     */
+  , canvas: null
+
+    /**
+     * Canvas rendering context
+     * @type CanvasRenderingContext2D
+     * @readonly
+     */
+  , context: null
+
+    /**
+     * Stack of scenes
+     * @type cocos.nodes.Scene[]
+     * @readonly
+     */
+  , sceneStack: null
+
+    /**
+     * Size of the canvas
+     * @type geometry.Size
+     * @readonly
+     */
+  , winSize: null
+
+    /**
+     * Whether the scene is paused. When true the framerate will drop to conserve CPU
+     * @type Boolean
+     */
+  , isPaused: false
+
+    /**
+     * Maximum possible framerate
+     * @type Integer
+     */
+  , maxFrameRate: 30
+
+    /**
+     * Should the framerate be drawn in the corner
+     * @type Boolean
+     */
+  , displayFPS: false
+
+    /**
+     * Scene that draws the preload progres bar
+     * @type cocos.nodes.PreloadScene
+     */
+  , preloadScene: null
+
+    /**
+     * Has everything been preloaded and ready to use
+     * @type Boolean
+     * @readonly
+     */
+  , isReady: false
+
+    /**
+     * Number of milliseconds since last frame
+     * @type Float
+     * @readonly
+     */
+  , dt: 0
+
+
+    /**
+     * @private
+     */
+  , _nextDeltaTimeZero: false
+
+    /**
+     * @private
+     * @type Float
+     */
+  , _lastUpdate: 0
+
+    /**
+     * @private
+     * @type cocos.nodes.Scene
+     */
+  , _nextScene: null
+
+    /**
+     * Append to an HTML element. It will create this canvas tag and attach
+     * event listeners
      *
      * @param {HTMLElement} view Any HTML element to add the application to
      */
-    attachInView: function (view) {
+  , attachInView: function (view) {
         view = view || document.body;
 
         while (view.firstChild) {
@@ -62,12 +135,12 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
         var canvas = document.createElement('canvas');
         canvas.style.verticalAlign = 'bottom';
-        this.set('canvas', canvas);
+        this._canvas = canvas;
         canvas.setAttribute('width', view.clientWidth);
         canvas.setAttribute('height', view.clientHeight);
 
         var context = canvas.getContext('2d');
-        this.set('context', context);
+        this._context = context;
 
         if (FLIP_Y_AXIS) {
             context.translate(0, view.clientHeight);
@@ -76,7 +149,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
         view.appendChild(canvas);
 
-        this.set('winSize', {width: view.clientWidth, height: view.clientHeight});
+        this._winSize = {width: view.clientWidth, height: view.clientHeight};
 
 
         // Setup event handling
@@ -130,28 +203,35 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
         document.documentElement.addEventListener('keydown', keyDown, false);
         document.documentElement.addEventListener('keyup', keyUp, false);
-    },
+    }
 
-    runPreloadScene: function () {
+    /**
+     * Create and push a Preload Scene which will draw a progress bar while
+     * also preloading all assets.
+     *
+     * If you wish to customise the preload scene first inherit from cocos.nodes.PreloadScene
+     * and then set Director#preloadScene to an instance of your PreloadScene
+     */
+  , runPreloadScene: function () {
         if (!this.canvas) {
             this.attachInView();
         }
 
-        var preloader = this.get('preloadScene');
+        var preloader = this.preloadScene;
         if (!preloader) {
             var PreloadScene = require('./nodes/PreloadScene').PreloadScene;
             preloader = PreloadScene.create();
-            this.set('preloadScene', preloader);
+            this.preloadScene = preloader;
         }
 
         events.addListener(preloader, 'complete', function (preloader) {
-            this.isReady = true;
+            this._isReady = true;
             events.trigger(this, 'ready', this);
         }.bind(this));
 
         this.pushScene(preloader);
         this.startAnimation();
-    },
+    }
 
     /**
      * Enters the Director's main loop with the given Scene. Call it to run
@@ -160,7 +240,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      *
      * @param {cocos.Scene} scene The scene to start
      */
-    runWithScene: function (scene) {
+  , runWithScene: function (scene) {
         if (!(scene instanceof Scene)) {
             throw "Director.runWithScene must be given an instance of Scene";
         }
@@ -171,7 +251,7 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
 
         this.pushScene(scene);
         this.startAnimation();
-    },
+    }
 
     /**
      * Replaces the running scene with a new one. The running scene is
@@ -179,14 +259,14 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      *
      * @param {cocos.Scene} scene The scene to replace with
      */
-    replaceScene: function (scene) {
+  , replaceScene: function (scene) {
         var index = this.sceneStack.length;
 
         this._sendCleanupToScene = true;
         this.sceneStack.pop();
         this.sceneStack.push(scene);
         this._nextScene = scene;
-    },
+    }
 
     /**
      * Pops out a scene from the queue. This scene will replace the running
@@ -194,8 +274,9 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      * the stack the execution is terminated. ONLY call it if there is a
      * running scene.
      */
-    popScene: function () {
-    },
+  , popScene: function () {
+      throw new Error("Not implemented yet");
+    }
 
     /**
      * Suspends the execution of the running scene, pushing it on the stack of
@@ -205,81 +286,81 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
      *
      * @param {cocos.Scene} scene The scene to add to the stack
      */
-    pushScene: function (scene) {
+  , pushScene: function (scene) {
         this._nextScene = scene;
-    },
+    }
 
     /**
      * The main loop is triggered again. Call this function only if
      * cocos.Directory#stopAnimation was called earlier.
      */
-    startAnimation: function () {
+   , startAnimation: function () {
         if (!this.canvas) {
             this.attachInView();
         }
 
         this._animating = true;
         this.animate();
-    },
+    }
 
-    animate: function() {
+  , animate: function() {
         if (this._animating) {
             this.drawScene();
             this.animate._bound = this.animate._bound || this.animate.bind(this);
             window.requestAnimationFrame(this.animate._bound, this.canvas);
         }
-    },
+    }
 
     /**
      * Stops the animation. Nothing will be drawn. The main loop won't be
      * triggered anymore. If you want to pause your animation call
      * cocos.Directory#pause instead.
      */
-    stopAnimation: function () {
+   , stopAnimation: function () {
         if (this._animationTimer) {
             clearInterval(this._animationTimer);
             this._animationTimer = null;
         }
         this._animating = false;
-    },
+    }
 
     /**
-     * Calculate time since last call
      * @private
+     * Calculate time since last call
      */
-    calculateDeltaTime: function () {
+   , _calculateDeltaTime: function () {
         var now = (new Date()).getTime() / 1000;
 
-        if (this.nextDeltaTimeZero) {
+        if (this._nextDeltaTimeZero) {
             this.dt = 0;
-            this.nextDeltaTimeZero = false;
+            this._nextDeltaTimeZero = false;
         }
 
-        this.dt = Math.max(0, now - this.lastUpdate);
+        this.dt = Math.max(0, now - this._lastUpdate);
 
-        this.lastUpdate = now;
-    },
+        this._lastUpdate = now;
+    }
 
     /**
-     * The main run loop
      * @private
+     * The main run loop
      */
-    drawScene: function () {
-        this.calculateDeltaTime();
-        
+   , drawScene: function () {
+        this._calculateDeltaTime();
+
         if (!this.isPaused) {
             Scheduler.get('sharedScheduler').tick(this.dt);
         }
 
 
-        var context = this.get('context');
-        context.fillStyle = this.get('backgroundColor');
+        var context = this.context;
+        context.fillStyle = this.backgroundColor;
         context.fillRect(0, 0, this.winSize.width, this.winSize.height);
         //this.canvas.width = this.canvas.width
 
 
         if (this._nextScene) {
-            this.setNextScene();
+            this._setNextScene();
         }
 
         var rect = new geo.Rect(0, 0, this.winSize.width, this.winSize.height);
@@ -303,16 +384,16 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
             }
         }
 
-        if (this.get('displayFPS')) {
-            this.showFPS();
+        if (this.displayFPS) {
+            this._showFPS();
         }
-    },
+    }
 
     /**
-     * Initialises the next scene
      * @private
+     * Initialises the next scene
      */
-    setNextScene: function () {
+   , _setNextScene: function () {
         // TODO transitions
 
         if (this._runningScene) {
@@ -327,9 +408,14 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
         this._nextScene = null;
 
         this._runningScene.onEnter();
-    },
+    }
 
-    convertEventToCanvas: function (evt) {
+     /**
+      * Convert the coordinates in a mouse event so they're relative to the corner of the canvas
+      *
+      * @param {MouseEvent} evt
+      */
+   , convertEventToCanvas: function (evt) {
         var x = this.canvas.offsetLeft - document.documentElement.scrollLeft,
             y = this.canvas.offsetTop - document.documentElement.scrollTop;
 
@@ -345,37 +431,41 @@ var Director = BObject.extend(/** @lends cocos.Director# */{
         }
 
         return p;
-    },
+    }
 
-    showFPS: function () {
+    /**
+     * @private
+     * Draw the FPS counter
+     */
+   , _showFPS: function () {
         if (!this._fpsLabel) {
             var Label = require('./nodes/Label').Label;
             this._fpsLabel = Label.create({string: '', fontSize: 16});
-            this._fpsLabel.set('anchorPoint', ccp(0, 1));
+            this._fpsLabel.anchorPoint = ccp(0, 1);
             this._frames = 0;
             this._accumDt = 0;
         }
 
 
         this._frames++;
-        this._accumDt += this.get('dt');
-        
+        this._accumDt += this.dt;
+
         if (this._accumDt > 1.0 / 3.0)  {
             var frameRate = this._frames / this._accumDt;
             this._frames = 0;
             this._accumDt = 0;
 
-            this._fpsLabel.set('string', 'FPS: ' + (Math.round(frameRate * 100) / 100).toString());
+            this._fpsLabel.string = 'FPS: ' + (Math.round(frameRate * 100) / 100).toString();
         }
 
 
-        var s = this.get('winSize');
-        this._fpsLabel.set('position', ccp(10, s.height - 10));
+        var s = this.winSize;
+        this._fpsLabel.position = ccp(10, s.height - 10);
 
-        this._fpsLabel.visit(this.get('context'));
+        this._fpsLabel.visit(this.context);
     }
 
-});
+};
 
 Object.defineProperty(Director, 'sharedDirector', {
     enumerable: true,
@@ -388,7 +478,7 @@ Object.defineProperty(Director, 'sharedDirector', {
      */
     get: function () {
         if (!Director._instance) {
-            Director._instance = this.create();
+            Director._instance = new this();
         }
 
         return Director._instance;
@@ -400,8 +490,11 @@ Object.defineProperty(Director, 'sharedDirector', {
  * @class Pretends to run at a constant frame rate even if it slows down
  * @extends cocos.Director
  */
-var DirectorFixedSpeed = Director.extend(/** @lends cocos.DirectorFixedSpeed */{
-    /**
+function DirectorFixedSpeed () {
+    DirectorFixedSpeed.superclass.constructor.call(this)
+}
+DirectorFixedSpeed.inherit(Director, /** @lends cocos.DirectorFixedSpeed */
+  { /**
      * Frames per second to draw.
      * @type Integer
      */
@@ -411,13 +504,13 @@ var DirectorFixedSpeed = Director.extend(/** @lends cocos.DirectorFixedSpeed */{
      * Calculate time since last call
      * @private
      */
-    calculateDeltaTime: function () {
-        if (this.nextDeltaTimeZero) {
+    _calculateDeltaTime: function () {
+        if (this._nextDeltaTimeZero) {
             this.dt = 0;
-            this.nextDeltaTimeZero = false;
+            this._nextDeltaTimeZero = false;
         }
 
-        this.dt = 1.0 / this.get('frameRate');
+        this.dt = 1.0 / this.frameRate;
     },
 
     /**
@@ -425,11 +518,12 @@ var DirectorFixedSpeed = Director.extend(/** @lends cocos.DirectorFixedSpeed */{
      * cocos.Directory#stopAnimation was called earlier.
      */
     startAnimation: function () {
-        this._animationTimer = setInterval(this.drawScene.bind(this), 1000 / this.get('frameRate'));
+        this._animationTimer = setInterval(this.drawScene.bind(this), 1000 / this.frameRate);
         this.drawScene();
     }
 
-});
+  }
+);
 
 exports.Director = Director;
 exports.DirectorFixedSpeed = DirectorFixedSpeed;

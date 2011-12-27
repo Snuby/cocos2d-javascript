@@ -356,18 +356,35 @@ var util = {
         util.extend(parent.exports, namespace);
 
         return namespace;
+    },
+
+    /**
+     * Update an object's properties so they're readonly
+     *
+     * @param {Object} obj Object to have readonly properties set on it
+     * @param {String[]} properties The properties to make readonly
+     */
+    makeReadonly: function (obj, properties) {
+        if (!(properties instanceof Array)) {
+            properties = [properties];
+        }
+        for (var i = 0, len = properties.length, p; i < len; i++) {
+            p = properties[i];
+            obj['_' + p] = obj[p]
+            Object.defineProperty(obj, p, {
+                get: function (p) { return this['_' + p] }.bind(obj, p)
+            });
+        }
     }
-
-
 }
 
 util.extend(String.prototype, /** @scope String.prototype */ {
     /**
      * Create an array of words from a string
      *
-     * @returns {String[]} Array of the words in the string
+     * @getter {String[]} w
      */
-    w: function() {
+    get w () {
         return this.split(' ');
     }
 });
