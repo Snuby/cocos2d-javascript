@@ -237,7 +237,7 @@
         <h1>Tests</h1>
         <p>Select a test suite to run:</p>
         <ul>
-            <li><a href="?test=commonjs">CommonJS</a></li>
+            <li><a href="?test=init_commonjs">CommonJS</a></li>
             <li><a href="?test=cocos2d/SpriteTest">Sprites</a></li>
             <li><a href="?test=cocos2d/ActionTest">Actions</a></li>
             <li><a href="?test=cocos2d/EaseActionTest">Ease Actions</a></li>

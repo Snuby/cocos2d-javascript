@@ -574,7 +574,6 @@ exports.main = function () {
     // Initialise test
     var director = cocos.Director.get('sharedDirector');
 
-    director.attachInView();
     director.set('displayFPS', true);
 
     events.addListener(director, 'ready', function (director) {

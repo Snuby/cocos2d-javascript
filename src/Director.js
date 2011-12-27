@@ -23,9 +23,11 @@ var Scene           = require('./nodes/Scene').Scene
 function Director () {
     Director.superclass.constructor.call(this)
     this.sceneStack = []
+    this.window   = parent.window
+    this.document = this.window.document
 
     // Prevent writing to some properties
-    util.makeReadonly(this, 'canvas context sceneStack winSize isReady'.w)
+    util.makeReadonly(this, 'canvas context sceneStack winSize isReady document window'.w)
 }
 
 Director.prototype = /** @lends cocos.Director# */
@@ -34,6 +36,31 @@ Director.prototype = /** @lends cocos.Director# */
      * @type String
      */
     backgroundColor: 'rgb(0, 0, 0)'
+
+
+    /**
+     * DOM Window of the containing page
+     *
+     * The global 'window' property is a sandbox and not the global of the
+     * containing page. If you need to access the real window, use this
+     * property.
+     *
+     * @type DOMWindow
+     * @readonly
+     */
+  , window: null
+
+    /**
+     * DOM Document of the containing page
+     *
+     * The global 'document' property is a sandbox and not the global of the
+     * containing page. If you need to access the real document, use this
+     * property.
+     *
+     * @type Document
+     * @readonly
+     */
+  , document: null
 
     /**
      * Canvas HTML element
@@ -126,12 +153,12 @@ Director.prototype = /** @lends cocos.Director# */
      * @param {HTMLElement} view Any HTML element to add the application to
      */
   , attachInView: function (view) {
-        view = view || document.body;
+        view = view || parent.document.getElementById(CONTAINER_ID) || document.body;
 
         while (view.firstChild) {
             view.removeChild(view.firstChild);
         }
-
+        var document = this.document
 
         var canvas = document.createElement('canvas');
         canvas.style.verticalAlign = 'bottom';
