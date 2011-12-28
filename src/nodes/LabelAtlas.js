@@ -4,7 +4,8 @@
 
 var AtlasNode = require('./AtlasNode').AtlasNode,
     Sprite = require('./Sprite').Sprite,
-    geo   = require('geometry');
+    geo   = require('geometry'),
+    events = require('events');
 
 var LabelAtlas = AtlasNode.extend(/** @lends cocos.nodes.LabelAtlas# */{
     string: '',
@@ -31,15 +32,16 @@ var LabelAtlas = AtlasNode.extend(/** @lends cocos.nodes.LabelAtlas# */{
             size: new geo.Size(opts.itemWidth * opts.string.length, opts.itemHeight)
         });
 
+        events.addPropertyListener(this, 'string', 'change', this.updateAtlasValue.bind(this))
 
         this.mapStartChar = opts.startCharMap.charCodeAt(0);
-        this.set('string', opts.string);
+        this.string = opts.string;
     },
 
     updateAtlasValue: function () {
         var n = this.string.length,
             s = this.get('string');
-    
+
         // FIXME this should reuse children to improve performance
         while (this.children.length > 0) {
             this.removeChild(this.children[0]);
@@ -48,7 +50,7 @@ var LabelAtlas = AtlasNode.extend(/** @lends cocos.nodes.LabelAtlas# */{
             var a = s.charCodeAt(i) - this.mapStartChar,
                 row = (a % this.itemsPerRow),
                 col = Math.floor(a / this.itemsPerRow);
-    
+
             var left = row * this.itemWidth,
                 top  = col * this.itemHeight;
 
@@ -58,15 +60,9 @@ var LabelAtlas = AtlasNode.extend(/** @lends cocos.nodes.LabelAtlas# */{
             tile.set('position', new geo.Point(i * this.itemWidth, 0));
             tile.set('anchorPoint', new geo.Point(0, 0));
             tile.set('opacity', this.get('opacity'));
-            
+
             this.addChild({child: tile});
         }
-    },
-
-    set_string: function (newString) {
-        this.string = newString;
-
-        this.updateAtlasValue();
     }
 });
 
