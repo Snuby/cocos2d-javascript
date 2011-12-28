@@ -30,8 +30,8 @@ function Director () {
     util.makeReadonly(this, 'canvas context sceneStack winSize isReady document window'.w)
 }
 
-Director.prototype = /** @lends cocos.Director# */
-  { /**
+Director.prototype = /** @lends cocos.Director# */ {
+    /**
      * Background colour of the canvas. It can be any valid CSS colour.
      * @type String
      */
@@ -153,83 +153,84 @@ Director.prototype = /** @lends cocos.Director# */
      * @param {HTMLElement} view Any HTML element to add the application to
      */
   , attachInView: function (view) {
-        view = view || parent.document.getElementById(CONTAINER_ID) || document.body;
-
-        while (view.firstChild) {
-            view.removeChild(view.firstChild);
-        }
         var document = this.document
 
-        var canvas = document.createElement('canvas');
-        canvas.style.verticalAlign = 'bottom';
-        this._canvas = canvas;
-        canvas.setAttribute('width', view.clientWidth);
-        canvas.setAttribute('height', view.clientHeight);
+        view = view || document.getElementById(CONTAINER_ID) || document.body
 
-        var context = canvas.getContext('2d');
-        this._context = context;
-
-        if (FLIP_Y_AXIS) {
-            context.translate(0, view.clientHeight);
-            context.scale(1, -1);
+        while (view.firstChild) {
+            view.removeChild(view.firstChild)
         }
 
-        view.appendChild(canvas);
+        var canvas = document.createElement('canvas')
+        canvas.style.verticalAlign = 'bottom'
+        this._canvas = canvas
+        canvas.setAttribute('width', view.clientWidth)
+        canvas.setAttribute('height', view.clientHeight)
 
-        this._winSize = {width: view.clientWidth, height: view.clientHeight};
+        var context = canvas.getContext('2d')
+        this._context = context
+
+        if (FLIP_Y_AXIS) {
+            context.translate(0, view.clientHeight)
+            context.scale(1, -1)
+        }
+
+        view.appendChild(canvas)
+
+        this._winSize = {width: view.clientWidth, height: view.clientHeight}
 
 
         // Setup event handling
 
         // Mouse events
-        var eventDispatcher = EventDispatcher.get('sharedDispatcher');
-        var self = this;
+        var eventDispatcher = EventDispatcher.get('sharedDispatcher')
+        var self = this
         function mouseDown(evt) {
-            evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-            evt.locationInCanvas = self.convertEventToCanvas(evt);
+            evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+            evt.locationInCanvas = self.convertEventToCanvas(evt)
 
             function mouseDragged(evt) {
-                evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-                evt.locationInCanvas = self.convertEventToCanvas(evt);
+                evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+                evt.locationInCanvas = self.convertEventToCanvas(evt)
 
-                eventDispatcher.mouseDragged(evt);
+                eventDispatcher.mouseDragged(evt)
             }
             function mouseUp(evt) {
-                evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-                evt.locationInCanvas = self.convertEventToCanvas(evt);
+                evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+                evt.locationInCanvas = self.convertEventToCanvas(evt)
 
-                document.body.removeEventListener('mousemove', mouseDragged, false);
-                document.body.removeEventListener('mouseup',   mouseUp,   false);
+                document.body.removeEventListener('mousemove', mouseDragged, false)
+                document.body.removeEventListener('mouseup',   mouseUp,   false)
 
 
-                eventDispatcher.mouseUp(evt);
+                eventDispatcher.mouseUp(evt)
             }
 
-            document.body.addEventListener('mousemove', mouseDragged, false);
-            document.body.addEventListener('mouseup',   mouseUp,   false);
+            document.body.addEventListener('mousemove', mouseDragged, false)
+            document.body.addEventListener('mouseup',   mouseUp,   false)
 
-            eventDispatcher.mouseDown(evt);
+            eventDispatcher.mouseDown(evt)
         }
         function mouseMoved(evt) {
-            evt.locationInWindow = ccp(evt.clientX, evt.clientY);
-            evt.locationInCanvas = self.convertEventToCanvas(evt);
+            evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+            evt.locationInCanvas = self.convertEventToCanvas(evt)
 
-            eventDispatcher.mouseMoved(evt);
+            eventDispatcher.mouseMoved(evt)
         }
-        canvas.addEventListener('mousedown', mouseDown, false);
-        canvas.addEventListener('mousemove', mouseMoved, false);
+        canvas.addEventListener('mousedown', mouseDown, false)
+        canvas.addEventListener('mousemove', mouseMoved, false)
 
         // Keyboard events
         function keyDown(evt) {
-            this._keysDown = this._keysDown || {};
-            eventDispatcher.keyDown(evt);
+            this._keysDown = this._keysDown || {}
+            eventDispatcher.keyDown(evt)
         }
         function keyUp(evt) {
-            eventDispatcher.keyUp(evt);
+            eventDispatcher.keyUp(evt)
         }
 
-        document.documentElement.addEventListener('keydown', keyDown, false);
-        document.documentElement.addEventListener('keyup', keyUp, false);
+        document.documentElement.addEventListener('keydown', keyDown, false)
+        document.documentElement.addEventListener('keyup', keyUp, false)
     }
 
     /**
@@ -241,23 +242,23 @@ Director.prototype = /** @lends cocos.Director# */
      */
   , runPreloadScene: function () {
         if (!this.canvas) {
-            this.attachInView();
+            this.attachInView()
         }
 
-        var preloader = this.preloadScene;
+        var preloader = this.preloadScene
         if (!preloader) {
-            var PreloadScene = require('./nodes/PreloadScene').PreloadScene;
-            preloader = PreloadScene.create();
-            this.preloadScene = preloader;
+            var PreloadScene = require('./nodes/PreloadScene').PreloadScene
+            preloader = PreloadScene.create()
+            this.preloadScene = preloader
         }
 
         events.addListener(preloader, 'complete', function (preloader) {
-            this._isReady = true;
-            events.trigger(this, 'ready', this);
-        }.bind(this));
+            this._isReady = true
+            events.trigger(this, 'ready', this)
+        }.bind(this))
 
-        this.pushScene(preloader);
-        this.startAnimation();
+        this.pushScene(preloader)
+        this.startAnimation()
     }
 
     /**
@@ -269,15 +270,15 @@ Director.prototype = /** @lends cocos.Director# */
      */
   , runWithScene: function (scene) {
         if (!(scene instanceof Scene)) {
-            throw "Director.runWithScene must be given an instance of Scene";
+            throw "Director.runWithScene must be given an instance of Scene"
         }
 
         if (this._runningScene) {
-            throw "You can't run a Scene if another Scene is already running. Use replaceScene or pushScene instead";
+            throw "You can't run a Scene if another Scene is already running. Use replaceScene or pushScene instead"
         }
 
-        this.pushScene(scene);
-        this.startAnimation();
+        this.pushScene(scene)
+        this.startAnimation()
     }
 
     /**
@@ -287,12 +288,12 @@ Director.prototype = /** @lends cocos.Director# */
      * @param {cocos.Scene} scene The scene to replace with
      */
   , replaceScene: function (scene) {
-        var index = this.sceneStack.length;
+        var index = this.sceneStack.length
 
-        this._sendCleanupToScene = true;
-        this.sceneStack.pop();
-        this.sceneStack.push(scene);
-        this._nextScene = scene;
+        this._sendCleanupToScene = true
+        this.sceneStack.pop()
+        this.sceneStack.push(scene)
+        this._nextScene = scene
     }
 
     /**
@@ -302,7 +303,7 @@ Director.prototype = /** @lends cocos.Director# */
      * running scene.
      */
   , popScene: function () {
-      throw new Error("Not implemented yet");
+      throw new Error("Not implemented yet")
     }
 
     /**
@@ -314,27 +315,27 @@ Director.prototype = /** @lends cocos.Director# */
      * @param {cocos.Scene} scene The scene to add to the stack
      */
   , pushScene: function (scene) {
-        this._nextScene = scene;
+        this._nextScene = scene
     }
 
     /**
      * The main loop is triggered again. Call this function only if
      * cocos.Directory#stopAnimation was called earlier.
      */
-   , startAnimation: function () {
+  , startAnimation: function () {
         if (!this.canvas) {
-            this.attachInView();
+            this.attachInView()
         }
 
-        this._animating = true;
-        this.animate();
+        this._animating = true
+        this.animate()
     }
 
   , animate: function() {
         if (this._animating) {
-            this.drawScene();
-            this.animate._bound = this.animate._bound || this.animate.bind(this);
-            window.requestAnimationFrame(this.animate._bound, this.canvas);
+            this.drawScene()
+            this.animate._bound = this.animate._bound || this.animate.bind(this)
+            window.requestAnimationFrame(this.animate._bound, this.canvas)
         }
     }
 
@@ -343,76 +344,76 @@ Director.prototype = /** @lends cocos.Director# */
      * triggered anymore. If you want to pause your animation call
      * cocos.Directory#pause instead.
      */
-   , stopAnimation: function () {
+  , stopAnimation: function () {
         if (this._animationTimer) {
-            clearInterval(this._animationTimer);
-            this._animationTimer = null;
+            clearInterval(this._animationTimer)
+            this._animationTimer = null
         }
-        this._animating = false;
+        this._animating = false
     }
 
     /**
      * @private
      * Calculate time since last call
      */
-   , _calculateDeltaTime: function () {
-        var now = (new Date()).getTime() / 1000;
+  , _calculateDeltaTime: function () {
+        var now = (new Date()).getTime() / 1000
 
         if (this._nextDeltaTimeZero) {
-            this.dt = 0;
-            this._nextDeltaTimeZero = false;
+            this.dt = 0
+            this._nextDeltaTimeZero = false
         }
 
-        this.dt = Math.max(0, now - this._lastUpdate);
+        this.dt = Math.max(0, now - this._lastUpdate)
 
-        this._lastUpdate = now;
+        this._lastUpdate = now
     }
 
     /**
      * @private
      * The main run loop
      */
-   , drawScene: function () {
-        this._calculateDeltaTime();
+  , drawScene: function () {
+        this._calculateDeltaTime()
 
         if (!this.isPaused) {
-            Scheduler.get('sharedScheduler').tick(this.dt);
+            Scheduler.get('sharedScheduler').tick(this.dt)
         }
 
 
-        var context = this.context;
-        context.fillStyle = this.backgroundColor;
-        context.fillRect(0, 0, this.winSize.width, this.winSize.height);
+        var context = this.context
+        context.fillStyle = this.backgroundColor
+        context.fillRect(0, 0, this.winSize.width, this.winSize.height)
         //this.canvas.width = this.canvas.width
 
 
         if (this._nextScene) {
-            this._setNextScene();
+            this._setNextScene()
         }
 
-        var rect = new geo.Rect(0, 0, this.winSize.width, this.winSize.height);
+        var rect = new geo.Rect(0, 0, this.winSize.width, this.winSize.height)
 
         if (rect) {
-            context.beginPath();
-            context.rect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
-            context.clip();
-            context.closePath();
+            context.beginPath()
+            context.rect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)
+            context.clip()
+            context.closePath()
         }
 
-        this._runningScene.visit(context, rect);
+        this._runningScene.visit(context, rect)
 
         if (SHOW_REDRAW_REGIONS) {
             if (rect) {
-                context.beginPath();
-                context.rect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
-                context.fillStyle = "rgba(255, 0, 0, 0.5)";
-                //context.fill();
-                context.closePath();
+                context.beginPath()
+                context.rect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)
+                context.fillStyle = "rgba(255, 0, 0, 0.5)"
+                //context.fill()
+                context.closePath()
             }
         }
 
         if (this.displayFPS) {
-            this._showFPS();
+            this._showFPS()
         }
     }
 
@@ -420,21 +421,21 @@ Director.prototype = /** @lends cocos.Director# */
      * @private
      * Initialises the next scene
      */
-   , _setNextScene: function () {
+  , _setNextScene: function () {
         // TODO transitions
 
         if (this._runningScene) {
-            this._runningScene.onExit();
+            this._runningScene.onExit()
             if (this._sendCleanupToScene) {
-                this._runningScene.cleanup();
+                this._runningScene.cleanup()
             }
         }
 
-        this._runningScene = this._nextScene;
+        this._runningScene = this._nextScene
 
-        this._nextScene = null;
+        this._nextScene = null
 
-        this._runningScene.onEnter();
+        this._runningScene.onEnter()
     }
 
      /**
@@ -442,61 +443,59 @@ Director.prototype = /** @lends cocos.Director# */
       *
       * @param {MouseEvent} evt
       */
-   , convertEventToCanvas: function (evt) {
-        var x = this.canvas.offsetLeft - document.documentElement.scrollLeft,
-            y = this.canvas.offsetTop - document.documentElement.scrollTop;
+  , convertEventToCanvas: function (evt) {
+        var x = this.canvas.offsetLeft - document.documentElement.scrollLeft
+          , y = this.canvas.offsetTop - document.documentElement.scrollTop
 
-        var o = this.canvas;
+        var o = this.canvas
         while ((o = o.offsetParent)) {
-            x += o.offsetLeft - o.scrollLeft;
-            y += o.offsetTop - o.scrollTop;
+            x += o.offsetLeft - o.scrollLeft
+            y += o.offsetTop - o.scrollTop
         }
 
-        var p = geo.ccpSub(evt.locationInWindow, ccp(x, y));
+        var p = geo.ccpSub(evt.locationInWindow, ccp(x, y))
         if (FLIP_Y_AXIS) {
-            p.y = this.canvas.height - p.y;
+            p.y = this.canvas.height - p.y
         }
 
-        return p;
+        return p
     }
 
     /**
      * @private
      * Draw the FPS counter
      */
-   , _showFPS: function () {
+  , _showFPS: function () {
         if (!this._fpsLabel) {
-            var Label = require('./nodes/Label').Label;
-            this._fpsLabel = Label.create({string: '', fontSize: 16});
-            this._fpsLabel.anchorPoint = ccp(0, 1);
-            this._frames = 0;
-            this._accumDt = 0;
+            var Label = require('./nodes/Label').Label
+            this._fpsLabel = Label.create({string: '', fontSize: 16})
+            this._fpsLabel.anchorPoint = ccp(0, 1)
+            this._frames = 0
+            this._accumDt = 0
         }
 
 
-        this._frames++;
-        this._accumDt += this.dt;
+        this._frames++
+        this._accumDt += this.dt
 
         if (this._accumDt > 1.0 / 3.0)  {
-            var frameRate = this._frames / this._accumDt;
-            this._frames = 0;
-            this._accumDt = 0;
+            var frameRate = this._frames / this._accumDt
+            this._frames = 0
+            this._accumDt = 0
 
-            this._fpsLabel.string = 'FPS: ' + (Math.round(frameRate * 100) / 100).toString();
+            this._fpsLabel.string = 'FPS: ' + (Math.round(frameRate * 100) / 100).toString()
         }
 
 
-        var s = this.winSize;
-        this._fpsLabel.position = ccp(10, s.height - 10);
+        var s = this.winSize
+        this._fpsLabel.position = ccp(10, s.height - 10)
 
-        this._fpsLabel.visit(this.context);
+        this._fpsLabel.visit(this.context)
     }
 
-};
+}
 
 Object.defineProperty(Director, 'sharedDirector', {
-    enumerable: true,
-
     /**
      * A shared singleton instance of cocos.Director
      *
@@ -505,12 +504,14 @@ Object.defineProperty(Director, 'sharedDirector', {
      */
     get: function () {
         if (!Director._instance) {
-            Director._instance = new this();
+            Director._instance = new this()
         }
 
-        return Director._instance;
+        return Director._instance
     }
-});
+
+  , enumerable: true
+})
 
 /**
  * @memberOf cocos
@@ -520,37 +521,36 @@ Object.defineProperty(Director, 'sharedDirector', {
 function DirectorFixedSpeed () {
     DirectorFixedSpeed.superclass.constructor.call(this)
 }
-DirectorFixedSpeed.inherit(Director, /** @lends cocos.DirectorFixedSpeed */
-  { /**
+DirectorFixedSpeed.inherit(Director, /** @lends cocos.DirectorFixedSpeed */ {
+    /**
      * Frames per second to draw.
      * @type Integer
      */
-    frameRate: 60,
+    frameRate: 60
 
     /**
      * Calculate time since last call
      * @private
      */
-    _calculateDeltaTime: function () {
+  , _calculateDeltaTime: function () {
         if (this._nextDeltaTimeZero) {
-            this.dt = 0;
-            this._nextDeltaTimeZero = false;
+            this.dt = 0
+            this._nextDeltaTimeZero = false
         }
 
-        this.dt = 1.0 / this.frameRate;
-    },
+        this.dt = 1.0 / this.frameRate
+    }
 
     /**
      * The main loop is triggered again. Call this function only if
      * cocos.Directory#stopAnimation was called earlier.
      */
-    startAnimation: function () {
-        this._animationTimer = setInterval(this.drawScene.bind(this), 1000 / this.frameRate);
-        this.drawScene();
+  , startAnimation: function () {
+        this._animationTimer = setInterval(this.drawScene.bind(this), 1000 / this.frameRate)
+        this.drawScene()
     }
-
   }
-);
+)
 
-exports.Director = Director;
-exports.DirectorFixedSpeed = DirectorFixedSpeed;
+exports.Director = Director
+exports.DirectorFixedSpeed = DirectorFixedSpeed
