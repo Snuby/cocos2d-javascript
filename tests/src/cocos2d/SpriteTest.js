@@ -16,7 +16,7 @@ var transitions = [
     "Sprite1",
     "SpriteBatchNode1",
     "SpriteAnchorPoint",
-	"SpriteColorOpacity",
+    "SpriteColorOpacity",
     "SpriteAnimationFlip",
     "SpriteZOrder",
     "AnimationCache"
@@ -181,7 +181,7 @@ tests.Sprite1 = SpriteDemo.extend(/** @lends Sprite1.prototype# */{
         actionBack = action.reverse();
         seq = actions.Sequence.create({actions: [action, actionBack]});
         sprite.runAction(actions.RepeatForever.create(seq));
-        
+
     },
     mouseUp: function (event) {
         var location = cocos.Director.get('sharedDirector').convertEventToCanvas(event);
@@ -324,12 +324,12 @@ tests.SpriteAnchorPoint = SpriteDemo.extend(/** @lends SpriteAnchorPoint.prototy
         for (var i = 0; i < 3; i++) {
             var sprite = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * i, 121 * 1, 85, 121)});
             sprite.position = ccp(s.width / 4 * (i + 1), s.height / 2);
-            
+
             var point = nodes.Sprite.create({file: module.dirname + "/resources/r1.png"});
             point.set('scale', 0.25);
             point.set('position', sprite.get('position'));
             this.addChild({child: point, z: 10});
-            
+
             switch (i) {
             case 0:
                 sprite.set('anchorPoint', ccp(0, 0));
@@ -341,16 +341,16 @@ tests.SpriteAnchorPoint = SpriteDemo.extend(/** @lends SpriteAnchorPoint.prototy
                 sprite.set('anchorPoint', ccp(1, 1));
                 break;
             }
-            
+
             point.set('position', sprite.get('position'));
-            
+
             var copy = action.copy();
             sprite.runAction(copy);
             this.addChild({child: sprite, z: 1});
         }
     }
 });
-        
+
 
 /**
  * @class
@@ -374,34 +374,34 @@ tests.SpriteZOrder = SpriteDemo.extend(/** @lends SpriteZOrder.prototype# */{
             sprite.set('position', ccp((i + 1) * step, s.height / 2));
             this.addChild({child: sprite, z: i});
         }
-        
+
         for (i = 5; i < 10; i++) {
             sprite = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 1, 121 * 0, 85, 121)});
             sprite.set('position', ccp((i + 1) * step, s.height / 2));
             this.addChild({child: sprite, z: 14 - i});
         }
-        
+
         sprite = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas-red.png", rect: geo.rectMake(85 * 3, 121 * 0, 85, 121)});
         this.addChild({child: sprite, z: -1, tag: kTagSprite1});
 
         sprite.set('position', ccp(s.width / 2, s.height / 2 + 20));
         sprite.set('scaleX', 6);
-        
+
         cocos.Scheduler.get('sharedScheduler').schedule({target: this, method: this.reorderSprite, interval: 1});
     },
     reorderSprite: function (dt) {
         var sprite = this.getChild({tag: kTagSprite1});
         var z = sprite.get('zOrder');
-    
+
         if (z < -1) {
             this.dir = 1;
         }
         if (z > 10) {
             this.dir = -1;
         }
-        
+
         z += this.dir * 3;
-    
+
         this.reorderChild({child: sprite, z: z});
     }
 });
@@ -434,22 +434,22 @@ tests.AnimationCache = SpriteDemo.extend(/** @lends AnimationCache.prototype# */
             frame = frameCache.getSpriteFrame({name: 'grossini_dance_' + (i >= 10 ? i : '0' + i) + '.png'});
             animFrames.push(frame);
         }
-        
+
         var animation = cocos.Animation.create({frames: animFrames, delay: 0.2});
-        
+
         // Add an animation to the Cache
         animCache.addAnimation({animation: animation, name: 'dance'});
-        
-        
+
+
         // create animation "dance gray"
         animFrames = [];
         for (i = 1; i < 15; i++) {
             frame = frameCache.getSpriteFrame({name: 'grossini_dance_gray_' + (i >= 10 ? i : '0' + i) + '.png'});
             animFrames.push(frame);
         }
-        
+
         animation = cocos.Animation.create({frames: animFrames, delay: 0.2});
-        
+
         // Add an animation to the Cache
         animCache.addAnimation({animation: animation, name: 'dance_gray'});
 
@@ -460,33 +460,33 @@ tests.AnimationCache = SpriteDemo.extend(/** @lends AnimationCache.prototype# */
             frame = frameCache.getSpriteFrame({name: 'grossini_blue_0' + i + '.png'});
             animFrames.push(frame);
         }
-        
+
         animation = cocos.Animation.create({frames: animFrames, delay: 0.2});
-        
+
         // Add an animation to the Cache
         animCache.addAnimation({animation: animation, name: 'dance_blue'});
-        
-    
+
+
         var normal     = animCache.getAnimation({name: 'dance'}),
             dance_gray = animCache.getAnimation({name: 'dance_gray'}),
             dance_blue = animCache.getAnimation({name: 'dance_blue'});
-        
+
         var animN = actions.Animate.create({animation: normal}),
             animG = actions.Animate.create({animation: dance_gray}),
             animB = actions.Animate.create({animation: dance_blue});
 
         var seq = actions.Sequence.create({actions: [animN, animG, animB]});
-        
+
         // create an sprite without texture
         var grossini = nodes.Sprite.create();
-        
+
         var winSize = cocos.Director.get('sharedDirector').get('winSize');
-        
+
         grossini.set('position', ccp(winSize.width / 2, winSize.height / 2));
-        
+
         this.addChild({child: grossini});
-        
-        
+
+
         // run the animation
         grossini.runAction(seq);
     }
@@ -499,76 +499,76 @@ tests.SpriteColorOpacity = SpriteDemo.extend(/** @lends SpriteColorOpacity.proto
         tests.SpriteColorOpacity.superclass.init.call(this);
 
 
-		var sprite1 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 0, 121 * 1, 85, 121)});
-		var sprite2 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 1, 121 * 1, 85, 121)});
-		var sprite3 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 2, 121 * 1, 85, 121)});
-		var sprite4 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 3, 121 * 1, 85, 121)});
+        var sprite1 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 0, 121 * 1, 85, 121)});
+        var sprite2 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 1, 121 * 1, 85, 121)});
+        var sprite3 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 2, 121 * 1, 85, 121)});
+        var sprite4 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 3, 121 * 1, 85, 121)});
 
-		var sprite5 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 0, 121 * 1, 85, 121)});
-		var sprite6 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 1, 121 * 1, 85, 121)});
-		var sprite7 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 2, 121 * 1, 85, 121)});
-		var sprite8 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 3, 121 * 1, 85, 121)});
-		
+        var sprite5 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 0, 121 * 1, 85, 121)});
+        var sprite6 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 1, 121 * 1, 85, 121)});
+        var sprite7 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 2, 121 * 1, 85, 121)});
+        var sprite8 = nodes.Sprite.create({file: module.dirname + "/resources/grossini_dance_atlas.png", rect: geo.rectMake(85 * 3, 121 * 1, 85, 121)});
+
         var s = cocos.Director.get('sharedDirector').get('winSize');
 
-		sprite1.set('position', ccp((s.width / 5) * 1, (s.height / 3) * 1));
-		sprite2.set('position', ccp((s.width / 5) * 2, (s.height / 3) * 1));
-		sprite3.set('position', ccp((s.width / 5) * 3, (s.height / 3) * 1));
-		sprite4.set('position', ccp((s.width / 5) * 4, (s.height / 3) * 1));
+        sprite1.set('position', ccp((s.width / 5) * 1, (s.height / 3) * 1));
+        sprite2.set('position', ccp((s.width / 5) * 2, (s.height / 3) * 1));
+        sprite3.set('position', ccp((s.width / 5) * 3, (s.height / 3) * 1));
+        sprite4.set('position', ccp((s.width / 5) * 4, (s.height / 3) * 1));
 
-		sprite5.set('position', ccp((s.width / 5) * 1, (s.height / 3) * 2));
-		sprite6.set('position', ccp((s.width / 5) * 2, (s.height / 3) * 2));
-		sprite7.set('position', ccp((s.width / 5) * 3, (s.height / 3) * 2));
-		sprite8.set('position', ccp((s.width / 5) * 4, (s.height / 3) * 2));
-		
+        sprite5.set('position', ccp((s.width / 5) * 1, (s.height / 3) * 2));
+        sprite6.set('position', ccp((s.width / 5) * 2, (s.height / 3) * 2));
+        sprite7.set('position', ccp((s.width / 5) * 3, (s.height / 3) * 2));
+        sprite8.set('position', ccp((s.width / 5) * 4, (s.height / 3) * 2));
+
         var action = actions.FadeIn.create({duration: 3}),
             actionBack = action.reverse(),
             fade = actions.RepeatForever.create(actions.Sequence.create({actions: [action, actionBack]}));
-		
-		/*
+
+        /*
         id tintred = [CCTintBy actionWithDuration:2 red:0 green:-255 blue:-255];
         id tintred_back = [tintred reverse];
         id red = [CCRepeatForever actionWithAction: [CCSequence actions: tintred, tintred_back, nil]];
-        
+
         id tintgreen = [CCTintBy actionWithDuration:2 red:-255 green:0 blue:-255];
         id tintgreen_back = [tintgreen reverse];
         id green = [CCRepeatForever actionWithAction: [CCSequence actions: tintgreen, tintgreen_back, nil]];
-        
+
         id tintblue = [CCTintBy actionWithDuration:2 red:-255 green:-255 blue:0];
         id tintblue_back = [tintblue reverse];
         id blue = [CCRepeatForever actionWithAction: [CCSequence actions: tintblue, tintblue_back, nil]];
-		*/
-		
-		
-		/*
+        */
+
+
+        /*
         [sprite5 runAction:red];
         [sprite6 runAction:green];
         [sprite7 runAction:blue];
-		*/
+        */
         sprite8.runAction(fade);
-		
-		// late add: test dirtyColor and dirtyPosition
-		this.addChild({child: sprite1, z: 0, tag: kTagSprite1});
-		this.addChild({child: sprite2, z: 0, tag: kTagSprite2});
-		this.addChild({child: sprite3, z: 0, tag: kTagSprite3});
-		this.addChild({child: sprite4, z: 0, tag: kTagSprite4});
-		this.addChild({child: sprite5, z: 0, tag: kTagSprite5});
-		this.addChild({child: sprite6, z: 0, tag: kTagSprite6});
-		this.addChild({child: sprite7, z: 0, tag: kTagSprite7});
-		this.addChild({child: sprite8, z: 0, tag: kTagSprite8});
-		
-		
+
+        // late add: test dirtyColor and dirtyPosition
+        this.addChild({child: sprite1, z: 0, tag: kTagSprite1});
+        this.addChild({child: sprite2, z: 0, tag: kTagSprite2});
+        this.addChild({child: sprite3, z: 0, tag: kTagSprite3});
+        this.addChild({child: sprite4, z: 0, tag: kTagSprite4});
+        this.addChild({child: sprite5, z: 0, tag: kTagSprite5});
+        this.addChild({child: sprite6, z: 0, tag: kTagSprite6});
+        this.addChild({child: sprite7, z: 0, tag: kTagSprite7});
+        this.addChild({child: sprite8, z: 0, tag: kTagSprite8});
+
+
         cocos.Scheduler.get('sharedScheduler').schedule({target: this, method: this.removeAndAddSprite, interval: 2});
     },
 
     removeAndAddSprite: function () {
         var sprite = this.getChild({tag: kTagSprite5});
-        
+
         this.removeChild({child: sprite, cleanup: false});
-		this.addChild({child: sprite, z: 0, tag: kTagSprite5});
+        this.addChild({child: sprite, z: 0, tag: kTagSprite5});
     }
 });
-                
+
 
 exports.main = function () {
     // Initialise test
