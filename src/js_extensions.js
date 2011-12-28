@@ -1,3 +1,5 @@
+'use strict'
+
 var util = require('util')
   , bob  = require('bobject')
 
@@ -9,6 +11,9 @@ if (!window.BArray) {
     window.BArray = bob.BArray
 }
 
+/**
+ * @memberOf Object
+ */
 function extend (target, parent, props) {
     target.prototype = Object.create(parent.prototype)
     if (props) {
@@ -17,6 +22,10 @@ function extend (target, parent, props) {
 
     return target
 }
+
+/**
+ * @memberOf Function#
+ */
 function inherit (parent, props) {
     return extend(this, parent, props)
 }
@@ -31,6 +40,11 @@ if (!Function.prototype.inherit) {
 
 if (!('superclass' in Function.prototype)) {
     Object.defineProperty(Function.prototype, 'superclass', {
+        /**
+         * The object prototype that this was inherited from
+         * @memberOf Function#
+         * @getter {Object} superclass
+         */
         get: function () {
             return Object.getPrototypeOf(this.prototype)
         },

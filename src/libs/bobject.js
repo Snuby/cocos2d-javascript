@@ -47,6 +47,10 @@ function addAccessor(obj, key, target, targetKey, noNotify) {
 var objectID = 0;
 
 /**
+ * @deprecated Since 0.2. Most functionality is now provided using ECMAScript 5 accessors and events.addPropertyListener
+ * @see events.addPropertyListener
+ * @see <a href="https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Working_with_Objects#Defining_Getters_and_Setters">Defining Getters and Setters</a>
+ *
  * @class
  * A bindable object. Allows observing and binding to its properties.
  */
