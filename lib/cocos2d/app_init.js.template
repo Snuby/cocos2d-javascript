@@ -12,7 +12,6 @@
 
     function initializeApplication () {
         if (window.document.readyState != 'complete') return
-        window.document.removeEventListener(listener)
 
         var container = window.document.getElementById(containerID)
           , frame = window.document.createElement('iframe')
