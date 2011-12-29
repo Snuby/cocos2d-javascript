@@ -55,7 +55,7 @@ var objectID = 0;
  * A bindable object. Allows observing and binding to its properties.
  */
 function BObject () {
-    this.init.apply(this, arguments)
+    return this.init.apply(this, arguments)
 }
 BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
     /**
@@ -288,7 +288,7 @@ BObject.extend = function (targetOrProperties, parent) {
     }
 
     target = target || function () {
-        this.init.apply(this, arguments)
+        return this.init.apply(this, arguments)
     }
 
     var args = [], i, x;
@@ -298,6 +298,7 @@ BObject.extend = function (targetOrProperties, parent) {
 
     // Add given properties to the prototype
     target.prototype = Object.create(parent.prototype)
+    target.prototype.constructor = target
     if (properties) {
         util.extend(target.prototype, properties)
     }

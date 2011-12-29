@@ -16,6 +16,8 @@ if (!window.BArray) {
  */
 function extend (target, parent, props) {
     target.prototype = Object.create(parent.prototype)
+    target.prototype.constructor = target
+
     if (props) {
         util.extend(target.prototype, props)
     }

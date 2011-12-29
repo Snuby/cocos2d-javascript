@@ -735,6 +735,24 @@ var Sequence = ActionInterval.extend(/** @lends cocos.actions.Sequence# */{
      * @opt {cocos.actions.FiniteTimeAction} two 2nd action to run
      */
     init: function (opts) {
+        if (opts.actions) {
+            var actions = opts.actions
+              , prev = actions[0].copy()
+              , NextSequence = Object.getPrototypeOf(this).constructor
+              , now
+              , i
+            for (i=1; i<actions.length; i++) {
+                now = actions[i].copy();
+                if (now) {
+                    prev = new NextSequence({one: prev, two: now});
+                } else {
+                    break;
+                }
+            }
+
+            return prev
+        }
+
         if (!opts.one) {
             throw "Sequence argument one must be non-nil";
         }
@@ -802,11 +820,11 @@ var Sequence = ActionInterval.extend(/** @lends cocos.actions.Sequence# */{
 
     copy: function () {
         // Constructor will copy actions 
-        return Sequence.create({actions: this.get('actions')});
+        return new Sequence({actions: this.get('actions')});
     },
 
     reverse: function() {
-        return Sequence.create({actions: [this.actions[1].reverse(), this.actions[0].reverse()]});
+        return new Sequence({actions: [this.actions[1].reverse(), this.actions[0].reverse()]});
     }
 });
 

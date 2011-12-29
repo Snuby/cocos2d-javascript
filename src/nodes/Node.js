@@ -291,7 +291,7 @@ var Node = BObject.extend(/** @lends cocos.nodes.Node# */{
      * @getter scale
      * @type Float
      */
-    get_scale: function () {
+    get scale () {
         if (this.scaleX != this.scaleY) {
             throw "scaleX and scaleY aren't identical";
         }
@@ -303,11 +303,11 @@ var Node = BObject.extend(/** @lends cocos.nodes.Node# */{
      * @setter scale
      * @type Float
      */
-    set_scale: function (val) {
-        this.set('scaleX', val);
-        this.set('scaleY', val);
+    set scale (val) {
+        this.scaleX = val;
+        this.scaleY = val;
     },
-		
+
     scheduleUpdate: function (opts) {
         opts = opts || {};
         var priority = opts.priority || 0;

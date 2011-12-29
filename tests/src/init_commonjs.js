@@ -9,7 +9,7 @@ var logNum = 0;
 window.print = function (msg, tag) {
     logNum++;
     var div = document.createElement('div');
-    div.appendChild(document.createTextNode(logNum + '. ' + msg));
+    div.appendChild(document.createTextNode(logNum + '. [' + currentTest.split('/').pop().toUpperCase() + '] ' + msg));
     div.className = 'log ' + tag;
     container.appendChild(div);
     container.scrollTop = container.offsetHeight;
@@ -33,15 +33,16 @@ var tests = [
     '/commonjs/tests/modules/1.0/transitive'
 ];
 
-var i = 0;
+var i = 0
+  , currentTest
 function nextTest() {
-    var test = tests[i];
-    require.paths.push(test);
+    currentTest = tests[i];
+    require.paths.push(currentTest);
     require('program');
-    require.paths.splice(require.paths.indexOf(test), 1);
+    require.paths.splice(require.paths.indexOf(currentTest), 1);
     i++;
     if (i < tests.length) {
-        setTimeout(nextTest, 250);
+        setTimeout(nextTest, 0);
     }
 }
 
