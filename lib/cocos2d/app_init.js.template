@@ -17,7 +17,6 @@
           , frame = window.document.createElement('iframe')
         frame.style.display = 'none'
 
-        container.innerHTML = ''
         container.parentNode.insertBefore(frame, container)
 
         var frameBody = frame.contentWindow.document.body
