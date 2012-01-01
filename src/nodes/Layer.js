@@ -27,9 +27,9 @@ function Layer () {
     events.addPropertyListener(this, 'isMouseEnabled', 'change', function () {
         if (this.isRunning) {
             if (this.isMouseEnabled) {
-                EventDispatcher.get('sharedDispatcher').addMouseDelegate({delegate: this, priority: this.mouseDelegatePriority})
+                EventDispatcher.sharedDispatcher.addMouseDelegate({delegate: this, priority: this.mouseDelegatePriority})
             } else {
-                EventDispatcher.get('sharedDispatcher').removeMouseDelegate({delegate: this})
+                EventDispatcher.sharedDispatcher.removeMouseDelegate({delegate: this})
             }
         }
     }.bind(this))
@@ -38,9 +38,9 @@ function Layer () {
     events.addPropertyListener(this, 'isKeyboardEnabled', 'change', function () {
         if (this.isRunning) {
             if (this.isKeyboardEnabled) {
-                EventDispatcher.get('sharedDispatcher').addKeyboardDelegate({delegate: this, priority: this.keyboardDelegatePriority})
+                EventDispatcher.sharedDispatcher.addKeyboardDelegate({delegate: this, priority: this.keyboardDelegatePriority})
             } else {
-                EventDispatcher.get('sharedDispatcher').removeKeyboardDelegate({delegate: this})
+                EventDispatcher.sharedDispatcher.removeKeyboardDelegate({delegate: this})
             }
         }
     }.bind(this))
@@ -54,10 +54,10 @@ Layer.inherit(Node, /** @lends cocos.nodes.Layer# */ {
 
   , onEnter: function () {
         if (this.isMouseEnabled) {
-            EventDispatcher.get('sharedDispatcher').addMouseDelegate({delegate: this, priority: this.mouseDelegatePriority})
+            EventDispatcher.sharedDispatcher.addMouseDelegate({delegate: this, priority: this.mouseDelegatePriority})
         }
         if (this.isKeyboardEnabled) {
-            EventDispatcher.get('sharedDispatcher').addKeyboardDelegate({delegate: this, priority: this.keyboardDelegatePriority})
+            EventDispatcher.sharedDispatcher.addKeyboardDelegate({delegate: this, priority: this.keyboardDelegatePriority})
         }
 
         Layer.superclass.onEnter.call(this)
@@ -65,10 +65,10 @@ Layer.inherit(Node, /** @lends cocos.nodes.Layer# */ {
 
   , onExit: function () {
         if (this.isMouseEnabled) {
-            EventDispatcher.get('sharedDispatcher').removeMouseDelegate({delegate: this})
+            EventDispatcher.sharedDispatcher.removeMouseDelegate({delegate: this})
         }
         if (this.isKeyboardEnabled) {
-            EventDispatcher.get('sharedDispatcher').removeKeyboardDelegate({delegate: this})
+            EventDispatcher.sharedDispatcher.removeKeyboardDelegate({delegate: this})
         }
 
         Layer.superclass.onExit.call(this)

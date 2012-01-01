@@ -1,12 +1,10 @@
-/*globals module exports resource require BObject BArray*/
-/*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
-"use strict";
+'use strict'
 
 /**
  * @memberOf cocos
  * @namespace
  */
-var TMXOrientation = /** @lends cocos.TMXOrientation */{
+var TMXOrientation = /** @lends cocos.TMXOrientation */ {
     /**
      * Orthogonal orientation
      * @constant
@@ -24,6 +22,8 @@ var TMXOrientation = /** @lends cocos.TMXOrientation */{
      * @constant
      */
     TMXOrientationIso: 3
-};
+}
 
-module.exports = TMXOrientation;
+module.exports = TMXOrientation
+
+// vim:et:st=4:fdm=marker:fdl=0:fdc=1

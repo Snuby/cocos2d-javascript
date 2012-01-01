@@ -93,7 +93,7 @@ function SpriteColorOpacity () {
     this.addChild({ child: sprite8, z: 0, tag: kTagSprite8 })
 
 
-    Scheduler.get('sharedScheduler').schedule({target: this, method: this.removeAndAddSprite, interval: 2})
+    Scheduler.sharedScheduler.schedule({target: this, method: this.removeAndAddSprite, interval: 2})
 }
 
 SpriteColorOpacity.inherit(SpriteDemo, /** @lends SpriteColorOpacity# */ {

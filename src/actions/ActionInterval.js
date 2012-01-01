@@ -311,8 +311,7 @@ RotateTo.inherit(ActionInterval, /** @lends cocos.actions.RotateTo# */ {
  * Rotates a cocos.Node object to a certain angle by modifying its rotation
  * attribute. The direction will be decided by the shortest angle.
  *
- * @memberOf cocos.action
- * @constructs
+ * @memberOf cocos.actions
  * @extends cocos.actions.RotateTo
  *
  * @opt {Float} duration Number of seconds to run action for

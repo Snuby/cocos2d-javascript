@@ -24,7 +24,7 @@ function AtlasNode (opts) {
     this.itemWidth = opts.itemWidth
     this.itemHeight = opts.itemHeight
 
-    this.textureAtlas = TextureAtlas.create({file: opts.file, capacity: opts.itemsToRender})
+    this.textureAtlas = new TextureAtlas({file: opts.file, capacity: opts.itemsToRender})
 
 
     this._calculateMaxItems()
@@ -66,7 +66,7 @@ AtlasNode.inherit(SpriteBatchNode, /** @lends cocos.nodes.AtlasNode# */ {
     },
 
     _calculateMaxItems: function () {
-        var s = this.textureAtlas.get('texture.contentSize')
+        var s = this.textureAtlas.texture.contentSize
         this.itemsPerColumn = s.height / this.itemHeight
         this.itemsPerRow = s.width / this.itemWidth
     }

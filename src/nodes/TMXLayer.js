@@ -110,7 +110,7 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
         var z = pos.x + pos.y * this.layerSize.width
             
         var rect = this.tileset.rectForGID(gid)
-        var tile = Sprite.create({rect: rect, textureAtlas: this.textureAtlas})
+        var tile = new Sprite({rect: rect, textureAtlas: this.textureAtlas})
         tile.position = this.positionAt(pos)
         tile.anchorPoint = ccp(0, 0)
         tile.opacity = this.opacity

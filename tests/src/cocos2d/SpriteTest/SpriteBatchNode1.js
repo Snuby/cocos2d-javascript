@@ -88,7 +88,7 @@ SpriteBatchNode1.inherit(SpriteDemo, /** @lends SpriteBatchNode1# */ {
                                   , angle: 360
                                   })
 
-            //action = cocos.TintBy.create({duration:3, scale:2})
+            //action = new cocos.TintBy({duration:3, scale:2})
         } else {
             action = new FadeOut({ duration: 2
                                  })

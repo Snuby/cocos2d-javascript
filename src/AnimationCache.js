@@ -1,28 +1,26 @@
-/*globals module exports resource require BObject BArray*/
-/*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
-"use strict";
+'use strict'
 
 var util = require('util'),
-    Plist = require('Plist').Plist;
+    Plist = require('Plist').Plist
 
-var AnimationCache = BObject.extend(/** @lends cocos.AnimationCache# */{
+/**
+ * @class
+ *
+ * @memberOf cocos
+ * @singleton
+ */
+function AnimationCache () {
+    AnimationCache.superclass.constructor.call(this)
+
+    this.animations = {}
+}
+
+AnimationCache.inherit(Object, /** @lends cocos.AnimationCache# */ {
     /**
      * Cached animations
      * @type Object
      */
     animations: null,
-
-    /**
-     * @memberOf cocos
-     * @constructs
-     * @extends BObject
-     * @singleton
-     */
-    init: function () {
-        AnimationCache.superclass.init.call(this);
-
-        this.set('animations', {});
-    },
 
     /**
      * Add an animation to the cache
@@ -32,9 +30,9 @@ var AnimationCache = BObject.extend(/** @lends cocos.AnimationCache# */{
      */
     addAnimation: function (opts) {
         var name = opts.name,
-            animation = opts.animation;
+            animation = opts.animation
 
-        this.get('animations')[name] = animation;
+        this.animations[name] = animation
     },
 
     /**
@@ -43,9 +41,9 @@ var AnimationCache = BObject.extend(/** @lends cocos.AnimationCache# */{
      * @opt {String} name Unique name of the animation
      */
     removeAnimation: function (opts) {
-        var name = opts.name;
+        var name = opts.name
 
-        delete this.get('animations')[name];
+        delete this.animations[name]
     },
 
     /**
@@ -55,27 +53,30 @@ var AnimationCache = BObject.extend(/** @lends cocos.AnimationCache# */{
      * @returns {cocos.Animation} Cached animation
      */
     getAnimation: function (opts) {
-        var name = opts.name;
+        var name = opts.name
 
-        return this.get('animations')[name];
+        return this.animations[name]
     }
-});
+})
 
-/**
- * Class methods
- */
-util.extend(AnimationCache, /** @lends cocos.AnimationCache */{
+Object.defineProperty(AnimationCache, 'sharedAnimationCache', {
     /**
-     * @getter sharedAnimationCache
-     * @type cocos.AnimationCache
+     * A shared singleton instance of cocos.AnimationCache
+     *
+     * @memberOf cocos.AnimationCache
+     * @getter {cocos.AnimationCache} sharedAnimationCache
      */
-    get_sharedAnimationCache: function (key) {
-        if (!this._instance) {
-            this._instance = this.create();
+    get: function () {
+        if (!AnimationCache._instance) {
+            AnimationCache._instance = new this()
         }
 
-        return this._instance;
+        return AnimationCache._instance
     }
-});
 
-exports.AnimationCache = AnimationCache;
+  , enumerable: true
+})
+
+exports.AnimationCache = AnimationCache
+
+// vim:et:st=4:fdm=marker:fdl=0:fdc=1

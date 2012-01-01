@@ -79,7 +79,7 @@ Sprite1.inherit(SpriteDemo, /** @lends Sprite1# */ {
                                   , angle: 360
                                   })
 
-            //action = cocos.TintBy.create({duration:3, scale:2})
+            //action = new cocos.TintBy({duration:3, scale:2})
         } else {
             action = new FadeOut({ duration: 2
                                  })

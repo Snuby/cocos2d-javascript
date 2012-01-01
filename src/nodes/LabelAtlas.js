@@ -39,7 +39,7 @@ LabelAtlas.inherit(AtlasNode, /** @lends cocos.nodes.LabelAtlas# */ {
 
     updateAtlasValue: function () {
         var n = this.string.length,
-            s = this.get('string')
+            s = this.string
 
         // FIXME this should reuse children to improve performance
         while (this.children.length > 0) {

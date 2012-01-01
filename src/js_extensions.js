@@ -1,15 +1,6 @@
 'use strict'
 
 var util = require('util')
-  , bob  = require('bobject')
-
-if (!window.BObject) {
-    window.BObject = bob.BObject
-}
-
-if (!window.BArray) {
-    window.BArray = bob.BArray
-}
 
 /**
  * @memberOf Object

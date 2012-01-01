@@ -199,7 +199,7 @@ Speed.inherit(Action, /** @lends cocos.actions.Speed# */ {
     },
 
     get isDone() {
-        return this.other.get_isDone()
+        return this.other.isDone
     },
 
     copy: function() {

@@ -5,8 +5,7 @@ var util   = require('util')
   , geo    = require('geometry')
   , ccp    = geo.ccp
 
-var Scene           = require('./nodes/Scene').Scene
-  , EventDispatcher = require('./EventDispatcher').EventDispatcher
+var EventDispatcher = require('./EventDispatcher').EventDispatcher
   , Scheduler       = require('./Scheduler').Scheduler
 
 /**
@@ -183,7 +182,7 @@ Director.prototype = /** @lends cocos.Director# */ {
         // Setup event handling
 
         // Mouse events
-        var eventDispatcher = EventDispatcher.get('sharedDispatcher')
+        var eventDispatcher = EventDispatcher.sharedDispatcher
           , mouseDown = function (evt) {
                 evt.locationInWindow = ccp(evt.clientX, evt.clientY)
                 evt.locationInCanvas = this.convertEventToCanvas(evt)
@@ -378,7 +377,7 @@ Director.prototype = /** @lends cocos.Director# */ {
         this._calculateDeltaTime()
 
         if (!this.isPaused) {
-            Scheduler.get('sharedScheduler').tick(this.dt)
+            Scheduler.sharedScheduler.tick(this.dt)
         }
 
 
@@ -555,3 +554,5 @@ DirectorFixedSpeed.inherit(Director, /** @lends cocos.DirectorFixedSpeed */ {
 
 exports.Director = Director
 exports.DirectorFixedSpeed = DirectorFixedSpeed
+
+// vim:et:st=4:fdm=marker:fdl=0:fdc=1

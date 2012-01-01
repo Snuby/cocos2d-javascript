@@ -42,7 +42,7 @@ function TransitionScene (opts) {
     if (this.inScene == this.outScene) {
         throw "Incoming scene must be different from the outgoing scene"
     }
-    EventDispatcher.get('sharedDispatcher').dispatchEvents = false
+    EventDispatcher.sharedDispatcher.dispatchEvents = false
     this.sceneOrder()
 }
 
@@ -86,7 +86,7 @@ TransitionScene.inherit(Scene, /** @lends cocos.nodes.TransitionScene# */ {
         os.scale = 1.0
         os.rotation = 0
 
-        Scheduler.get('sharedScheduler').schedule({
+        Scheduler.sharedScheduler.schedule({
             target: this,
             method: this.setNewScene,
             interval: 0
@@ -112,7 +112,7 @@ TransitionScene.inherit(Scene, /** @lends cocos.nodes.TransitionScene# */ {
         dir.replaceScene(this.inScene)
 
         // enable events while transitions
-        EventDispatcher.get('sharedDispatcher').dispatchEvents = true
+        EventDispatcher.sharedDispatcher.dispatchEvents = true
 
         // issue #267
         this.outScene.visible = true

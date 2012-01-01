@@ -10,6 +10,7 @@ var util = require('util'),
  * @class
  * Renders a simple text label
  *
+ * @memberOf cocos.nodes
  * @extends cocos.nodes.Node
  *
  * @opt {String} [string=""] The text string to draw

@@ -28,8 +28,8 @@ var SpriteDemo       = require('./SpriteDemo')
 function SpriteAnimationCache () {
     SpriteAnimationCache.superclass.constructor.call(this)
 
-    var frameCache = SpriteFrameCache.get('sharedSpriteFrameCache')
-      , animCache  = AnimationCache.get('sharedAnimationCache')
+    var frameCache = SpriteFrameCache.sharedSpriteFrameCache
+      , animCache  = AnimationCache.sharedAnimationCache
 
     frameCache.addSpriteFrames({ file: path.join(__dirname, '../resources/animations/grossini.plist') })
     frameCache.addSpriteFrames({ file: path.join(__dirname, '../resources/animations/grossini_gray.plist') })

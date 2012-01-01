@@ -64,7 +64,7 @@ function SpriteZOrder () {
                   })
 
 
-    Scheduler.get('sharedScheduler').schedule({ target: this
+    Scheduler.sharedScheduler.schedule({ target: this
                                        , method: this.reorderSprite
                                        , interval: 1
                                        })
