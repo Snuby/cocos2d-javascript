@@ -1,12 +1,36 @@
-/*globals module exports resource require BObject BArray*/
-/*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
-"use strict";
+'use strict'
 
 var SpriteBatchNode = require('./BatchNode').SpriteBatchNode,
     TextureAtlas = require('../TextureAtlas').TextureAtlas,
-    geo   = require('geometry');
+    geo   = require('geometry')
 
-var AtlasNode = SpriteBatchNode.extend(/** @lends cocos.AtlasNode# */{
+/**
+ * @class
+ * It knows how to render a TextureAtlas object. If you are going to
+ * render a TextureAtlas consider subclassing cocos.nodes.AtlasNode (or a
+ * subclass of cocos.nodes.AtlasNode)
+ *
+ * @memberOf cocos.nodes
+ * @extends cocos.nodes.SpriteBatchNode
+ *
+ * @opt {String} file Path to Atals image
+ * @opt {Integer} itemWidth Character width
+ * @opt {Integer} itemHeight Character height
+ * @opt {Integer} itemsToRender Quantity of items to render
+ */
+function AtlasNode (opts) {
+    AtlasNode.superclass.constructor.call(this, opts)
+
+    this.itemWidth = opts.itemWidth
+    this.itemHeight = opts.itemHeight
+
+    this.textureAtlas = TextureAtlas.create({file: opts.file, capacity: opts.itemsToRender})
+
+
+    this._calculateMaxItems()
+}
+
+AtlasNode.inherit(SpriteBatchNode, /** @lends cocos.nodes.AtlasNode# */ {
     /**
      * Characters per row
      * @type Integer
@@ -35,43 +59,19 @@ var AtlasNode = SpriteBatchNode.extend(/** @lends cocos.AtlasNode# */{
     /**
      * @type cocos.TextureAtlas
      */
-     textureAtlas: null,
-
-    /**
-     * @class
-     * It knows how to render a TextureAtlas object. If you are going to
-     * render a TextureAtlas consider subclassing cocos.nodes.AtlasNode (or a
-     * subclass of cocos.nodes.AtlasNode)
-     * @memberOf cocos
-     * @extends cocos.nodes.SpriteBatchNode
-     * @constructs
-     *
-     * @opt {String} file Path to Atals image
-     * @opt {Integer} itemWidth Character width
-     * @opt {Integer} itemHeight Character height
-     * @opt {Integer} itemsToRender Quantity of items to render
-     */
-    init: function (opts) {
-        AtlasNode.superclass.init.call(this, opts);
-
-        this.itemWidth = opts.itemWidth;
-        this.itemHeight = opts.itemHeight;
-        
-        this.textureAtlas = TextureAtlas.create({file: opts.file, capacity: opts.itemsToRender});
-
-
-        this._calculateMaxItems();
-    },
+    textureAtlas: null,
 
     updateAtlasValues: function () {
-        throw "cocos.nodes.AtlasNode:Abstract - updateAtlasValue not overriden";
+        throw "cocos.nodes.AtlasNode:Abstract - updateAtlasValue not overriden"
     },
 
     _calculateMaxItems: function () {
-        var s = this.textureAtlas.get('texture.contentSize');
-        this.itemsPerColumn = s.height / this.itemHeight;
-        this.itemsPerRow = s.width / this.itemWidth;
+        var s = this.textureAtlas.get('texture.contentSize')
+        this.itemsPerColumn = s.height / this.itemHeight
+        this.itemsPerRow = s.width / this.itemWidth
     }
-});
+})
 
-exports.AtlasNode = AtlasNode;
+exports.AtlasNode = AtlasNode
+
+// vim:et:st=4:fdm=marker:fdl=0:fdc=1

@@ -39,6 +39,52 @@ if (!Object.extend) {
 if (!Function.prototype.inherit) {
     Function.prototype.inherit = inherit
 }
+if (!('id' in Object.prototype)) {
+
+    /**
+     * @ignore
+     * Every object has a unique ID. It only gets set the first time its accessed
+     */
+    var nextObjectID = 1
+
+    Object.defineProperty(Object.prototype, 'id', {
+        get: function () {
+            if (this === Object.prototype || Object.getPrototypeOf(this) === Object.prototype) {
+                return
+            }
+
+
+            var id = nextObjectID++
+            this.id = id
+            return id
+        },
+
+        /** @ignore
+         * Allow overwriting of 'id' property
+         */
+        set: function (x) {
+            if (this === Object.prototype) {
+                return
+            }
+            if (Object.getPrototypeOf(this) === Object.prototype) {
+                Object.defineProperty(this, 'id', {
+                    configurable: true,
+                    writable: true,
+                    enumerable: true,
+                    value: x
+                })
+            } else {
+                Object.defineProperty(this, 'id', {
+                    configurable: true,
+                    writable: true,
+                    enumerable: false,
+                    value: x
+                })
+            }
+
+        }
+    })
+}
 
 if (!('superclass' in Function.prototype)) {
     Object.defineProperty(Function.prototype, 'superclass', {

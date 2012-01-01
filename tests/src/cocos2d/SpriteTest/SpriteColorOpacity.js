@@ -58,7 +58,7 @@ function SpriteColorOpacity () {
 
     var action = new FadeIn({ duration: 3 })
       , actionBack = action.reverse()
-      , fade = new RepeatForever(Sequence.create({actions: [action, actionBack]}))
+      , fade = new RepeatForever(new Sequence({actions: [action, actionBack]}))
 
     /*
     id tintred = [CCTintBy actionWithDuration:2 red:0 green:-255 blue:-255]

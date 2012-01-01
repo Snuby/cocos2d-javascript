@@ -1,29 +1,29 @@
-/*globals module exports resource require BObject BArray*/
-/*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
-"use strict";
+'use strict'
 
-var Node = require('./Node').Node,
-    geo = require('geometry');
-
-var Scene = Node.extend(/** @lends cocos.nodes.Scene */{
-    /**
-     * Everything in your view will be a child of this object. You need at least 1 scene per app.
-     *
-     * @memberOf cocos.nodes
-     * @constructs
-     * @extends cocos.nodes.Node
-     */
-    init: function () {
-        Scene.superclass.init.call(this);
+var Node     = require('./Node').Node
+  , Director = require('../Director').Director
+  , geo      = require('geometry')
 
 
-        var Director = require('../Director').Director;
-        var s = Director.get('sharedDirector').get('winSize');
-        this.set('isRelativeAnchorPoint', false);
-        this.anchorPoint = new geo.Point(0.5, 0.5);
-        this.set('contentSize', s);
-    }
+/**
+ * @class
+ * Everything in your view will be a child of this object. You need at least 1 scene per app.
+ *
+ * @memberOf cocos.nodes
+ * @extends cocos.nodes.Node
+ */
+function Scene () {
+    Scene.superclass.constructor.call(this)
 
-});
+    var s = Director.sharedDirector.winSize
 
-module.exports.Scene = Scene;
+    this.isRelativeAnchorPoint = false
+    this.anchorPoint = new geo.Point(0.5, 0.5)
+    this.contentSize = s
+}
+
+Scene.inherit(Node)
+
+module.exports.Scene = Scene
+
+// vim:et:st=4:fdm=marker:fdl=0:fdc=1

@@ -1,79 +1,78 @@
-/*globals module exports resource require BObject BArray*/
-/*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
-"use strict";
+'use strict'
 
-var Node = require('./Node').Node,
-    util = require('util'),
-    evt = require('events'),
-    Director = require('../Director').Director,
-    ccp    = require('geometry').ccp,
-    EventDispatcher = require('../EventDispatcher').EventDispatcher;
+var util   = require('util')
+  , events = require('events')
+  , ccp    = require('geometry').ccp
 
-var Layer = Node.extend(/** @lends cocos.nodes.Layer# */{
-    isMouseEnabled: false,
-    isKeyboardEnabled: false,
-    mouseDelegatePriority: 0,
-    keyboardDelegatePriority: 0,
+var Node            = require('./Node').Node
+  , Director        = require('../Director').Director
+  , EventDispatcher = require('../EventDispatcher').EventDispatcher
 
-    /** 
-     * A fullscreen Node. You need at least 1 layer in your app to add other nodes to.
-     *
-     * @memberOf cocos.nodes
-     * @constructs
-     * @extends cocos.nodes.Node
-     */
-    init: function () {
-        Layer.superclass.init.call(this);
+/**
+ * @class
+ * A fullscreen Node. You need at least 1 layer in your app to add other nodes to.
+ *
+ * @memberOf cocos.nodes
+ * @extends cocos.nodes.Node
+ */
+function Layer () {
+    Layer.superclass.constructor.call(this)
 
-        var s = Director.get('sharedDirector').get('winSize');
+    var s = Director.sharedDirector.winSize
 
-        this.set('isRelativeAnchorPoint', false);
-        this.anchorPoint = ccp(0.5, 0.5);
-        this.set('contentSize', s);
+    this.isRelativeAnchorPoint = false
+    this.anchorPoint = ccp(0.5, 0.5)
+    this.contentSize = s
 
-        evt.addPropertyListener(this, 'isMouseEnabled', 'change', function () {
-            if (this.isRunning) {
-                if (this.isMouseEnabled) {
-                    EventDispatcher.get('sharedDispatcher').addMouseDelegate({delegate: this, priority: this.get('mouseDelegatePriority')});
-                } else {
-                    EventDispatcher.get('sharedDispatcher').removeMouseDelegate({delegate: this});
-                }
+    events.addPropertyListener(this, 'isMouseEnabled', 'change', function () {
+        if (this.isRunning) {
+            if (this.isMouseEnabled) {
+                EventDispatcher.get('sharedDispatcher').addMouseDelegate({delegate: this, priority: this.mouseDelegatePriority})
+            } else {
+                EventDispatcher.get('sharedDispatcher').removeMouseDelegate({delegate: this})
             }
-        }.bind(this));
+        }
+    }.bind(this))
 
 
-        evt.addPropertyListener(this, 'isKeyboardEnabled', 'change', function () {
-            if (this.isRunning) {
-                if (this.isKeyboardEnabled) {
-                    EventDispatcher.get('sharedDispatcher').addKeyboardDelegate({delegate: this, priority: this.get('keyboardDelegatePriority')});
-                } else {
-                    EventDispatcher.get('sharedDispatcher').removeKeyboardDelegate({delegate: this});
-                }
+    events.addPropertyListener(this, 'isKeyboardEnabled', 'change', function () {
+        if (this.isRunning) {
+            if (this.isKeyboardEnabled) {
+                EventDispatcher.get('sharedDispatcher').addKeyboardDelegate({delegate: this, priority: this.keyboardDelegatePriority})
+            } else {
+                EventDispatcher.get('sharedDispatcher').removeKeyboardDelegate({delegate: this})
             }
-        }.bind(this));
-    },
+        }
+    }.bind(this))
+}
 
-    onEnter: function () {
+Layer.inherit(Node, /** @lends cocos.nodes.Layer# */ {
+    isMouseEnabled: false
+  , isKeyboardEnabled: false
+  , mouseDelegatePriority: 0
+  , keyboardDelegatePriority: 0
+
+  , onEnter: function () {
         if (this.isMouseEnabled) {
-            EventDispatcher.get('sharedDispatcher').addMouseDelegate({delegate: this, priority: this.get('mouseDelegatePriority')});
+            EventDispatcher.get('sharedDispatcher').addMouseDelegate({delegate: this, priority: this.mouseDelegatePriority})
         }
         if (this.isKeyboardEnabled) {
-            EventDispatcher.get('sharedDispatcher').addKeyboardDelegate({delegate: this, priority: this.get('keyboardDelegatePriority')});
-        }
-				
-        Layer.superclass.onEnter.call(this);
-    },
-
-    onExit: function () {
-        if (this.isMouseEnabled) {
-            EventDispatcher.get('sharedDispatcher').removeMouseDelegate({delegate: this});
-        }
-        if (this.isKeyboardEnabled) {
-            EventDispatcher.get('sharedDispatcher').removeKeyboardDelegate({delegate: this});
+            EventDispatcher.get('sharedDispatcher').addKeyboardDelegate({delegate: this, priority: this.keyboardDelegatePriority})
         }
 
-        Layer.superclass.onExit.call(this);
+        Layer.superclass.onEnter.call(this)
     }
-});
 
-module.exports.Layer = Layer;
+  , onExit: function () {
+        if (this.isMouseEnabled) {
+            EventDispatcher.get('sharedDispatcher').removeMouseDelegate({delegate: this})
+        }
+        if (this.isKeyboardEnabled) {
+            EventDispatcher.get('sharedDispatcher').removeKeyboardDelegate({delegate: this})
+        }
+
+        Layer.superclass.onExit.call(this)
+    }
+})
+
+module.exports.Layer = Layer

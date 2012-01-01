@@ -249,7 +249,7 @@ Director.prototype = /** @lends cocos.Director# */ {
         var preloader = this.preloadScene
         if (!preloader) {
             var PreloadScene = require('./nodes/PreloadScene').PreloadScene
-            preloader = PreloadScene.create()
+            preloader = new PreloadScene()
             this.preloadScene = preloader
         }
 
@@ -469,7 +469,7 @@ Director.prototype = /** @lends cocos.Director# */ {
   , _showFPS: function () {
         if (!this._fpsLabel) {
             var Label = require('./nodes/Label').Label
-            this._fpsLabel = Label.create({string: '', fontSize: 16})
+            this._fpsLabel = new Label({string: '', fontSize: 16})
             this._fpsLabel.anchorPoint = ccp(0, 1)
             this._frames = 0
             this._accumDt = 0

@@ -59,13 +59,6 @@ function BObject () {
 }
 BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
     /**
-     * Unique ID
-     * @type Integer
-     */
-    _id: 0,
-    
-
-    /**
      * The constructor for subclasses. Overwrite this for any initalisation you
      * need to do.
      * @ignore
@@ -243,19 +236,6 @@ BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
                 this.unbind(k);
             }
         }
-    },
-
-    /**
-     * Unique ID for this object
-     * @getter id
-     * @type Integer
-     */
-    get_id: function () {
-        if (!this._id) {
-            this._id = ++objectID;
-        }
-
-        return this._id;
     }
 });
 

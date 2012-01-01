@@ -1,92 +1,84 @@
-/*globals module exports resource require BObject BArray*/
-/*jslint undef: true, strict: true, white: true, newcap: true, browser: true, indent: 4 */
-"use strict";
+'use strict'
 
-var util = require('util');
+var util = require('util')
 
 /** @ignore */
 function HashUpdateEntry() {
-    this.timers = [];
-    this.timerIndex = 0;
-    this.currentTimer = null;
-    this.currentTimerSalvaged = false;
-    this.paused = false;
+    this.timers = []
+    this.timerIndex = 0
+    this.currentTimer = null
+    this.currentTimerSalvaged = false
+    this.paused = false
 }
 
 /** @ignore */
 function HashMethodEntry() {
-    this.timers = [];
-    this.timerIndex = 0;
-    this.currentTimer = null;
-    this.currentTimerSalvaged = false;
-    this.paused = false;
+    this.timers = []
+    this.timerIndex = 0
+    this.currentTimer = null
+    this.currentTimerSalvaged = false
+    this.paused = false
 }
 
-var Timer = BObject.extend(/** @lends cocos.Timer# */{
+/**
+ * @class
+ * Runs a function repeatedly at a fixed interval
+ *
+ * @memberOf cocos
+ *
+ * @opt {Function} callback The function to run at each interval
+ * @opt {Float} interval Number of milliseconds to wait between each exectuion of callback
+ */
+function Timer (opts) {
+    this.callback = opts.callback
+    this.interval = opts.interval || 0
+    this.elapsed = -1
+}
+
+Timer.inherit(Object, /** @lends cocos.Timer# */ {
     callback: null,
     interval: 0,
     elapsed: -1,
-
-    /**
-     * Runs a function repeatedly at a fixed interval
-     *
-     * @memberOf cocos
-     * @constructs
-     * @extends BObject
-     *
-     * @opt {Function} callback The function to run at each interval
-     * @opt {Float} interval Number of milliseconds to wait between each exectuion of callback
-     */
-    init: function (opts) {
-        Timer.superclass.init(this, opts);
-
-        this.set('callback', opts.callback);
-        this.set('interval', opts.interval || 0);
-        this.set('elapsed', -1);
-    },
 
     /**
      * @private
      */
     update: function (dt) {
         if (this.elapsed == -1) {
-            this.elapsed = 0;
+            this.elapsed = 0
         } else {
-            this.elapsed += dt;
+            this.elapsed += dt
         }
 
         if (this.elapsed >= this.interval) {
-            this.callback(this.elapsed);
-            this.elapsed = 0;
+            this.callback(this.elapsed)
+            this.elapsed = 0
         }
     }
-});
+})
 
-
-var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
+/**
+ * @class
+ * Runs the timers
+ *
+ * @memberOf cocos
+ *
+ * @singleton
+ */
+function Scheduler () {
+    this.updates0 = []
+    this.updatesNeg = []
+    this.updatesPos = []
+    this.hashForUpdates = {}
+    this.hashForMethods = {}
+}
+Scheduler.inherit(Object, /** @lends cocos.Scheduler# */ {
     updates0: null,
     updatesNeg: null,
     updatesPos: null,
     hashForUpdates: null,
     hashForMethods: null,
     timeScale: 1.0,
-
-    /**
-     * Runs the timers
-     *
-     * @memberOf cocos
-     * @constructs
-     * @extends BObject
-     * @singleton
-     * @private
-     */
-    init: function () {
-        this.updates0 = [];
-        this.updatesNeg = [];
-        this.updatesPos = [];
-        this.hashForUpdates = {};
-        this.hashForMethods = {};
-    },
 
     /**
      * The scheduled method will be called every 'interval' seconds.
@@ -98,21 +90,21 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
         var target   = opts.target,
             method   = (typeof opts.method == 'function') ? opts.method : target[opts.method],
             interval = opts.interval,
-            paused   = opts.paused || false;
+            paused   = opts.paused || false
 
-        var element = this.hashForMethods[target.get('id')];
+        var element = this.hashForMethods[target.id]
 
         if (!element) {
-            element = new HashMethodEntry();
-            this.hashForMethods[target.get('id')] = element;
-            element.target = target;
-            element.paused = paused;
+            element = new HashMethodEntry()
+            this.hashForMethods[target.id] = element
+            element.target = target
+            element.paused = paused
         } else if (element.paused != paused) {
-            throw "cocos.Scheduler. Trying to schedule a method with a pause value different than the target";
+            throw "cocos.Scheduler. Trying to schedule a method with a pause value different than the target"
         }
 
-        var timer = Timer.create({callback: method.bind(target), interval: interval});
-        element.timers.push(timer);
+        var timer = new Timer({callback: method.bind(target), interval: interval})
+        element.timers.push(timer)
     },
 
     /**
@@ -123,41 +115,41 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
     scheduleUpdate: function (opts) {
         var target   = opts.target,
             priority = opts.priority,
-            paused   = opts.paused;
+            paused   = opts.paused
 
-        var i, len;
-        var entry = {target: target, priority: priority, paused: paused};
-        var added = false;
+        var i, len
+        var entry = {target: target, priority: priority, paused: paused}
+        var added = false
 
         if (priority === 0) {
-            this.updates0.push(entry);
+            this.updates0.push(entry)
         } else if (priority < 0) {
             for (i = 0, len = this.updatesNeg.length; i < len; i++) {
                 if (priority < this.updatesNeg[i].priority) {
-                    this.updatesNeg.splice(i, 0, entry);
-                    added = true;
-                    break;
+                    this.updatesNeg.splice(i, 0, entry)
+                    added = true
+                    break
                 }
             }
 
             if (!added) {
-                this.updatesNeg.push(entry);
+                this.updatesNeg.push(entry)
             }
         } else /* priority > 0 */{
             for (i = 0, len = this.updatesPos.length; i < len; i++) {
                 if (priority < this.updatesPos[i].priority) {
-                    this.updatesPos.splice(i, 0, entry);
-                    added = true;
-                    break;
+                    this.updatesPos.splice(i, 0, entry)
+                    added = true
+                    break
                 }
             }
 
             if (!added) {
-                this.updatesPos.push(entry);
+                this.updatesPos.push(entry)
             }
         }
 
-        this.hashForUpdates[target.get('id')] = entry;
+        this.hashForUpdates[target.id] = entry
     },
 
     /**
@@ -165,42 +157,43 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
      * You should NEVER call this method, unless you know what you are doing.
      */
     tick: function (dt) {
-        var i, len, x;
+        var i, len, x
         if (this.timeScale != 1.0) {
-            dt *= this.timeScale;
+            dt *= this.timeScale
         }
 
-        var entry;
+        var entry
         for (i = 0, len = this.updatesNeg.length; i < len; i++) {
-            entry = this.updatesNeg[i];
+            entry = this.updatesNeg[i]
             if (entry && !entry.paused) {
-                entry.target.update(dt);
+                entry.target.update(dt)
             }
         }
 
+
         for (i = 0, len = this.updates0.length; i < len; i++) {
-            entry = this.updates0[i];
+            entry = this.updates0[i]
             if (entry && !entry.paused) {
-                entry.target.update(dt);
+                entry.target.update(dt)
             }
         }
 
         for (i = 0, len = this.updatesPos.length; i < len; i++) {
-            entry = this.updatesPos[i];
+            entry = this.updatesPos[i]
             if (entry && !entry.paused) {
-                entry.target.update(dt);
+                entry.target.update(dt)
             }
         }
 
         for (x in this.hashForMethods) {
             if (this.hashForMethods.hasOwnProperty(x)) {
-                entry = this.hashForMethods[x];
+                entry = this.hashForMethods[x]
 
                 if (entry) {
                     for (i = 0, len = entry.timers.length; i < len; i++) {
-                        var timer = entry.timers[i];
+                        var timer = entry.timers[i]
                         if (timer) {
-                            timer.update(dt);
+                            timer.update(dt)
                         }
                     }
                 }
@@ -215,19 +208,19 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
      */
     unschedule: function (opts) {
         if (!opts.target || !opts.method) {
-            return;
+            return
         }
 
         var target = opts.target,
-            method = (typeof opts.method == 'function') ? opts.method : target[opts.method];
+            method = (typeof opts.method == 'function') ? opts.method : target[opts.method]
 
-        var element = this.hashForMethods[opts.target.get('id')];
+        var element = this.hashForMethods[opts.target.id]
         if (element) {
             for (var i=0; i<element.timers.length; i++) {
                 // Compare callback function
                 if (element.timers[i].callback == method.bind(target)) {
-                    var timer = element.timers.splice(i, 1);
-                    timer = null;
+                    var timer = element.timers.splice(i, 1)
+                    timer = null
                 }
             }
         }
@@ -238,22 +231,22 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
      */
     unscheduleUpdateForTarget: function (target) {
         if (!target) {
-            return;
+            return
         }
-        var id = target.get('id'),
-            elementUpdate = this.hashForUpdates[id];
+        var id = target.id,
+            elementUpdate = this.hashForUpdates[id]
         if (elementUpdate) {
             // Remove from updates list
             if (elementUpdate.priority === 0) {
-                this.updates0.splice(this.updates0.indexOf(elementUpdate), 1);
+                this.updates0.splice(this.updates0.indexOf(elementUpdate), 1)
             } else if (elementUpdate.priority < 0) {
-                this.updatesNeg.splice(this.updatesNeg.indexOf(elementUpdate), 1);
+                this.updatesNeg.splice(this.updatesNeg.indexOf(elementUpdate), 1)
             } else /* priority > 0 */{
-                this.updatesPos.splice(this.updatesPos.indexOf(elementUpdate), 1);
+                this.updatesPos.splice(this.updatesPos.indexOf(elementUpdate), 1)
             }
         }
         // Release HashMethodEntry object
-        this.hashForUpdates[id] = null;
+        this.hashForUpdates[id] = null
     },
 
     /**
@@ -261,34 +254,34 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
      * You should NEVER call this method, unless you know what you are doing.
      */
     unscheduleAllSelectors: function () {
-        var i, x, entry;
+        var i, x, entry
 
         // Custom selectors
         for (x in this.hashForMethods) {
             if (this.hashForMethods.hasOwnProperty(x)) {
-                entry = this.hashForMethods[x];
-                this.unscheduleAllSelectorsForTarget(entry.target);
+                entry = this.hashForMethods[x]
+                this.unscheduleAllSelectorsForTarget(entry.target)
             }
         }
         // Updates selectors
         for (i = 0, len = this.updatesNeg.length; i < len; i++) {
-            entry = this.updatesNeg[i];
+            entry = this.updatesNeg[i]
             if (entry) {
-                this.unscheduleUpdateForTarget(entry.target);
+                this.unscheduleUpdateForTarget(entry.target)
             }
         }
 
         for (i = 0, len = this.updates0.length; i < len; i++) {
-            entry = this.updates0[i];
+            entry = this.updates0[i]
             if (entry) {
-                this.unscheduleUpdateForTarget(entry.target);
+                this.unscheduleUpdateForTarget(entry.target)
             }
         }
 
         for (i = 0, len = this.updatesPos.length; i < len; i++) {
-            entry = this.updatesPos[i];
+            entry = this.updatesPos[i]
             if (entry) {
-                this.unscheduleUpdateForTarget(entry.target);
+                this.unscheduleUpdateForTarget(entry.target)
             }
         }
     },
@@ -299,19 +292,19 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
      */
     unscheduleAllSelectorsForTarget: function (target) {
         if (!target) {
-            return;
+            return
         }
         // Custom selector
-        var element = this.hashForMethods[target.get('id')];
+        var element = this.hashForMethods[target.id]
         if (element) {
-            element.paused = true;
+            element.paused = true
             element.timers = []; // Clear all timers
         }
         // Release HashMethodEntry object
-        this.hashForMethods[target.get('id')] = null;
+        this.hashForMethods[target.id] = null
 
         // Update selector
-        this.unscheduleUpdateForTarget(target);
+        this.unscheduleUpdateForTarget(target)
     },
 
     /**
@@ -321,14 +314,14 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
      */
 
     pauseTarget: function (target) {
-        var element = this.hashForMethods[target.get('id')];
+        var element = this.hashForMethods[target.id]
         if (element) {
-            element.paused = true;
+            element.paused = true
         }
 
-        var elementUpdate = this.hashForUpdates[target.get('id')];
+        var elementUpdate = this.hashForUpdates[target.id]
         if (elementUpdate) {
-            elementUpdate.paused = true;
+            elementUpdate.paused = true
         }
     },
 
@@ -337,35 +330,39 @@ var Scheduler = BObject.extend(/** @lends cocos.Scheduler# */{
      * The 'target' will be unpaused, so all schedule selectors/update will be 'ticked' again.
      * If the target is not present, nothing happens.
      */
-
     resumeTarget: function (target) {
-        var element = this.hashForMethods[target.get('id')];
+        var element = this.hashForMethods[target.id]
         if (element) {
-            element.paused = false;
+            element.paused = false
         }
 
-        var elementUpdate = this.hashForUpdates[target.get('id')];
-        //console.log('foo', target.get('id'), elementUpdate);
+        var elementUpdate = this.hashForUpdates[target.id]
+        //console.log('foo', target.id, elementUpdate)
         if (elementUpdate) {
-            elementUpdate.paused = false;
+            elementUpdate.paused = false
         }
     }
-});
+})
 
-util.extend(Scheduler, /** @lends cocos.Scheduler */{
+Object.defineProperty(Scheduler, 'sharedScheduler', {
     /**
      * A shared singleton instance of cocos.Scheduler
-     * @getter sharedScheduler 
-     * @type cocos.Scheduler
+     *
+     * @memberOf cocos.Scheduler
+     * @getter {cocos.Scheduler} sharedScheduler
      */
-    get_sharedScheduler: function (key) {
-        if (!this._instance) {
-            this._instance = this.create();
+    get: function () {
+        if (!Scheduler._instance) {
+            Scheduler._instance = new this()
         }
 
-        return this._instance;
+        return Scheduler._instance
     }
-});
 
-exports.Timer = Timer;
-exports.Scheduler = Scheduler;
+  , enumerable: true
+})
+
+exports.Timer = Timer
+exports.Scheduler = Scheduler
+
+// vim:et:st=4:fdm=marker:fdl=0:fdc=1

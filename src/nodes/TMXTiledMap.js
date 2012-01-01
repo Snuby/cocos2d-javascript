@@ -12,7 +12,49 @@ var util = require('util'),
     TMXLayer   = require('./TMXLayer').TMXLayer,
     TMXMapInfo = require('../TMXXMLParser').TMXMapInfo;
 
-var TMXTiledMap = Node.extend(/** @lends cocos.nodes.TMXTiledMap# */{
+/**
+ * @class
+ * A TMX Map loaded from a .tmx file
+ *
+ * @memberOf cocos.nodes
+ * @extends cocos.nodes.Node
+ *
+ * @opt {String} file The file path of the TMX map to load
+ */
+function TMXTiledMap (opts) {
+    TMXTiledMap.superclass.init.call(this, opts);
+
+    this.set('anchorPoint', ccp(0, 0));
+
+    var mapInfo = new TMXMapInfo(opts.file);
+
+    this.mapSize        = mapInfo.mapSize;
+    this.tileSize       = mapInfo.tileSize;
+    this.mapOrientation = mapInfo.orientation;
+    this.objectGroups   = mapInfo.objectGroups;
+    this.properties     = mapInfo.properties;
+    this.tileProperties = mapInfo.tileProperties;
+
+    // Add layers to map
+    var idx = 0;
+    util.each(mapInfo.layers, function (layerInfo) {
+        if (layerInfo.visible) {
+            var child = this.parseLayer({layerInfo: layerInfo, mapInfo: mapInfo});
+            this.addChild({child: child, z: idx, tag: idx});
+
+            var childSize   = child.contentSize;
+            var currentSize = this.contentSize;
+            currentSize.width  = Math.max(currentSize.width,  childSize.width);
+            currentSize.height = Math.max(currentSize.height, childSize.height);
+            this.set('contentSize', currentSize);
+
+            idx++;
+        }
+    }.bind(this));
+}
+
+
+TMXTiledMap.inherit(Node, /** @lends cocos.nodes.TMXTiledMap# */ {
     mapSize: null,
     tileSize: null,
     mapOrientation: 0,
@@ -20,50 +62,9 @@ var TMXTiledMap = Node.extend(/** @lends cocos.nodes.TMXTiledMap# */{
     properties: null,
     tileProperties: null,
 
-    /**
-     * A TMX Map loaded from a .tmx file
-     *
-     * @memberOf cocos.nodes
-     * @constructs
-     * @extends cocos.nodes.Node
-     *
-     * @opt {String} file The file path of the TMX map to load
-     */
-    init: function (opts) {
-        TMXTiledMap.superclass.init.call(this, opts);
-
-        this.set('anchorPoint', ccp(0, 0));
-
-        var mapInfo = TMXMapInfo.create(opts.file);
-
-        this.mapSize        = mapInfo.get('mapSize');
-        this.tileSize       = mapInfo.get('tileSize');
-        this.mapOrientation = mapInfo.get('orientation');
-        this.objectGroups   = mapInfo.get('objectGroups');
-        this.properties     = mapInfo.get('properties');
-        this.tileProperties = mapInfo.get('tileProperties');
-
-        // Add layers to map
-        var idx = 0;
-        util.each(mapInfo.layers, function (layerInfo) {
-            if (layerInfo.get('visible')) {
-                var child = this.parseLayer({layerInfo: layerInfo, mapInfo: mapInfo});
-                this.addChild({child: child, z: idx, tag: idx});
-
-                var childSize   = child.get('contentSize');
-                var currentSize = this.get('contentSize');
-                currentSize.width  = Math.max(currentSize.width,  childSize.width);
-                currentSize.height = Math.max(currentSize.height, childSize.height);
-                this.set('contentSize', currentSize);
-
-                idx++;
-            }
-        }.bind(this));
-    },
-    
     parseLayer: function (opts) {
         var tileset = this.tilesetForLayer(opts);
-        var layer = TMXLayer.create({tilesetInfo: tileset, layerInfo: opts.layerInfo, mapInfo: opts.mapInfo});
+        var layer = new TMXLayer({tilesetInfo: tileset, layerInfo: opts.layerInfo, mapInfo: opts.mapInfo});
 
         layer.setupTiles();
 
@@ -73,7 +74,7 @@ var TMXTiledMap = Node.extend(/** @lends cocos.nodes.TMXTiledMap# */{
     tilesetForLayer: function (opts) {
         var layerInfo = opts.layerInfo,
             mapInfo = opts.mapInfo,
-            size = layerInfo.get('layerSize');
+            size = layerInfo.layerSize;
 
         // Reverse loop
         var tileset;
@@ -106,7 +107,7 @@ var TMXTiledMap = Node.extend(/** @lends cocos.nodes.TMXTiledMap# */{
         var layerName = opts.name,
             layer = null;
 
-        this.get('children').forEach(function (item) {
+        this.children.forEach(function (item) {
             if (item instanceof TMXLayer && item.layerName == layerName) {
                 layer = item;
             }
