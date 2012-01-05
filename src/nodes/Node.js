@@ -11,8 +11,10 @@ var Scheduler     = require('../Scheduler').Scheduler
 //}}}
 
 /**
+ * @class
+ * The base class all visual elements extend from
+ *
  * @memberOf cocos.nodes
- * @class The base class all visual elements extend from
  */
 function Node () {
     this.contentSize = new geo.Size(0, 0)
@@ -24,14 +26,12 @@ function Node () {
     events.addPropertyListener(this, 'scaleX scaleY rotation position anchorPoint contentSize isRelativeAnchorPoint'.w, 'change', this._dirtyTransform.bind(this))
     events.addPropertyListener(this, 'anchorPoint contentSize'.w, 'change', this._updateAnchorPointInPixels.bind(this))
 }
-Node.prototype = /** @lends cocos.nodes.Node# */ {
-    constructor: Node
-
+Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
     /**
      * Is the node visible
-     * @type boolean
+     * @type Boolean
      */
-  , visible: true
+    visible: true
 
     /**
      * Position relative to parent node
@@ -48,7 +48,7 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
 
     /**
      * Unique tag to identify the node
-     * @type *
+     * @type String
      */
   , tag: null
 
@@ -131,7 +131,7 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
 
     /**
      * The child Nodes
-     * @type cocos.nodes.Node[]
+     * @type {cocos.nodes.Node[]}
      */
   , children: null
 
@@ -297,6 +297,13 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
         children.splice(idx, 1)
     }
 
+    /**
+     * Change the Z index of a child node. Other child nodes will have their Z
+     * index adjusted to accommodate.
+     *
+     * @opt {cocos.nodes.Node} child Child node to reorder
+     * @opt {Integer} z The new Z index for the child
+     */
   , reorderChild: function (opts) {
         var child = opts.child,
             z     = opts.z
@@ -332,7 +339,7 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
      * draw only the area inside the rect then don't bother. The result will be
      * clipped to that area anyway.
      *
-     * @param {CanvasRenderingContext2D|WebGLRenderingContext} context Canvas rendering context
+     * @param {CanvasRenderingContext2D} context Canvas rendering context
      * @param {geometry.Rect} rect Rectangular region that needs redrawing. Limit drawing to this area only if it's more efficient to do so.
      */
   , draw: function (context, rect) {
@@ -340,6 +347,8 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
     }
 
     /**
+     * The scale factor for the node. Only valid is scaleX and scaleY are identical
+     *
      * @type Float
      */
   , get scale () {
@@ -351,6 +360,8 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
     }
 
     /**
+     * Sets both scaleX and scaleY to the given value
+     *
      * @type Float
      */
   , set scale (val) {
@@ -358,6 +369,11 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
         this.scaleY = val
     }
 
+    /**
+     * Schedule a timer to call the 'update' method on this node every frame
+     *
+     * @opt {Integer} [priority=0] Priority order for when the method should be called
+     */
   , scheduleUpdate: function (opts) {
         opts = opts || {}
         var priority = opts.priority || 0
@@ -409,10 +425,24 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
   , unscheduleAllSelectors: function () {
         Scheduler.sharedScheduler.unscheduleAllSelectorsForTarget(this)
     }
+
+    /**
+     * Stop all running actions on this node
+     */
   , stopAllActions: function () {
         ActionManager.sharedManager.removeAllActionsFromTarget(this)
     }
 
+    /**
+     * Called automatically every frame and triggers the call to 'draw' this
+     * node and its chidlren in the correct order.
+     *
+     * For custom drawing override the 'draw' method. Only override this if you
+     * really need to do something special.
+     *
+     * @param {CanvasRenderingContext2D} context Canvas rendering context
+     * @param {geometry.Rect} [rect] Area that needs redrawing
+     */
   , visit: function (context, rect) {
         if (!this.visible) {
             return
@@ -450,6 +480,11 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
         context.restore()
     }
 
+    /**
+     * Transforms the node by its scale, rotation and position. Called automatically when one of these changes
+     *
+     * @param {CanvasRenderingContext2D} context Canvas rendering context
+     */
   , transform: function (context) {
         // Translate
         if (this.isRelativeAnchorPoint && (this.anchorPointInPixels.x !== 0 || this.anchorPointInPixels.y !== 0)) {
@@ -473,6 +508,11 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
         }
     }
 
+    /**
+     * Run an action on the node
+     *
+     * @param {cocos.actions.Action} action Action to run
+     */
   , runAction: function (action) {
         ActionManager.sharedManager.addAction({action: action, target: this, paused: this.isRunning})
     }
@@ -538,6 +578,8 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
     }
 
     /**
+     * Rectangle bounding box relative to its parent Node
+     *
      * @type geometry.Rect
      */
   , get boundingBox () {
@@ -548,6 +590,8 @@ Node.prototype = /** @lends cocos.nodes.Node# */ {
     }
 
     /**
+     * Rectangle bounding box relative to the world
+     *
      * @type geometry.Rect
      */
   , get worldBoundingBox () {

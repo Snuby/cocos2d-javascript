@@ -29,13 +29,12 @@ function Director () {
     util.makeReadonly(this, 'canvas context sceneStack winSize isReady document window'.w)
 }
 
-Director.prototype = /** @lends cocos.Director# */ {
+Director.inherit(Object, /** @lends cocos.Director# */ {
     /**
      * Background colour of the canvas. It can be any valid CSS colour.
      * @type String
      */
     backgroundColor: 'rgb(0, 0, 0)'
-
 
     /**
      * DOM Window of the containing page
@@ -331,6 +330,10 @@ Director.prototype = /** @lends cocos.Director# */ {
         this.animate()
     }
 
+    /**
+     * Draws the scene after waiting for the next animation frame time. This
+     * controls the framerate.
+     */
   , animate: function() {
         if (this._animating) {
             this.drawScene()
@@ -493,7 +496,7 @@ Director.prototype = /** @lends cocos.Director# */ {
         this._fpsLabel.visit(this.context)
     }
 
-}
+})
 
 Object.defineProperty(Director, 'sharedDirector', {
     /**

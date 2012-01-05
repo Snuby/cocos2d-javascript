@@ -6,7 +6,8 @@ var util = require('util'),
 
 /**
  * @class
- * Base class for Actions
+ * Base class for Actions. Actions change properites of a Node gradually
+ * over time or instantly.
  *
  * @memberOf cocos.actions
  */
@@ -23,12 +24,15 @@ Action.inherit(Object, /** @lends cocos.actions.Action# */ {
 
     /**
      * Unique tag to identify the action
-     * @type *
+     * @type String
      */
     tag: null,
 
     /**
-     * Called every frame with it's delta time.
+     * Called every frame with its delta time. Overwrite this only if you're
+     * making a new base type of action. Usually you'll just want to override
+     * 'update' and extend from cocos.actions.ActionInstance or
+     * cocos.actions.ActionInterval.
      *
      * @param {Float} dt The delta time
      */
@@ -37,7 +41,8 @@ Action.inherit(Object, /** @lends cocos.actions.Action# */ {
     },
 
     /**
-     * Called once per frame.
+     * Called once per frame. Override this method with your implementation to
+     * update the target.
      *
      * @param {Float} time How much of the animation has played. 0.0 = just started, 1.0 just finished.
      */
@@ -56,7 +61,7 @@ Action.inherit(Object, /** @lends cocos.actions.Action# */ {
 
     /**
      * Called after the action has finished. It will set the 'target' to nil.
-     * <strong>Important</strong>: You should never call cocos.actions.Action#stop manually.
+     * Important: You should never call cocos.actions.Action#stop manually.
      * Instead, use cocos.nodes.Node#stopAction(action)
      */
     stop: function () {
@@ -64,18 +69,17 @@ Action.inherit(Object, /** @lends cocos.actions.Action# */ {
     },
 
     /**
-     * @getter isDone
-     * @type {Boolean}
+     * @type Boolean
      */
     get isDone (key) {
         return true
     },
 
-
     /**
-     * Returns a copy of this Action but in reverse
+     * Returns a copy of this Action but in reverse. Overwrite this and inside
+     * create a new instance of the action, but with the reverse values.
      *
-     * @returns {cocos.actions.Action} A new Action in reverse
+     * @returns {cocos.actions.Action} A new instance of the Action but in reverse
      */
     reverse: function () {
     }
@@ -83,8 +87,8 @@ Action.inherit(Object, /** @lends cocos.actions.Action# */ {
 
 /**
  * @class
- * Repeats an action forever. To repeat the an action for a limited number of
- * times use the cocos.actions.Repeat action.
+ * Repeats an action forever. To repeat an action for a limited number of
+ * times use the cocos.actions.Repeat action instead.
  *
  * @memberOf cocos.actions
  * @extends cocos.actions.Action
@@ -132,7 +136,7 @@ RepeatForever.inherit(Action, /** @lends cocos.actions.RepeatForever# */ {
 /**
  * @class
  * Repeats an action a number of times. To repeat an action forever use the
- * cocos.RepeatForever action.
+ * cocos.RepeatForever action instead.
  *
  * @memberOf cocos.actions
  * @extends cocos.actions.Action
@@ -163,8 +167,11 @@ FiniteTimeAction.inherit(Action, /** @lends cocos.actions.FiniteTimeAction# */ {
  *
  * @memberOf cocos.actions
  * @extends cocos.actions.Action
+ *
+ * @opt {cocos.actions.Action} action Action to change duration of
+ * @opt {Float} speed How much to multiply the duration by. Values > 1 increase duration, and < 1 will decrease duration.
  */
-function Speed () {
+function Speed (opts) {
     Speed.superclass.constructor.call(this, opts)
 
     this.other = opts.action
@@ -172,41 +179,41 @@ function Speed () {
 }
 
 Speed.inherit(Action, /** @lends cocos.actions.Speed# */ {
+    /**
+     * The action being adjusted
+     * @type cocos.actions.Action
+     */
     other: null,
 
     /**
-     * speed of the inner function
+     * Speed of the inner function
      * @type Float
      */
     speed: 1.0,
 
-    startWithTarget: function(target) {
+    startWithTarget: function (target) {
         Speed.superclass.startWithTarget.call(this, target)
         this.other.startWithTarget(this.target)
     },
 
-    setSpeed: function(speed) {
-        this.speed = speed
-    },
-
-    stop: function() {
+    stop: function () {
         this.other.stop()
         Speed.superclass.stop.call(this)
     },
 
-    step: function(dt) {
+    step: function (dt) {
         this.other.step(dt * this.speed)
     },
 
-    get isDone() {
+    get isDone () {
         return this.other.isDone
     },
 
-    copy: function() {
+    copy: function () {
         return new Speed({action: this.other.copy(), speed: this.speed})
     },
 
-    reverse: function() {
+    reverse: function () {
         return new Speed({action: this.other.reverse(), speed: this.speed})
     }
 })
@@ -259,36 +266,57 @@ function Follow (opts) {
 
 Follow.inherit(Action, /** @lends cocos.actions.Follow# */ {
     /**
-     * node to follow
+     * Node to follow
+     * @type cocos.nodes.Node
      */
     followedNode: null,
 
     /**
-     * whether camera should be limited to certain area
+     * Whether camera should be limited to certain area
      * @type Boolean
      */
     boundarySet: false,
 
     /**
-     * if screensize is bigger than the boundary - update not needed
+     * If this screen size is bigger than the boundary - update not needed
      * @type Boolean
      */
     boundaryFullyCovered: false,
 
     /**
-     * fast access to the screen dimensions
+     * Fast access to half the screen dimensions
      * @type geometry.Point
      */
     halfScreenSize: null,
+
+    /**
+     * Fast access to the screen dimensions
+     * @type geometry.Point
+     */
     fullScreenSize: null,
 
     /**
-     * world boundaries
+     * Left edge of world
      * @type Float
      */
     leftBoundary: 0,
+
+    /**
+     * Right edge of world
+     * @type Float
+     */
     rightBoundary: 0,
+
+    /**
+     * Top edge of world
+     * @type Float
+     */
     topBoundary: 0,
+
+    /**
+     * Bottom edge of world
+     * @type Float
+     */
     bottomBoundary: 0,
 
     step: function (dt) {
@@ -298,16 +326,15 @@ Follow.inherit(Action, /** @lends cocos.actions.Follow# */ {
                 return
             }
             var tempPos = geo.ccpSub(this.halfScreenSize, this.followedNode.position)
-            this.target.set('position', ccp(
-                Math.min(Math.max(tempPos.x, this.leftBoundary), this.rightBoundary),
-                Math.min(Math.max(tempPos.y, this.bottomBoundary), this.topBoundary))
-            )
+            this.target.position = ccp( Math.min(Math.max(tempPos.x, this.leftBoundary),   this.rightBoundary)
+                                      , Math.min(Math.max(tempPos.y, this.bottomBoundary), this.topBoundary)
+                                      )
         } else {
             this.target.position = geo.ccpSub(this.halfScreenSize, this.followedNode.position)
         }
     },
 
-    get isDone() {
+    get isDone () {
         return !this.followedNode.isRunning
     }
 })
