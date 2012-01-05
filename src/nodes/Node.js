@@ -141,8 +141,8 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * anchorPointInPixels property
      */
   , _updateAnchorPointInPixels: function () {
-        var ap = this.anchorPoint,
-            cs = this.contentSize
+        var ap = this.anchorPoint
+          , cs = this.contentSize
         this.anchorPointInPixels = ccp(cs.width * ap.x, cs.height * ap.y)
     }
 
@@ -159,20 +159,21 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
             return this.addChild({child: opts})
         }
 
-        var child = opts.child,
-            z = opts.z,
-            tag = opts.tag
+        var child = opts.child
+          , z = opts.z
+          , tag = opts.tag
+          , added = false
 
         if (z === undefined || z === null) {
             z = child.zOrder
         }
 
         //this.insertChild({child: child, z:z})
-        var added = false
 
 
-        for (var i = 0, childLen = this.children.length; i < childLen; i++) {
-            var c = this.children[i]
+        var i, c
+        for (i = 0, childLen = this.children.length; i < childLen; i++) {
+            c = this.children[i]
             if (c.zOrder > z) {
                 added = true
                 this.children.splice(i, 0, child)
@@ -228,15 +229,15 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
             return this.removeChild({child: opts})
         }
 
-        var child = opts.child,
-            cleanup = opts.cleanup
+        var child = opts.child
+          , cleanup = opts.cleanup
 
         if (!child) {
             return
         }
 
-        var children = this.children,
-            idx = children.indexOf(child)
+        var children = this.children
+          , idx = children.indexOf(child)
 
         if (idx > -1) {
             this._detatchChild({child: child, cleanup: cleanup})
@@ -252,8 +253,8 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * @opt {Boolean} [cleanup=false] Should a cleanup be performed after removing the Node
      */
   , removeChildren: function(opts) {
-        var children = this.children,
-            isRunning = this.isRunning
+        var children = this.children
+          , isRunning = this.isRunning
 
         // Perform cleanup on each child but can't call removeChild()
         // due to Array.splice's destructive nature during iteration.
@@ -278,12 +279,12 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * @opt {Boolean} [cleanup=false] Should a cleanup be performed after removing the Node
      */
   , _detatchChild: function (opts) {
-        var child = opts.child,
-            cleanup = opts.cleanup
+        var child = opts.child
+          , cleanup = opts.cleanup
 
-        var children = this.children,
-            isRunning = this.isRunning,
-            idx = children.indexOf(child)
+        var children = this.children
+          , isRunning = this.isRunning
+          , idx = children.indexOf(child)
 
         if (isRunning) {
             child.onExit()
@@ -305,10 +306,10 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * @opt {Integer} z The new Z index for the child
      */
   , reorderChild: function (opts) {
-        var child = opts.child,
-            z     = opts.z
+        var child = opts.child
+          , z     = opts.z
+          , pos   = this.children.indexOf(child)
 
-        var pos = this.children.indexOf(child)
         if (pos == -1) {
             throw "Node isn't a child of this node"
         }
@@ -320,8 +321,9 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
 
         // Add child back at correct location
         var added = false
-        for (var i = 0, childLen = this.children.length; i < childLen; i++) {
-            var c = this.children[i]
+          , i, c
+        for (i = 0, childLen = this.children.length; i < childLen; i++) {
+            c = this.children[i]
             if (c.zOrder > z) {
                 added = true
                 this.children.splice(i, 0, child)
@@ -584,7 +586,8 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      */
   , get boundingBox () {
         var cs = this.contentSize
-        var rect = geo.rectMake(0, 0, cs.width, cs.height)
+          , rect = new geo.Rect(0, 0, cs.width, cs.height)
+
         rect = geo.rectApplyAffineTransform(rect, this.nodeToParentTransform())
         return rect
     }
@@ -596,8 +599,8 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      */
   , get worldBoundingBox () {
         var cs = this.contentSize
-
-        var rect = geo.rectMake(0, 0, cs.width, cs.height)
+          , rect = new geo.Rect(0, 0, cs.width, cs.height)
+ 
         rect = geo.rectApplyAffineTransform(rect, this.nodeToWorldTransform())
         return rect
     }
@@ -610,10 +613,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      */
   , get visibleRect () {
         var s = require('../Director').Director.sharedDirector.winSize
-        var rect = new geo.Rect(
-            0, 0,
-            s.width, s.height
-        )
+          , rect = new geo.Rect(0, 0, s.width, s.height)
 
         return geo.rectApplyAffineTransform(rect, this.worldToNodeTransform())
     }
