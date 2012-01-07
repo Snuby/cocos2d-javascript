@@ -26,4 +26,8 @@ exports.main = function () {
             }
         }
     }
+
+    if (ENABLE_DEPRECATED_METHODS) {
+        require('./legacy')
+    }
 };

@@ -1,4 +1,7 @@
 module.exports = {
+    // Enable BObject's get/set/extend/etc methods
+    ENABLE_DEPRECATED_METHODS: false,
+
     // Invert the Y axis so origin is at the bottom left
     FLIP_Y_AXIS: false,
     
