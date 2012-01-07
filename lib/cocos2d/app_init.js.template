@@ -19,27 +19,39 @@
 
         container.parentNode.insertBefore(frame, container)
 
-        var frameBody = frame.contentWindow.document.body
-        frame.contentWindow.CONTAINER_ID = containerID
+        var frameWin = frame.contentWindow
+          , frameDoc = frameWin.document
+          , frameBody = frameDoc.body
+        if (!frameBody) {
+            var frameHTML = frameDoc.createElement('html')
+            frameBody = frameDoc.createElement('body')
+            frameHTML.appendChild(frameBody)
+            frameDoc.appendChild(frameHTML)
+        }
+
+        frameWin.CONTAINER_ID = containerID
+
 
         var i = 0
         ;(function nextScript () {
             if (scripts.length > i) {
-                addScript(frameBody, scripts[i], nextScript)
+                addScript(frameDoc, scripts[i], nextScript)
             }
             i++
         })()
     }
 
-    function addScript (body, script, callback) {
+    function addScript (document, script, callback) {
         s = document.createElement('script')
         s.type = 'text/javascript'
         s.defer = true
         s.src = script
         s.onload = callback
-        body.appendChild(s)
+        document.body.appendChild(s)
     }
 
     var listener = window.document.addEventListener('readystatechange', initializeApplication)
     initializeApplication()
 })(window)
+
+// vim:et:st=4:fdm=marker:fdl=0:fdc=1:ft=javascript
