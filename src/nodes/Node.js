@@ -26,6 +26,7 @@ function Node () {
     events.addPropertyListener(this, 'scaleX scaleY rotation position anchorPoint contentSize isRelativeAnchorPoint'.w, 'change', this._dirtyTransform.bind(this))
     events.addPropertyListener(this, 'anchorPoint contentSize'.w, 'change', this._updateAnchorPointInPixels.bind(this))
 }
+
 Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
     /**
      * Is the node visible
@@ -663,7 +664,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
         Scheduler.sharedScheduler.unschedule({target: this, method: method})
     }
 
-}
+})
 
 module.exports.Node = Node
 

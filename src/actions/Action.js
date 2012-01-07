@@ -71,7 +71,7 @@ Action.inherit(Object, /** @lends cocos.actions.Action# */ {
     /**
      * @type Boolean
      */
-    get isDone (key) {
+    get isDone () {
         return true
     },
 

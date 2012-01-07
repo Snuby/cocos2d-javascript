@@ -4,8 +4,10 @@ exports.main = function () {
     require.paths.push(path.join(__dirname, 'libs'))
 
     require('./js_extensions')
-    require('./legacy')
 
+    // Link to the parent window's XHR object, IE9 will fail with cross-origin
+    // errors if we don't.
+    window.XMLHttpRequest = parent.XMLHttpRequest
 
     // Load default cocos2d config
     var config = require('./config')

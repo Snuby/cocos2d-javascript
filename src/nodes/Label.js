@@ -43,7 +43,7 @@ Label.inherit(Node, /** @lends cocos.nodes.Label# */ {
      *
      * @type String
      */
-    get font (key) {
+    get font () {
         return this.fontSize + 'px ' + this.fontName
     },
 
