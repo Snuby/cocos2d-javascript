@@ -24,7 +24,10 @@ var EventDispatcher = require('./EventDispatcher').EventDispatcher
  * @singleton
  */
 function Director () {
-    Director.superclass.constructor.call(this)
+    if (Director._instance) {
+        throw new Error('Director instance already exists')
+    }
+
     this.sceneStack = []
     this.window   = parent.window
     this.document = this.window.document
