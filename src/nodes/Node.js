@@ -172,8 +172,9 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
         //this.insertChild({child: child, z:z})
 
 
-        var i, c
-        for (i = 0, childLen = this.children.length; i < childLen; i++) {
+        var childLen = this.children.length
+          , i, c
+        for (i = 0; i < childLen; i++) {
             c = this.children[i]
             if (c.zOrder > z) {
                 added = true
@@ -253,7 +254,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      *
      * @opt {Boolean} [cleanup=false] Should a cleanup be performed after removing the Node
      */
-  , removeChildren: function(opts) {
+  , removeChildren: function (opts) {
         var children = this.children
           , isRunning = this.isRunning
 
@@ -523,7 +524,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
     /**
      * @opt {String} tag Tag of the action to return
      */
-  , getAction: function(opts) {
+  , getAction: function (opts) {
         return ActionManager.sharedManager.getActionFromTarget({target: this, tag: opts.tag})
     }
 
