@@ -242,7 +242,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
           , idx = children.indexOf(child)
 
         if (idx > -1) {
-            this._detatchChild({child: child, cleanup: cleanup})
+            this._detachChild({child: child, cleanup: cleanup})
         }
     }
 
@@ -275,12 +275,12 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
 
     /**
      * @private
-     * Detatch the child node from this node
+     * Detach the child node from this node
      *
      * @opt {cocos.nodes.Node} child The Node to remove
      * @opt {Boolean} [cleanup=false] Should a cleanup be performed after removing the Node
      */
-  , _detatchChild: function (opts) {
+  , _detachChild: function (opts) {
         var child = opts.child
           , cleanup = opts.cleanup
 
