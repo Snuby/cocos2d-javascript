@@ -9,6 +9,10 @@ var EventDispatcher = require('./EventDispatcher').EventDispatcher
   , Scheduler       = require('./Scheduler').Scheduler
 
 /**
+ * Create a new instance of Director. This is a singleton so you shouldn't use
+ * the constructor directly. Instead grab the shared instance using the
+ * cocos.Director.sharedDirector property.
+ *
  * @class
  * Creates and handles the main view and manages how and when to execute the
  * Scenes.
