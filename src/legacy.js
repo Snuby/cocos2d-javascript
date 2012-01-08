@@ -25,27 +25,22 @@ function applyAccessors (obj) {
         })
 }
 
-var nodes = 'Node Scene Layer Sprite Menu MenuItem RenderTexture BatchNode Label AtlasNode LabelAtlas TMXLayer TMXTiledMap Transition'.w
-nodes.forEach(function (n) {
-    var mod = require('./nodes/' + n)
-    for (var m in mod) {
-        if (mod.hasOwnProperty(m)) {
-            applyAccessors(mod[m])
-        }
-    }
-})
-var actions = 'Action ActionInterval ActionInstant ActionEase'.w
-actions.forEach(function (a) {
-    var mod = require('./actions/' + a)
-    for (var m in mod) {
-        if (mod.hasOwnProperty(m)) {
-            applyAccessors(mod[m])
-        }
-    }
-})
-applyAccessors(require('./Director').Director)
-applyAccessors(require('./Scheduler').Scheduler)
-/*
-applyAccessors(require('./actions/Action').Action)
-*/
+var pkgs = { _:       'ActionManager Director SpriteFrame TMXXMLParser Animation EventDispatcher SpriteFrameCache Texture2D AnimationCache Scheduler TextureAtlas'.w
+           , nodes:   'AtlasNode BatchNode index Label LabelAtlas Layer Menu MenuItem Node PreloadScene ProgressBar RenderTexture Scene Sprite TMXLayer TMXTiledMap Transition'.w
+           , actions: 'Action ActionEase ActionInterval ActionInstant'.w
+           }
 
+for (var ns in pkgs) {
+    var modules = pkgs[ns]
+      , dir = (ns == '_') ? '' : ns + '/'
+
+    modules.forEach(function (n) {
+        var mod = require('./' + dir + n)
+        for (var m in mod) {
+            if (mod.hasOwnProperty(m) && typeof mod[m] == 'function') {
+                applyAccessors(mod[m])
+            }
+        }
+    })
+
+}
