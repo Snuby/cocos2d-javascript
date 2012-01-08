@@ -10,7 +10,8 @@ var util      = require('util')
   , actions   = cocos.actions
   , ccp       = geo.ccp
 
-var SpriteDemo       = require('./SpriteDemo')
+var TestCase         = require('../TestCase')
+  , Director         = cocos.Director
   , Director         = cocos.Director
   , Animation        = cocos.Animation
   , AnimationCache   = cocos.AnimationCache
@@ -113,7 +114,7 @@ function SpriteAnimationCache () {
     grossini.runAction(seq)
 }
 
-SpriteAnimationCache.inherit(SpriteDemo, /** @lends SpriteAnimationCache# */ {
+SpriteAnimationCache.inherit(TestCase, /** @lends SpriteAnimationCache# */ {
     title: 'AnimationCache'
   , subtitle: 'Sprite should be animated'
 })

@@ -9,7 +9,7 @@ var util      = require('util')
   , actions   = cocos.actions
   , ccp       = geo.ccp
 
-var SpriteDemo    = require('./SpriteDemo')
+var TestCase      = require('../TestCase')
   , Director      = cocos.Director
   , Scheduler     = cocos.Scheduler
   , Rect          = geo.Rect
@@ -96,7 +96,7 @@ function SpriteColorOpacity () {
     Scheduler.sharedScheduler.schedule({target: this, method: this.removeAndAddSprite, interval: 2})
 }
 
-SpriteColorOpacity.inherit(SpriteDemo, /** @lends SpriteColorOpacity# */ {
+SpriteColorOpacity.inherit(TestCase, /** @lends SpriteColorOpacity# */ {
     title: 'Sprite: Opacity'
 
   , removeAndAddSprite: function () {

@@ -9,7 +9,7 @@ var util      = require('util')
   , actions   = cocos.actions
   , ccp       = geo.ccp
 
-var SpriteDemo    = require('./SpriteDemo')
+var TestCase      = require('../TestCase')
   , Director      = cocos.Director
   , Rect          = geo.Rect
   , Sprite        = nodes.Sprite
@@ -35,7 +35,7 @@ function Sprite1 () {
     this.addNewSprite(ccp(s.width / 2, s.height / 2))
 }
 
-Sprite1.inherit(SpriteDemo, /** @lends Sprite1# */ {
+Sprite1.inherit(TestCase, /** @lends Sprite1# */ {
     title: 'Sprite'
   , subtitle: 'Click screen'
 

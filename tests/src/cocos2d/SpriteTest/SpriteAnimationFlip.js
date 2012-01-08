@@ -9,7 +9,7 @@ var util      = require('util')
   , actions   = cocos.actions
   , ccp       = geo.ccp
 
-var SpriteDemo    = require('./SpriteDemo')
+var TestCase      = require('../TestCase')
   , Director      = cocos.Director
   , Texture2D     = cocos.Texture2D
   , SpriteFrame   = cocos.SpriteFrame
@@ -60,7 +60,7 @@ function SpriteAnimationFlip () {
 
 }
 
-SpriteAnimationFlip.inherit(SpriteDemo, /** @lends SpriteAnimationFlip# */ {
+SpriteAnimationFlip.inherit(TestCase, /** @lends SpriteAnimationFlip# */ {
     title: 'Sprite Animation + Flip'
 })
 

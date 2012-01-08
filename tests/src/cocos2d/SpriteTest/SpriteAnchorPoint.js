@@ -9,7 +9,7 @@ var util      = require('util')
   , actions   = cocos.actions
   , ccp       = geo.ccp
 
-var SpriteDemo    = require('./SpriteDemo')
+var TestCase      = require('../TestCase')
   , Director      = cocos.Director
   , Rect          = geo.Rect
   , Sprite        = nodes.Sprite
@@ -70,7 +70,7 @@ function SpriteAnchorPoint () {
     }
 }
 
-SpriteAnchorPoint.inherit(SpriteDemo, /** @lends SpriteAnchorPoint# */ {
+SpriteAnchorPoint.inherit(TestCase, /** @lends SpriteAnchorPoint# */ {
     title: 'Sprite Anchor Point'
 })
 

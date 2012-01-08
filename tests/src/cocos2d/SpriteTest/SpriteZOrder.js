@@ -9,11 +9,11 @@ var util      = require('util')
   , actions   = cocos.actions
   , ccp       = geo.ccp
 
-var SpriteDemo    = require('./SpriteDemo')
-  , Director      = cocos.Director
-  , Scheduler     = cocos.Scheduler
-  , Rect          = geo.Rect
-  , Sprite        = nodes.Sprite
+var TestCase  = require('../TestCase')
+  , Director  = cocos.Director
+  , Scheduler = cocos.Scheduler
+  , Rect      = geo.Rect
+  , Sprite    = nodes.Sprite
 //}}} Imports
 
 //{{{ Constants
@@ -70,7 +70,7 @@ function SpriteZOrder () {
                                        })
 }
 
-SpriteZOrder.inherit(SpriteDemo, /** @lends SpriteZOrder# */ {
+SpriteZOrder.inherit(TestCase, /** @lends SpriteZOrder# */ {
     title: 'Sprite Z Order'
   , dir: 1
 

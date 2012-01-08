@@ -7,7 +7,7 @@ var util      = require('util')
   , actions   = cocos.actions
   , ccp       = geo.ccp
 
-var SpriteDemo    = require('./SpriteDemo')
+var TestCase      = require('../TestCase')
   , Director      = cocos.Director
   , Size          = geo.Size
   , Rect          = geo.Rect
@@ -45,7 +45,7 @@ function SpriteBatchNode1 () {
     this.addNewSprite(ccp(s.width / 2, s.height / 2))
 }
 
-SpriteBatchNode1.inherit(SpriteDemo, /** @lends SpriteBatchNode1# */ {
+SpriteBatchNode1.inherit(TestCase, /** @lends SpriteBatchNode1# */ {
     title: 'SpriteBatchNode'
   , subtitle: 'Click screen'
 
