@@ -167,9 +167,9 @@ tests.SpriteEase = SpriteDemo.extend(/** @lends SpriteEase.prototype# */{
         
         var delay = actions.DelayTime.create({duration: 0.25});
         
-        var seq1 = actions.Sequence.create({actions: [move, delay, move_back, delay.copy()]});
-        var seq2 = actions.Sequence.create({actions: [move_ease_in, delay.copy(), move_ease_in_back, delay.copy()]});
-        var seq3 = actions.Sequence.create({actions: [move_ease_out, delay.copy(), move_ease_out_back, delay.copy()]});
+        var seq1 = new actions.Sequence({actions: [move, delay, move_back, delay.copy()]});
+        var seq2 = new actions.Sequence({actions: [move_ease_in, delay.copy(), move_ease_in_back, delay.copy()]});
+        var seq3 = new actions.Sequence({actions: [move_ease_out, delay.copy(), move_ease_out_back, delay.copy()]});
         
         var a2 = this.get('grossini').runAction(actions.RepeatForever.create(seq1));        
         var a1 = this.get('tamara').runAction(actions.RepeatForever.create(seq2));

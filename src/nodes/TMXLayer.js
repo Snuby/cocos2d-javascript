@@ -1,6 +1,7 @@
 'use strict'
 
 var util = require('util'),
+    events = require('events'),
     SpriteBatchNode = require('./BatchNode').SpriteBatchNode,
     Sprite = require('./Sprite').Sprite,
     TMXOrientationOrtho = require('../TMXOrientation').TMXOrientationOrtho,
@@ -84,18 +85,20 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
     },
 
     setupTiles: function () {
-        this.tileset.bindTo('imageSize', this.texture, 'contentSize')
-
+        events.addPropertyListener(this.texture, 'contentSize', 'change', function (e) {
+            this.tileset.imageSize = this.texture.contentSize
+        }.bind(this))
+        this.tileset.imageSize = this.texture.contentSize
 
         for (var y = 0; y < this.layerSize.height; y++) {
             for (var x = 0; x < this.layerSize.width; x++) {
-                
+
                 var pos = x + this.layerSize.width * y,
                     gid = this.tiles[pos]
-                
+
                 if (gid !== 0) {
                     this.appendTile({gid: gid, position: ccp(x, y)})
-                    
+
                     // Optimization: update min and max GID rendered by the layer
                     this.minGID = Math.min(gid, this.minGID)
                     this.maxGID = Math.max(gid, this.maxGID)
@@ -108,13 +111,13 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
             pos = opts.position
 
         var z = pos.x + pos.y * this.layerSize.width
-            
+
         var rect = this.tileset.rectForGID(gid)
         var tile = new Sprite({rect: rect, textureAtlas: this.textureAtlas})
         tile.position = this.positionAt(pos)
         tile.anchorPoint = ccp(0, 0)
         tile.opacity = this.opacity
-        
+
         this.addChild({child: tile, z: 0, tag: z})
     },
     positionAt: function (pos) {

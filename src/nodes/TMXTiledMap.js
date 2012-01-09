@@ -20,9 +20,9 @@ var util = require('util'),
  * @opt {String} file The file path of the TMX map to load
  */
 function TMXTiledMap (opts) {
-    TMXTiledMap.superclass.init.call(this, opts)
+    TMXTiledMap.superclass.constructor.call(this, opts)
 
-    this.set('anchorPoint', ccp(0, 0))
+    this.anchorPoint = ccp(0, 0)
 
     var mapInfo = new TMXMapInfo(opts.file)
 
@@ -44,7 +44,7 @@ function TMXTiledMap (opts) {
             var currentSize = this.contentSize
             currentSize.width  = Math.max(currentSize.width,  childSize.width)
             currentSize.height = Math.max(currentSize.height, childSize.height)
-            this.set('contentSize', currentSize)
+            this.contentSize = currentSize
 
             idx++
         }

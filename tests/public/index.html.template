@@ -88,13 +88,12 @@
             <p>Select a test suite to run:</p>
             <nav>
                 <ul>
-                    <li><a href="?test=init_commonjs">CommonJS</a></li>
-                    <li><a href="?test=cocos2d/SpriteTest">Sprites</a></li>
-                    <li><a href="?test=cocos2d/ActionTest">Actions</a></li>
-                    <li><a href="?test=cocos2d/EaseActionTest">Ease Actions</a></li>
-                    <li><a href="?test=cocos2d/LabelTest">Labels</a></li>
-                    <li><a href="?test=cocos2d/TileMapTest">Tile Maps</a></li>
-                    <li><a href="?test=cocos2d/TransitionTest">Scene Transitions</a></li>
+                    <li><a href="?test=sprites">Sprites</a></li>
+                    <li><a href="?test=actions">Actions</a></li>
+                    <li><a href="?test=ease_actions">Ease Actions</a></li>
+                    <li><a href="?test=labels">Labels</a></li>
+                    <li><a href="?test=tile_maps">Tile Maps</a></li>
+                    <li><a href="?test=transitions">Scene Transitions</a></li>
                 </ul>
             </nav>
             <div id="${containerID}">
