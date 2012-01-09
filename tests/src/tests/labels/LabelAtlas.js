@@ -42,7 +42,7 @@ function TestLabelAtlas () {
                   })
 
 
-    var label2 = new LabelAtlas({string: "0123456789"
+    var label2 = new LabelAtlas({ string: "0123456789"
                                 , charMapFile: path.join(__dirname, '../resources/fonts/tuffy_bold_italic-charmap.png')
                                 , itemWidth: 48
                                 , itemHeight: 64

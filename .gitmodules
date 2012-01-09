@@ -1,6 +1,3 @@
-[submodule "tests/src/commonjs"]
-	path = tests/src/commonjs
-	url = https://github.com/commonjs/commonjs.git
 [submodule "support/node-builds"]
 	path = support/node-builds
 	url = https://github.com/ryanwilliams/node-builds-v4.git
