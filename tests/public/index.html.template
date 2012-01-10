@@ -14,9 +14,9 @@
                 top: 40%;
                 left: 50%;
                 margin: -168px 0 0 -373px;
-                height: 320px;
+                height: 396px;
                 background: #fff;
-                width: 730px;
+                width: 830px;
                 padding: 16px;
                 border: 2px solid #333;
                 border-radius: 8px;
@@ -46,7 +46,7 @@
             nav {
                 float: left;
             }
-            nav ul, 
+            nav ul,
             nav li {
                 padding: 0;
                 margin: 0;
@@ -65,8 +65,8 @@
                 background: #ddd;
             }
             #${containerID} {
-                width: 480px;
-                height: 320px;
+                width: 580px;
+                height: 396px;
                 position: absolute;
                 top: 16px;
                 right: 16px;

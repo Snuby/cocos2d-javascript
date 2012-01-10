@@ -479,7 +479,8 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
         if (!this._fpsLabel) {
             var Label = require('./nodes/Label').Label
             this._fpsLabel = new Label({string: '', fontSize: 16})
-            this._fpsLabel.anchorPoint = ccp(0, 1)
+            this._fpsLabel.anchorPoint = ccp(0, 0)
+            this._fpsLabel.position = ccp(10, 10)
             this._frames = 0
             this._accumDt = 0
         }
@@ -497,8 +498,6 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
         }
 
 
-        var s = this.winSize
-        this._fpsLabel.position = ccp(10, s.height - 10)
 
         this._fpsLabel.visit(this.context)
     }

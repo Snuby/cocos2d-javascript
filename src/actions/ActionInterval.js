@@ -8,6 +8,28 @@ var util = require('util'),
 /**
  * @ignore
  *
+ * Creates multiple instances of actionType each given one action plus the next
+ * actionType instance
+ */
+function initWithActions (actionType, actions) {
+    var prev = actions[0].copy()
+      , now
+      , i
+    for (i=1; i<actions.length; i++) {
+        now = actions[i].copy()
+        if (now) {
+            prev = new actionType({one: prev, two: now})
+        } else {
+            break
+        }
+    }
+
+    return prev
+}
+
+/**
+ * @ignore
+ *
  * Bezier cubic formula
  * ((1 - t) + t)3 = 1
  */
@@ -745,21 +767,7 @@ FadeTo.inherit(ActionInterval, /** @lends cocos.actions.FadeTo# */ {
  */
 function Sequence (opts) {
     if (opts.actions) {
-        var actions = opts.actions
-          , prev = actions[0].copy()
-          , NextSequence = Object.getPrototypeOf(this).constructor
-          , now
-          , i
-        for (i=1; i<actions.length; i++) {
-            now = actions[i].copy()
-            if (now) {
-                prev = new NextSequence({one: prev, two: now})
-            } else {
-                break
-            }
-        }
-
-        return prev
+        return initWithActions(Object.getPrototypeOf(this).constructor, opts.actions)
     }
 
     if (!opts.one) {
@@ -937,6 +945,10 @@ Repeat.inherit(ActionInterval, /** @lends cocos.actions.Repeat# */ {
  * @opt {cocos.actions.FiniteTimeAction} two: second action to spawn
  */
 function Spawn (opts) {
+    if (opts.actions) {
+        return initWithActions(Object.getPrototypeOf(this).constructor, opts.actions)
+    }
+
     var action1 = opts.one,
         action2 = opts.two
 
@@ -1002,27 +1014,6 @@ Spawn.inherit(ActionInterval, /** @lends cocos.actions.Spawn# */ {
 
     reverse: function () {
         return new Spawn({one: this.one.reverse(), two: this.two.reverse()})
-    }
-})
-
-// FIXME move htis code into the constructor
-util.extend(Spawn, /** @lends cocos.actions.Spawn */{
-    /**
-     * Helper class function to create Spawn object from array of actions
-     *
-     * @opt {Array} actions: list of actions to run simultaneously
-     */
-    initWithActions: function (opts) {
-        var now, prev = opts.actions.shift()
-        while (opts.actions.length > 0) {
-            now = opts.actions.shift()
-            if (now) {
-                prev = new this({one: prev, two: now})
-            } else {
-                break
-            }
-        }
-        return prev
     }
 })
 

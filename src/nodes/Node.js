@@ -323,8 +323,9 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
 
         // Add child back at correct location
         var added = false
+          , childLen = this.children.length
           , i, c
-        for (i = 0, childLen = this.children.length; i < childLen; i++) {
+        for (i = 0; i < childLen; i++) {
             c = this.children[i]
             if (c.zOrder > z) {
                 added = true
@@ -502,7 +503,11 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
         }
 
         // Rotate
-        context.rotate(geo.degreesToRadians(this.rotation))
+        if (FLIP_Y_AXIS) {
+            context.rotate(-geo.degreesToRadians(this.rotation))
+        } else {
+            context.rotate(geo.degreesToRadians(this.rotation))
+        }
 
         // Scale
         context.scale(this.scaleX, this.scaleY)
