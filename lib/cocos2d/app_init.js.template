@@ -15,7 +15,11 @@
 
         var container = window.document.getElementById(containerID)
           , frame = window.document.createElement('iframe')
-        frame.style.display = 'none'
+        frame.style.position = 'absolute'
+        frame.style.left = '-10000px'
+        frame.style.width = '1px'
+        frame.style.height = '1px'
+        frame.style.visibility = 'hidden'
 
         frame.onload = function () {
             var i = 0
