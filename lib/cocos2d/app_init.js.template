@@ -30,8 +30,6 @@
                 i++
             }
 
-            //frame.contentWindow.document.write('<html><body</body></html>')
-
             var frameWin = frame.contentWindow
               , frameDoc = frameWin.document
               , frameBody = frameDoc.body

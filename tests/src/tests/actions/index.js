@@ -15,7 +15,6 @@ var testList = [ 'Manual'
                , 'Sequence'
                , 'Sequence2'
                , 'Spawn'
-               /*
                , 'Reverse'
                , 'Delay'
                , 'Repeat'
@@ -26,7 +25,6 @@ var testList = [ 'Manual'
                , 'ReverseSequence2'
                , 'Speed'
                , 'Follow'
-               */
                ]
 //}}}
 
