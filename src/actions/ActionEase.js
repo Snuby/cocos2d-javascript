@@ -194,7 +194,7 @@ EaseExponentialIn.inherit(ActionEase, /** @lends cocos.actions.EaseExponentialIn
  * @memberOf cocos.actions
  * @extends cocos.actions.ActionEase
  */
-function EaseExponentialOut () {
+function EaseExponentialOut (opts) {
     EaseExponentialOut.superclass.constructor.call(this, opts)
 }
 
@@ -300,7 +300,7 @@ EaseSineOut.inherit(ActionEase, /** @lends cocos.actions.EaseSineOut# */ {
  * @memberOf cocos.actions
  * @extends cocos.actions.ActionEase
  */
-function EaseSineInOut () {
+function EaseSineInOut (opts) {
     EaseSineInOut.superclass.constructor.call(this, opts)
 }
 
@@ -502,7 +502,7 @@ EaseBounce.inherit(ActionEase, /** @lends cocos.actions.EaseBounce# */ {
  * @memberOf cocos.actions
  * @extends cocos.actions.EaseBounce
  */
-function EaseBounceIn () {
+function EaseBounceIn (opts) {
     EaseBounceIn.superclass.constructor.call(this, opts)
 }
 
@@ -528,7 +528,7 @@ EaseBounceIn.inherit(EaseBounce, /** @lends cocos.actions.EaseBounceIn# */ {
  * @memberOf cocos.actions
  * @extends cocos.actions.EaseBounce
  */
-function EaseBounceOut () {
+function EaseBounceOut (opts) {
     EaseBounceOut.superclass.constructor.call(this, opts)
 }
 
@@ -554,7 +554,7 @@ EaseBounceOut.inherit(EaseBounce, /** @lends cocos.actions.EaseBounceOut# */ {
  * @memberOf cocos.actions
  * @extends cocos.actions.EaseBounce
  */
-function EaseBounceInOut () {
+function EaseBounceInOut (opts) {
     EaseBounceInOut.superclass.constructor.call(this, opts)
 }
 
@@ -586,7 +586,7 @@ EaseBounceInOut.inherit(EaseBounce, /** @lends cocos.actions.EaseBounceInOut# */
  * @memberOf cocos.actions
  * @extends cocos.actions.ActionEase
  */
-function EaseBackIn () {
+function EaseBackIn (opts) {
     EaseBackIn.superclass.constructor.call(this, opts)
 }
 
@@ -612,7 +612,7 @@ EaseBackIn.inherit(ActionEase, /** @lends cocos.actions.EaseBackIn# */ {
  * @memberOf cocos.actions
  * @extends cocos.actions.ActionEase
  */
-function EaseBackOut () {
+function EaseBackOut (opts) {
     EaseBackOut.superclass.constructor.call(this, opts)
 }
 
@@ -639,7 +639,7 @@ EaseBackOut.inherit(ActionEase, /** @lends cocos.actions.EaseBackOut# */ {
  * @memberOf cocos.actions
  * @extends cocos.actions.ActionEase
  */
-function EaseBackInOut () {
+function EaseBackInOut (opts) {
     EaseBackInOut.superclass.constructor.call(this, opts)
 }
 
