@@ -180,7 +180,7 @@ TransitionRotoZoom.inherit(TransitionScene, /** @lends cocos.nodes.TransitionRot
         this.outScene.anchorPoint = geo.ccp(0.5, 0.5)
 
         var outzoom = [
-            actions.Spawn.initWithActions({actions: [
+            new actions.Spawn({actions: [
                 new actions.ScaleBy({scale: 0.001, duration: dur/2}),
                 new actions.RotateBy({angle: 360*2, duration: dur/2})
                 ]}),
@@ -191,7 +191,7 @@ TransitionRotoZoom.inherit(TransitionScene, /** @lends cocos.nodes.TransitionRot
         var inzoom = [
             new actions.DelayTime({duration: dur/2}),
 
-            actions.Spawn.initWithActions({actions: [
+            new actions.Spawn({actions: [
                 new actions.ScaleTo({scale: 1.0, duration: dur/2}),
                 new actions.RotateBy({angle: -360*2, duration: dur/2})
                 ]}),

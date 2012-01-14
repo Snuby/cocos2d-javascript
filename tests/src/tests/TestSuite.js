@@ -33,11 +33,15 @@ TestSuite.inherit(Object, /** @lends TestSuite# */ {
      */
   , currentTest: 0
 
+  , getTest: function () {
+        return new this.tests[this.currentTest]
+    }
+
     /**
      * Start running the tests
      */
   , run: function () {
-        var test = new this.tests[this.currentTest]
+        var test = this.getTest()
 
         events.addListener(test, 'next',    this.next.bind(this))
         events.addListener(test, 'back',    this.previous.bind(this))
