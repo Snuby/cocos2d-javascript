@@ -275,6 +275,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * @param {cocos.Scene} scene The scene to start
      */
   , runWithScene: function (scene) {
+        var Scene = require('./nodes/Scene').Scene
         if (!(scene instanceof Scene)) {
             throw "Director.runWithScene must be given an instance of Scene"
         }
@@ -560,6 +561,7 @@ DirectorFixedSpeed.inherit(Director, /** @lends cocos.DirectorFixedSpeed */ {
     }
   }
 )
+Object.defineProperty(DirectorFixedSpeed, 'sharedDirector', Object.getOwnPropertyDescriptor(Director, 'sharedDirector'))
 
 exports.Director = Director
 exports.DirectorFixedSpeed = DirectorFixedSpeed

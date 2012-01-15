@@ -245,9 +245,9 @@ BObject.prototype = util.extend(BObject.prototype, /** @lends BObject# */{
  * @returns {BObject} New instance of this object
  */
 BObject.create = function () {
-    var ret = Object.create(this.prototype);
-    ret.constructor.apply(ret, arguments);
-    return ret;
+    var ret = Object.create(this.prototype)
+      , ret2 = ret.constructor.apply(ret, arguments);
+    return ret2 || ret;
 };
 
 /**
