@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Cocos2D -- Tests</title>
+        <style type="text/css" media="screen">
+            body {
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 10pt;
+                background: #ccc;
+            }
+            #wrapper {
+                position: absolute;
+                top: 40%;
+                left: 50%;
+                margin: -168px 0 0 -373px;
+                height: 396px;
+                background: #fff;
+                width: 830px;
+                padding: 16px;
+                border: 2px solid #333;
+                border-radius: 8px;
+                box-shadow: 0px 3px 6px #333;
+            }
+            #wrapper h1 {
+                margin-top: 0;
+            }
+            .log {
+                padding: 2px 8px;
+                border-bottom: 1px solid #999;
+                color: #000;
+                font-size: 0.9em;
+            }
+            .log.pass {
+                background: #4d4;
+            }
+            .log.fail {
+                background: #d44;
+            }
+            .log.info {
+                background: #ccc;
+            }
+            .logs {
+                overflow: auto;
+            }
+            nav {
+                float: left;
+            }
+            nav ul,
+            nav li {
+                padding: 0;
+                margin: 0;
+                list-style: none;
+                width: 200px;
+            }
+            nav a::before {
+                content: '•  '
+            }
+            nav a {
+                display: block;
+                padding: 2px 8px;
+                text-decoration: none;
+            }
+            nav a:hover {
+                background: #ddd;
+            }
+            #cocos2d-tests {
+                width: 580px;
+                height: 396px;
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                color: #fff;
+                background: #000;
+                box-shadow: 0px 3px 6px #333;
+            }
+            .loading {
+                font-size: 2em;
+                text-align: center;
+                line-height: 386px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <h1>Cocos2D Tests</h1>
+            <p>Select a test suite to run:</p>
+            <nav>
+                <ul>
+                    <li><a href="?test=sprites">Sprites</a></li>
+                    <li><a href="?test=actions">Actions</a></li>
+                    <li><a href="?test=ease_actions">Ease Actions</a></li>
+                    <li><a href="?test=labels">Labels</a></li>
+                    <li><a href="?test=tile_maps">Tile Maps</a></li>
+                    <li><a href="?test=transitions">Scene Transitions</a></li>
+                </ul>
+            </nav>
+            <div id="cocos2d-tests">
+                <div class="loading">Loading, Please wait…</div>
+                <script src="jah.js" type="text/javascript" defer></script><script src="cocos2d.js" type="text/javascript" defer></script><script src="cocos2d_tests/cocos2d_tests.js" type="text/javascript" defer></script>
+            </div>
+        </div>
+    </body>
+</html>

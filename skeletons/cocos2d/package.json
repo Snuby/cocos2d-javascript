@@ -13,7 +13,7 @@
     },
 
     "dependencies": {
-        "jah": "~${jahVersion}"
+        "jah": "~${jahVersion}",
         "cocos2d": "~${cocosVersion}"
     }
 }

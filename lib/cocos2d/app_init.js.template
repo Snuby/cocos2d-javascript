@@ -1,6 +1,7 @@
 (function (window) {
 
-    var scripts = ${scriptArray}
+    var assetURL = "${assetPath}"
+      , scripts  = ${scriptArray}
 
 
 
@@ -52,14 +53,17 @@
             function nextScript () {
                 if (scripts.length > i) {
                     addScript(frameDoc, scripts[i], nextScript)
+                    i++
+                } else {
+                    frameWin.__jah__.__triggerReady()
                 }
-                i++
             }
 
             var frameWin = frame.contentWindow
               , frameDoc = frameWin.document
               , frameBody = frameDoc.body
 
+            frameWin.__jah__ = {resources:{}, assetURL: assetURL, __blockReady: true};
             if (!frameBody) {
                 var frameHTML = frameDoc.createElement('html')
                 frameBody = frameDoc.createElement('body')

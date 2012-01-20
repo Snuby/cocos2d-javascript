@@ -1,0 +1,16 @@
+{
+    "name": "Cocos2D Tests",
+    "author": "Ryan Williams",
+    "description": "Tests and demos for Cocos2D JavaScript",
+    "version": "1.0.0",
+    "homepage": "",
+
+    "engines": {
+        "node": ">= 0.4.0"
+    },
+
+    "dependencies": {
+        "jah": "~0.1.0",
+        "cocos2d": "~0.2.0"
+    }
+}
