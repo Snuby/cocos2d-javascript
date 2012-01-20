@@ -64,7 +64,7 @@
             nav a:hover {
                 background: #ddd;
             }
-            #${containerID} {
+            #cocos2d-tests {
                 width: 580px;
                 height: 396px;
                 position: absolute;
@@ -82,7 +82,6 @@
         </style>
     </head>
     <body>
-        ${scripts}
         <div id="wrapper">
             <h1>Cocos2D Tests</h1>
             <p>Select a test suite to run:</p>
@@ -96,8 +95,9 @@
                     <li><a href="?test=transitions">Scene Transitions</a></li>
                 </ul>
             </nav>
-            <div id="${containerID}">
+            <div id="cocos2d-tests">
                 <div class="loading">Loading, Please wait…</div>
+                ${scripts}
             </div>
         </div>
     </body>

@@ -1,6 +1,6 @@
 (function (window) {
+
     var scripts = ${scriptArray}
-      , containerID = "${containerID}"
 
 
 
@@ -9,12 +9,38 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var ts = Date.now().toString()
+      , identifier = "__cocos2d-app-" + ts.substring(ts.length - 3)
+
+    while (document.getElementById(identifier)) {
+      ts = Date.now().toString()
+      identifier = "__cocos2d-app-" + ts.substring(ts.length - 3)
+    }
+
+    document.write('<div id="' + identifier + '"></div>');
 
     function initializeApplication () {
         if (window.document.readyState != 'complete') return
 
-        var container = window.document.getElementById(containerID)
+        var container = window.document.getElementById(identifier).parentNode
           , frame = window.document.createElement('iframe')
+        frame.className = 'cocos2d-app-frame'
         frame.style.position = 'absolute'
         frame.style.left = '-10000px'
         frame.style.width = '1px'
@@ -41,7 +67,7 @@
                 frameDoc.appendChild(frameHTML)
             }
 
-            frameWin.CONTAINER_ID = containerID
+            frameWin.container = container
 
             nextScript()
         }

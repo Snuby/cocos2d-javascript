@@ -160,7 +160,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
   , attachInView: function (view) {
         var document = this.document
 
-        view = view || document.getElementById(CONTAINER_ID) || document.body
+        view = view || window.container || document.body
 
         while (view.firstChild) {
             view.removeChild(view.firstChild)

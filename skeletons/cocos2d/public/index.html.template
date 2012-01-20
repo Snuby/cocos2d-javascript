@@ -13,7 +13,7 @@
                 text-align: center;
                 text-shadow: 0 2px 1px #fff;
             }
-            #${containerID} {
+            .cocos2d-app {
                 border: 1px solid #000;
                 width: 640px;
                 height: 480px;
@@ -27,8 +27,10 @@
         </style>
     </head>
     <body>
-        ${scripts}
         <h1>${appname}</h1>
-        <div id="${containerID}"></div>
+        <div class="cocos2d-app">
+            Loading ${appname}...
+            ${scripts}
+        </div>
     </body>
 </html>
