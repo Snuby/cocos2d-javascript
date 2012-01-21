@@ -88,8 +88,22 @@
         document.body.appendChild(s)
     }
 
-    var listener = window.document.addEventListener('readystatechange', initializeApplication, false)
-    initializeApplication()
+
+    if (typeof window.document.onreadystatechange !== 'undefined') {
+        var listener = window.document.addEventListener('readystatechange', initializeApplication, false)
+        initializeApplication()
+    } else if (window.document.readyState) {
+        var checkReadyState = function () {
+            if (window.document.readyState == 'complete') {
+                initializeApplication()
+            } else {
+                setTimeout(checkReadyState, 13)
+            }
+        }
+        checkReadyState()
+    } else {
+        window.onload = initializeApplication
+    }
 })(window)
 
 // vim:et:st=4:fdm=marker:fdl=0:fdc=1:ft=javascript
