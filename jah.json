@@ -1,3 +1,3 @@
-{ "jahProject": { "version": "0.0.3" }
+{ "jahProject": { "version": "0.2.0" }
 , "mount": "/libs/cocos2d"
 }
