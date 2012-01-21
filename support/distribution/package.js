@@ -6,14 +6,11 @@
 
 var path = require('path');
 
-// Include cocos2d because it has some useful modules
-require.paths.unshift(path.join(__dirname, '../../lib'));
-
-var sys = require('sys'),
+var sys = require('util'),
     fs  = require('fs'),
     spawn = require('child_process').spawn,
-    opts = require('cocos2d/opts'),
-    Template = require('cocos2d/template').Template;
+    opts = require('../../lib/cocos2d/opts'),
+    Template = require('../../lib/cocos2d/template').Template;
 
 
 var OPTS = [
