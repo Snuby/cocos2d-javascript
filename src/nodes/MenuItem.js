@@ -52,8 +52,8 @@ MenuItem.inherit(Node, /** @lends cocos.nodes.MenuItem# */ {
         return this._isEnabled
     },
 
-    set isEnabled (isEnabled) {
-        this._isEnabled = isEnabled
+    set isEnabled (enabled) {
+        this._isEnabled = enabled
     },
 
     selected: function () {
