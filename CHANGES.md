@@ -1,5 +1,25 @@
-v0.2
-====
+v0.2-beta3
+==========
+
+See the [upgrading guide][upgrading] for details on how to upgrade a v0.1 project to v0.2.
+
+* Deprecated BObject. You can re-enable it by adding: `exports.ENABLED_DEPRECATED_METHODS` to your config.js.
+  * `.set()` and `.get()` methods are no longer used to set/get properties. Use normal JavaScript now.
+  * `Foo.extend()` no longer exists. Use the `Bar.inherit(Foo)` helper instead.
+  * `Foo.create()` no longer exists. Use `new Foo()` instead.
+  * `util.callback()` has been deprecated. Use the standard `this.myFunc.bind(this)` function instead.
+* All code runs inside a sandbox (a hidden iframe). Setting globals in your application will have no impact on the webpage it's embedded in and vice versa.
+* Applications are embedded by placing the 'script' tag where you want it to appear.
+* Appliaction root folder is no longer in the `require` search path. You should prefix your paths with '/' or add this to the top of your main.js: `require.paths.unshift('/')`.
+
+
+v0.2-beta2
+==========
+
+Installer fix for MS Windows
+
+v0.2-beta
+=========
 
 New Features
 ------------
@@ -56,9 +76,9 @@ Bug Fixes
 ---------
 
 * 'event' module renamed to 'events' to avoid conflict with DOM events
-* Fixed Sprites not always drawing in the correct location after changing their contentSize
+* Fixed Sprites not always drawing in the correct location after changing their `contentSize`
 * Fixed anchor point not being properly calculated
-* Fixed MenuItemSprite not drawing its children
+* Fixed `MenuItemSprite` not drawing its children
 
 
 v0.1
@@ -67,3 +87,4 @@ v0.1
 Everything
 
 [jah]: https://github.com/ryanwilliams/jah
+[upgrading]: http://cocos2d-javascript.org/tutorials/upgrading-from-v0-1-to-v0-2
