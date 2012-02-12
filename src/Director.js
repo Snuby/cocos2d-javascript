@@ -277,11 +277,11 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
   , runWithScene: function (scene) {
         var Scene = require('./nodes/Scene').Scene
         if (!(scene instanceof Scene)) {
-            throw "Director.runWithScene must be given an instance of Scene"
+            throw new Error("Director.runWithScene must be given an instance of Scene")
         }
 
         if (this._runningScene) {
-            throw "You can't run a Scene if another Scene is already running. Use replaceScene or pushScene instead"
+            throw new Error("You can't run a Scene if another Scene is already running. Use replaceScene or pushScene instead")
         }
 
         this.pushScene(scene)
@@ -295,6 +295,10 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * @param {cocos.Scene} scene The scene to replace with
      */
   , replaceScene: function (scene) {
+        var Scene = require('./nodes/Scene').Scene
+        if (!(scene instanceof Scene)) {
+            throw new Error("Director.replaceScene must be given an instance of Scene")
+        }
         var index = this.sceneStack.length
 
         this._sendCleanupToScene = true
@@ -322,6 +326,10 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * @param {cocos.Scene} scene The scene to add to the stack
      */
   , pushScene: function (scene) {
+        var Scene = require('./nodes/Scene').Scene
+        if (!(scene instanceof Scene)) {
+            throw new Error("Director.pushScene must be given an instance of Scene")
+        }
         this._nextScene = scene
     }
 
