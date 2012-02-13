@@ -14,6 +14,7 @@ var testList = [ 'Sprite1'
                , 'SpriteAnimationFlip'
                , 'SpriteColorOpacity'
                , 'SpriteAnimationCache'
+               , 'SpriteChildrenAnchorPoint'
                ]
 //}}}
 

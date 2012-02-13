@@ -104,7 +104,12 @@ TextureAtlas.inherit(Object, /** @lends cocos.TextureAtlas# */ {
             dx, dy, // Draw at 0, 0
             dw, dh  // Draw size
         )
-        ctx.scale(1, 1)
+
+        if (FLIP_Y_AXIS) {
+            ctx.scale(1, -1)
+        } else {
+            ctx.scale(1, 1)
+        }
     }
 })
 

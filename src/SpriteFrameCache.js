@@ -165,7 +165,7 @@ SpriteFrameCache.inherit(Object, /** @lends cocos.SpriteFrameCache# */ {
      * @returns {cocos.SpriteFrame} The sprite frame
      */
     getSpriteFrame: function (opts) {
-        var name = opts.name
+        var name = opts.name || opts
 
         var frame = this.spriteFrames[name]
 

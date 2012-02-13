@@ -3,6 +3,7 @@
 var util = require('util'),
     evt = require('events'),
     Director = require('../Director').Director,
+    SpriteFrameCache = require('../SpriteFrameCache').SpriteFrameCache,
     TextureAtlas = require('../TextureAtlas').TextureAtlas,
     Node = require('./Node').Node,
     geo = require('geometry'),
@@ -23,16 +24,20 @@ function Sprite (opts) {
 
     opts = opts || {}
 
-    var file         = opts.file,
-        textureAtlas = opts.textureAtlas,
-        texture      = opts.texture,
-        frame        = opts.frame,
-        spritesheet  = opts.spritesheet,
-        rect         = opts.rect
+    var file         = opts.file
+      , textureAtlas = opts.textureAtlas
+      , texture      = opts.texture
+      , frame        = opts.frame
+      , spritesheet  = opts.spritesheet
+      , rect         = opts.rect
+      , frameName    = opts.frameName
 
     this.offsetPosition = ccp(0, 0)
     this.unflippedOffsetPositionFromCenter = ccp(0, 0)
 
+    if (frameName) {
+        frame = SpriteFrameCache.sharedSpriteFrameCache.getSpriteFrame(frameName)
+    }
 
     if (frame) {
         texture = frame.texture
