@@ -33,7 +33,7 @@ function Director () {
     this.document = this.window.document
 
     // Prevent writing to some properties
-    util.makeReadonly(this, 'canvas context sceneStack winSize isReady document window'.w)
+    util.makeReadonly(this, 'canvas context sceneStack winSize isReady document window container'.w)
 }
 
 Director.inherit(Object, /** @lends cocos.Director# */ {
@@ -66,6 +66,17 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * @readonly
      */
   , document: null
+
+    /**
+     * Container DIV around the canvas
+     *
+     * This element is created dynamically. Its parent is the HTML element the
+     * script was added into.
+     *
+     * @type HTMLDivElement
+     * @readonly
+     */
+  , container: null
 
     /**
      * Canvas HTML element
@@ -165,6 +176,17 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
         while (view.firstChild) {
             view.removeChild(view.firstChild)
         }
+
+        // Wrapper <div> which can be used for adding special HTML elements if required
+        var container = this._container = document.createElement('div')
+        container.style.width = view.clientWidth + 'px'
+        container.style.height = view.clientHeight + 'px'
+        container.style.position = 'relative'
+        container.style.overflow = 'hidden'
+        view.appendChild(container)
+        view = container
+
+
 
         var canvas = document.createElement('canvas')
         canvas.style.verticalAlign = 'bottom'
