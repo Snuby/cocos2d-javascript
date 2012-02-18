@@ -90,6 +90,8 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
         }.bind(this))
         this.tileset.imageSize = this.texture.contentSize
 
+        this.parseInternalProperties()
+
         for (var y = 0; y < this.layerSize.height; y++) {
             for (var x = 0; x < this.layerSize.width; x++) {
 
@@ -106,6 +108,23 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
             }
         }
     },
+
+    propertyNamed: function (name) {
+        return this.properties[name]
+    },
+
+    parseInternalProperties: function () {
+        var vertexz = this.properties.cc_vertexz
+
+        if (vertexz) {
+            if (vertexz === 'automatic') {
+                this._useAutomaticVertexZ = true
+            } else {
+                this._vertexZvalue = parseInt(vertexz, 10)
+            }
+        }
+    },
+
     appendTile: function (opts) {
         var gid = opts.gid,
             pos = opts.position

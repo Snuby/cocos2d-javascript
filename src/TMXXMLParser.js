@@ -212,7 +212,7 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
             this.tilesets.push(tileset)
         }
 
-        // PARSE <layers>
+        // PARSE <layer>s
         var layers = map.getElementsByTagName('layer')
         for (i = 0, len = layers.length; i < len; i++) {
             var l = layers[i]
@@ -274,6 +274,18 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
                 throw "Unsupported TMX Tile Map compression: " + compression
             }
 
+            // Parties <properties> in <layer>
+            var properties = l.querySelectorAll('properties > property')
+              , propertiesValue = {}
+              , property
+            for (j = 0; j < properties.length; j++) {
+                property = properties[j]
+                if (property.getAttribute('name')) {
+                    propertiesValue[property.getAttribute('name')] = property.getAttribute('value')
+                }
+            }
+
+            layer.properties = propertiesValue
             this.layers.push(layer)
         }
 
@@ -287,9 +299,9 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
 
             objectGroup.name = g.getAttribute('name')
 
-            var properties = g.querySelectorAll('objectgroup > properties property'),
-                propertiesValue = {},
-                property
+            properties = g.querySelectorAll('objectgroup > properties property')
+            propertiesValue = {}
+            property
 
             for (j = 0; j < properties.length; j++) {
                 property = properties[j]

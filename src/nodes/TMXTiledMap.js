@@ -35,7 +35,7 @@ function TMXTiledMap (opts) {
 
     // Add layers to map
     var idx = 0
-    util.each(mapInfo.layers, function (layerInfo) {
+    mapInfo.layers.forEach(function (layerInfo) {
         if (layerInfo.visible) {
             var child = this.parseLayer({layerInfo: layerInfo, mapInfo: mapInfo})
             this.addChild({child: child, z: idx, tag: idx})
