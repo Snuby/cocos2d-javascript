@@ -84,11 +84,8 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
 
     addDirtyRegion: function (rect) {
         // Increase rect slightly to compensate for subpixel artifacts
-        rect = util.copy(rect)
-        rect.origin.x -= 2
-        rect.origin.y -= 2
-        rect.size.width += 4
-        rect.size.height += 4
+        rect = new geo.Rect(Math.floor(rect.origin.x), Math.floor(rect.origin.y),
+                            Math.ceil(rect.size.width),Math.ceil(rect.size.height))
 
         var region = this.dirtyRegion
         if (!region) {
