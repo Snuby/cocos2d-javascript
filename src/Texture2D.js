@@ -28,7 +28,7 @@ function Texture2D (opts) {
     this.size = {width: 0, height: 0}
 
     if (data instanceof RemoteResource) {
-        events.addListener(data, 'load', this.dataDidLoad.bind(this))
+        events.addListenerOnce(data, 'load', this.dataDidLoad.bind(this))
         this.imgElement = data.load()
     } else {
         this.imgElement = data
@@ -45,7 +45,7 @@ Texture2D.inherit(Object, /** @lends cocos.Texture2D# */ {
     dataDidLoad: function (data) {
         this.isLoaded = true
         this.size = {width: this.imgElement.width, height: this.imgElement.height}
-        events.trigger(self, 'load', self)
+        events.trigger(this, 'load', this)
     },
 
     drawAtPoint: function (ctx, point) {
