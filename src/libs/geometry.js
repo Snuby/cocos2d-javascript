@@ -528,6 +528,18 @@ var geometry = {
     }
 }
 
+Object.defineProperty(geometry.Point, 'zero', {
+    /**
+     * Point(0, 0)
+     *
+     * @memberOf geometry.Point
+     * @getter {geometry.Point} zero
+     */
+    get: function () {
+        return new geometry.Point(0, 0)
+    }
+})
+
 module.exports = geometry
 
 // vim:et:st=4:fdm=marker:fdl=0:fdc=1
