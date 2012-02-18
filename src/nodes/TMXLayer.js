@@ -137,7 +137,7 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
         tile.anchorPoint = ccp(0, 0)
         tile.opacity = this.opacity
 
-        this.addChild({child: tile, z: 0, tag: z})
+        this.addChild({child: tile, z: this.vertexZForPos(pos), tag: z})
     },
     positionAt: function (pos) {
         switch (this.layerOrientation) {
@@ -153,6 +153,26 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
             return ccp(0, 0)
         }
     },
+
+    vertexZForPos: function (pos) {
+        var maxVal = 0
+        if (this._useAutomaticVertexZ) {
+            switch (this.layerOrientation) {
+            case TMXOrientationIso:
+                maxVal = this.layerSize.width + this.layerSize.height
+                return -(maxVal - (pos.x + pos.y))
+            case TMXOrientationOrtho:
+                return -(this.layerSize.height - pos.y)
+            case CCTMXOrientationHex:
+                throw new Error("TMX Hexa zOrder not supported")
+            default:
+                throw new Error("TMX invalid value")
+            }
+        } else {
+            return this._vertexZvalue
+        }
+    },
+
     positionForOrthoAt: function (pos) {
         var overlap = this.mapTileSize.height - this.tileset.tileSize.height
         var x = Math.floor(pos.x * this.mapTileSize.width + 0.49)
