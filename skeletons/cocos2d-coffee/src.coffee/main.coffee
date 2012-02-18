@@ -29,7 +29,7 @@ class ${classname} extends Layer
         label.position = new Point s.width / 2, s.height / 2
 
         # Add label to layer
-        this.addChild label
+        @addChild label
 
 # Initialise application
 exports.main = ->
