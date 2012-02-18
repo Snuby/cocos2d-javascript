@@ -19,27 +19,29 @@ var kTagTileMap = 1
 
 /**
  * @class
- * Test Orthographic TMX Map
+ * Test Isographic TMX Map
  *
  * @extends TMXTestCase
  */
-function TMXOrthoZorder () {
-    TMXOrthoZorder.superclass.constructor.call(this)
+function TMXIsoZorder () {
+    TMXIsoZorder.superclass.constructor.call(this)
 
     this.isMouseEnabled = true
 
-    var s = Director.sharedDirector.winSize
-      , map = new TMXTiledMap({ file: path.join(__dirname, '../resources/TileMaps/orthogonal-test-vertexz.tmx') })
+    var  map = new TMXTiledMap({ file: path.join(__dirname, '../resources/TileMaps/iso-test-vertexz.tmx') })
+      , s = map.contentSize
+
+    map.position = new Point(-s.width / 2, 0)
 
     this.addChild({ child: map
                   , tag: kTagTileMap
                   , z: 0
                   })
 
-    var layer = map.getLayer({name: 'trees'})
-      , tamara = layer.tileAt(new Point(0, 11))
+    var layer = map.getLayer({name: 'Trees'})
+      , tamara = layer.tileAt(new Point(29, 29))
 
-    var move = new actions.MoveBy({ duration: 10, position: new Point(400, 450) })
+    var move = new actions.MoveBy({ duration: 10, position: new Point(300, 250) })
       , back = move.reverse()
       , seq = new actions.Sequence({ actions: [move, back] })
 
@@ -49,16 +51,16 @@ function TMXOrthoZorder () {
     this.schedule('repositionSprite')
 }
 
-TMXOrthoZorder.inherit(TestCase, /** @lends TMXOrthoZorder# */ {
-    title: 'TMX Ortho Zorder'
+TMXIsoZorder.inherit(TestCase, /** @lends TMXIsoZorder# */ {
+    title: 'TMX Iso Zorder'
   , subtitle: 'Sprite should hide behind the trees'
 
   , repositionSprite: function () {
         var p = this.tamara.position
-        this.tamara.parent.reorderChild({child: this.tamara, z: Math.floor(-( (p.y + 81) /81)) })
+        this.tamara.parent.reorderChild({child: this.tamara, z: Math.floor(-((p.y + 32) / 16)) })
     }
 })
 
-module.exports = TMXOrthoZorder
+module.exports = TMXIsoZorder
 
 // vim:et:st=4:fdm=marker:fdl=0:fdc=1

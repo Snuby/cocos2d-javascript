@@ -66,8 +66,10 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
         // TODO handle texture resize
 
         // Watch for changes in child
-        var watchProperties = 'position scaleX scaleY rotation anchorPoint opacity visible'.split(' ')
-        events.addPropertyListener(child, watchProperties, 'beforechange', function () {
+        events.addListener(child, 'drawdirty', function (oldBox) {
+            if (oldBox) {
+                this.addDirtyRegion(oldBox)
+            }
             this.addDirtyRegion(child.boundingBox)
         }.bind(this))
 
@@ -84,8 +86,8 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
 
     addDirtyRegion: function (rect) {
         // Increase rect slightly to compensate for subpixel artifacts
-        rect = new geo.Rect(Math.floor(rect.origin.x), Math.floor(rect.origin.y),
-                            Math.ceil(rect.size.width),Math.ceil(rect.size.height))
+        rect = new geo.Rect(Math.floor(rect.origin.x) - 1, Math.floor(rect.origin.y) - 1,
+                            Math.ceil(rect.size.width) + 2 ,Math.ceil(rect.size.height) + 2)
 
         var region = this.dirtyRegion
         if (!region) {

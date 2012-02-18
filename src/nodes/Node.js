@@ -25,6 +25,7 @@ function Node () {
 
     events.addPropertyListener(this, 'scaleX scaleY rotation position anchorPoint contentSize isRelativeAnchorPoint'.w, 'change', this._dirtyTransform.bind(this))
     events.addPropertyListener(this, 'anchorPoint contentSize'.w, 'change', this._updateAnchorPointInPixels.bind(this))
+    events.addPropertyListener(this, 'opacity visible'.w, 'change', this._dirtyDraw.bind(this))
 }
 
 Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
@@ -592,11 +593,18 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * @type geometry.Rect
      */
   , get boundingBox () {
+        if (this.isTransformDirty || !this._boundingBox) {
+            this._updateBoundingBox()
+        }
+        return this._boundingBox
+    }
+
+
+  , _updateBoundingBox: function () {
         var cs = this.contentSize
           , rect = new geo.Rect(0, 0, cs.width, cs.height)
 
-        rect = geo.rectApplyAffineTransform(rect, this.nodeToParentTransform())
-        return rect
+        this._boundingBox = geo.rectApplyAffineTransform(rect, this.nodeToParentTransform())
     }
 
     /**
@@ -629,7 +637,14 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * @private
      */
   , _dirtyTransform: function () {
+        var oldBB = this.boundingBox
         this.isTransformDirty = true
+        this._dirtyDraw(oldBB)
+        events.trigger(this, 'transformdirty', oldBB)
+    }
+
+  , _dirtyDraw: function (oldBB) {
+        events.trigger(this, 'drawdirty', (oldBB instanceof geo.Rect) ? oldBB : void(0))
     }
 
     /**

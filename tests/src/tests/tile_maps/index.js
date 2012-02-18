@@ -12,6 +12,7 @@ var testList = [ 'TMXReadWriteTest'
                , 'TMXOrthoObjectsTest'
                , 'TMXIsoTest'
                , 'TMXOrthoZorder'
+               , 'TMXIsoZorder'
                ]
 //}}}
 
