@@ -192,6 +192,8 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
     },
 
     onEnter: function () {
+        BatchNode.superclass.onEnter.call(this)
+
         if (this.partialDraw) {
             events.addPropertyListener(this.parent, 'isTransformDirty', 'change', function () {
                 var box = this.visibleRect

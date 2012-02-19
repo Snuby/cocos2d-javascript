@@ -103,7 +103,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
   , opacity: 255
 
     /**
-     * Is the node active in the scee
+     * Is the node active in the scene
      * @type Boolean
      * @readonly
      */
