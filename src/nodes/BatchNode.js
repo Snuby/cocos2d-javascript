@@ -30,7 +30,7 @@ function BatchNode (opts) {
     this.contentRect = geo.rectMake(0, 0, size.width, size.height)
     this.renderTexture = new RenderTexture(size)
     this.renderTexture.sprite.isRelativeAnchorPoint = false
-    this.addChild({child: this.renderTexture})
+    BatchNode.superclass.addChild.call(this, this.renderTexture)
 }
 
 BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
@@ -56,11 +56,13 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
     addChild: function (opts) {
         BatchNode.superclass.addChild.call(this, opts)
 
-        var child = opts.child,
-            z     = opts.z
+        var child, z
 
-        if (child == this.renderTexture) {
-            return
+        if (opts instanceof Node) {
+            child = opts
+        } else {
+            child = opts.child
+            z     = opts.z
         }
 
         // TODO handle texture resize
@@ -85,7 +87,7 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
     },
 
     addDirtyRegion: function (rect) {
-        // Increase rect slightly to compensate for subpixel artifacts
+        // Increase rect slightly to compensate for subpixel artefacts
         rect = new geo.Rect(Math.floor(rect.origin.x) - 1, Math.floor(rect.origin.y) - 1,
                             Math.ceil(rect.size.width) + 2 ,Math.ceil(rect.size.height) + 2)
 
