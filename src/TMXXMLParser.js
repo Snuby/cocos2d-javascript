@@ -189,10 +189,20 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
         var i, j, len, jen, s
         for (i = 0, len = tilesets.length; i < len; i++) {
             var t = tilesets[i]
+              , externalTilesetName = t.getAttribute('source')
 
             var tileset = new TMXTilesetInfo()
-            tileset.name = t.getAttribute('name')
             tileset.firstGID = parseInt(t.getAttribute('firstgid'), 10)
+
+            // Tileset is in external file, load in XML from there -- Must
+            // happen AFTER 'firstGID' is obtained because firstGID is stored
+            // in the main .tmx file, not the .tsx
+            if (externalTilesetName) {
+                var externalTilesetPath = path.join(path.dirname(xmlFile), externalTilesetName)
+                t = parser.parseFromString(resource(externalTilesetPath), 'text/xml').documentElement
+            }
+
+            tileset.name = t.getAttribute('name')
             if (t.getAttribute('spacing')) {
                 tileset.spacing = parseInt(t.getAttribute('spacing'), 10)
             }
@@ -207,7 +217,11 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
 
             // PARSE <image> We assume there's only 1
             var image = t.getElementsByTagName('image')[0]
-            tileset.sourceImage = path.join(path.dirname(this.filename), image.getAttribute('source'))
+            if (externalTilesetName) {
+                tileset.sourceImage = path.join(path.dirname(externalTilesetPath), image.getAttribute('source'))
+            } else {
+                tileset.sourceImage = path.join(path.dirname(this.filename), image.getAttribute('source'))
+            }
 
             this.tilesets.push(tileset)
         }
