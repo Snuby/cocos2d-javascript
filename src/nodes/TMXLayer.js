@@ -11,6 +11,12 @@ var util = require('util'),
     ccp    = geo.ccp,
     Node = require('./Node').Node
 
+
+
+var FLIPPED_HORIZONTALLY_FLAG = 0x80000000
+  , FLIPPED_VERTICALLY_FLAG   = 0x40000000
+  , FLIPPED_DIAGONALLY_FLAG   = 0x20000000
+
 /**
  * @class
  * A tile map layer loaded from a TMX file. This will probably automatically be made by cocos.TMXTiledMap
@@ -95,11 +101,26 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
         for (var y = 0; y < this.layerSize.height; y++) {
             for (var x = 0; x < this.layerSize.width; x++) {
 
-                var pos = x + this.layerSize.width * y,
-                    gid = this.tiles[pos]
+                var pos = x + this.layerSize.width * y
+                  , gid = this.tiles[pos]
+                  , flipH = gid & FLIPPED_HORIZONTALLY_FLAG
+                  , flipV = gid & FLIPPED_VERTICALLY_FLAG
+                  , flipD = gid & FLIPPED_DIAGONALLY_FLAG
+
+                // Remove flip flags
+                gid &= ~( FLIPPED_HORIZONTALLY_FLAG
+                        | FLIPPED_VERTICALLY_FLAG
+                        | FLIPPED_DIAGONALLY_FLAG
+                        )
+
 
                 if (gid !== 0) {
-                    this.appendTile({gid: gid, position: ccp(x, y)})
+                    this.appendTile({ gid: gid
+                                    , position: new geo.Point(x, y)
+                                    , flipH: flipH
+                                    , flipV: flipV
+                                    , flipD: flipD
+                                    })
 
                     // Optimization: update min and max GID rendered by the layer
                     this.minGID = Math.min(gid, this.minGID)
@@ -134,10 +155,30 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
         var rect = this.tileset.rectForGID(gid)
         var tile = new Sprite({rect: rect, textureAtlas: this.textureAtlas})
         tile.position = this.positionAt(pos)
-        tile.anchorPoint = ccp(0, 0)
         tile.opacity = this.opacity
 
-        this.addChild({child: tile, z: this.vertexZForPos(pos), tag: z})
+        var anchorX = 0
+          , anchorY = 0
+        if (opts.flipH) {
+            tile.scaleX = -1
+            anchorX = 1
+        }
+        if (opts.flipV) {
+            tile.scaleY = -1
+            anchorY = 1
+        }
+        if (opts.flipD) {
+            console.warn("Diagonal flipped tiles are unsupported")
+        }
+
+        tile.anchorPoint = new geo.Point(anchorX, anchorY)
+
+        this.addChild({ child: tile
+                      , z: this.vertexZForPos(pos)
+                      , tag: z
+                      })
+
+        return tile
     },
     positionAt: function (pos) {
         switch (this.layerOrientation) {

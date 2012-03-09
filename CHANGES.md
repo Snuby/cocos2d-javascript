@@ -1,3 +1,9 @@
+v0.2-rc1
+========
+
+* TMX Maps can use external .tsx tilesets
+* TMX Maps layers support flipped tiles
+
 v0.2-beta3
 ==========
 
