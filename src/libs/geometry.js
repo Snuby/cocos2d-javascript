@@ -32,6 +32,34 @@ var geometry = {
 
     /**
      * @class
+     * A 3D point in space
+     *
+     * @param {Float} x X value
+     * @param {Float} y Y value
+     * @param {Float} z Z value
+     */
+    Point3D: function (x, y, z) {
+        /**
+         * X coordinate
+         * @type Float
+         */
+        this.x = x
+
+        /**
+         * Y coordinate
+         * @type Float
+         */
+        this.y = y
+
+        /**
+         * Z coordinate
+         * @type Float
+         */
+        this.z = z
+    },
+
+    /**
+     * @class
      * A 2D size
      *
      * @param {Float} w Width
@@ -49,6 +77,34 @@ var geometry = {
          * @type Float
          */
         this.height = h
+    },
+
+    /**
+     * @class
+     * A 3D size
+     *
+     * @param {Float} w Width
+     * @param {Float} h Height
+     * @param {Float} d Depth
+     */
+    Size3D: function (w, h, d) {
+        /**
+         * Width
+         * @type Float
+         */
+        this.width = w
+
+        /**
+         * Height
+         * @type Float
+         */
+        this.height = h
+
+        /**
+         * Depth
+         * @type Float
+         */
+        this.depth = d
     },
 
     /**
