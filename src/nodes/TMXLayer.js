@@ -54,7 +54,7 @@ function TMXLayer (opts) {
     var offset = this.calculateLayerOffset(layerInfo.offset)
     this.position = offset
 
-    this.contentSize = geo.sizeMake(this.layerSize.width * this.mapTileSize.width, (this.layerSize.height * (this.mapTileSize.height - 1)) + this.tileset.tileSize.height)
+    this.contentSize = new geo.Size(this.layerSize.width * this.mapTileSize.width, (this.layerSize.height * this.mapTileSize.height) + this.tileset.tileSize.height)
 }
 
 TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
