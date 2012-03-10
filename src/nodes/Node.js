@@ -387,6 +387,10 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
         Scheduler.sharedScheduler.scheduleUpdate({target: this, priority: priority, paused: !this.isRunning})
     }
 
+  , unscheduleUpdate: function () {
+        Scheduler.sharedScheduler.unscheduleUpdateForTarget(this)
+    }
+
     /**
      * Triggered when the node is added to a scene
      *
