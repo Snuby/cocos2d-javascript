@@ -337,6 +337,11 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
                     width   : parseInt(object.getAttribute('width'), 10),
                     height  : parseInt(object.getAttribute('height'), 10)
                 }
+
+                if (FLIP_Y_AXIS) {
+                    objectValue.y = (this.mapSize.height * this.tileSize.height) - objectValue.y - objectValue.height
+                }
+
                 if (object.getAttribute('name')) {
                     objectValue.name = object.getAttribute('name')
                 }

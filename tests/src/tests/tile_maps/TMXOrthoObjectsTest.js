@@ -72,11 +72,6 @@ TMXOrthoObjectsTest.inherit(TestCase, /** @lends TMXOrthoObjectsTest# */ {
         ctx.lineWidth = 3
         ctx.beginPath()
 
-        if (FLIP_Y_AXIS) {
-            ctx.scale(1, -1)
-            ctx.translate(0, -1024)
-        }
-
         var i, obj, len = objs.length
         for (i = 0; i < len; i++) {
             obj = objs[i]
