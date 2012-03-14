@@ -17,15 +17,13 @@ var Scheduler     = require('../Scheduler').Scheduler
  * @memberOf cocos.nodes
  */
 function Node () {
-    this.contentSize = new geo.Size(0, 0)
-    this.anchorPoint = ccp(0.5, 0.5)
+    this._contentSize = new geo.Size(0, 0)
+    this._anchorPoint = ccp(0.5, 0.5)
     this.anchorPointInPixels = ccp(0, 0)
-    this.position = ccp(0, 0)
+    this._position = ccp(0, 0)
     this.children = []
 
-    events.addPropertyListener(this, 'scaleX scaleY rotation position anchorPoint contentSize isRelativeAnchorPoint'.w, 'change', this._dirtyTransform.bind(this))
-    events.addPropertyListener(this, 'anchorPoint contentSize'.w, 'change', this._updateAnchorPointInPixels.bind(this))
-    events.addPropertyListener(this, 'opacity visible'.w, 'change', this._dirtyDraw.bind(this))
+    events.addListener(this, 'dirtytransform', this._dirtyTransform.bind(this))
 }
 
 Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
@@ -33,13 +31,17 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * Is the node visible
      * @type Boolean
      */
-    visible: true
+    get visible ()  { return this._visible }
+  , set visible (x) { this._visible = x; this._dirtyDraw() }
+  , _visible: true
 
     /**
      * Position relative to parent node
      * @type geometry.Point
      */
-  , position: null
+  , get position ()  { return this._position }
+  , set position (x) { this._position = x; events.trigger(this, 'dirtytransform', {target: this, property: 'position'}) }
+  , _position: null
 
     /**
      * Parent node
@@ -58,7 +60,9 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * Size of the node
      * @type geometry.Size
      */
-  , contentSize: null
+  , get contentSize ()  { return this._contentSize }
+  , set contentSize (x) { this._contentSize = x; events.trigger(this, 'dirtytransform', {target: this, property: 'contentSize'}); this._updateAnchorPointInPixels() }
+  , _contentSize: null
 
     /**
      * Nodes Z index. i.e. draw order
@@ -70,7 +74,8 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * Anchor point for scaling and rotation. 0x0 is top left and 1x1 is bottom right
      * @type geometry.Point
      */
-  , anchorPoint: null
+  , get anchorPoint ()  { return this._anchorPoint }
+  , set anchorPoint (x) { this._anchorPoint = x; events.trigger(this, 'dirtytransform', {target: this, property: 'anchorPoint'}); this._updateAnchorPointInPixels() }
 
     /**
      * Anchor point for scaling and rotation in pixels from top left
@@ -82,25 +87,41 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * Rotation angle in degrees
      * @type Float
      */
-  , rotation: 0
+  , get rotation ()  { return this._rotation }
+  , set rotation (x) { this._rotation = x; events.trigger(this, 'dirtytransform', {target: this, property: 'rotation'}) }
+  , _rotation: 0
 
     /**
      * X scale factor
      * @type Float
      */
-  , scaleX: 1
+  , get scaleX ()  { return this._scaleX }
+  , set scaleX (x) { this._scaleX = x; events.trigger(this, 'dirtytransform', {target: this, property: 'scaleX'}) }
+
+    /**
+     * @ignore
+     */
+  , _scaleX: 1
 
     /**
      * Y scale factor
      * @type Float
      */
-  , scaleY: 1
+  , get scaleY ()  { return this._scaleY }
+  , set scaleY (x) { this._scaleY = x; events.trigger(this, 'dirtytransform', {target: this, property: 'scaleY'}) }
+
+    /**
+     * @ignore
+     */
+  , _scaleY: 1
 
     /**
      * Opacity of the Node. 0 is totally transparent, 255 is totally opaque
      * @type Float
      */
-  , opacity: 255
+  , get opacity ()  { return this._opacity }
+  , set opacity (x) { this._opacity = x; this._dirtyDraw() }
+  , _opacity: 255
 
     /**
      * Is the node active in the scene
@@ -113,7 +134,9 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * Is the anchor point relative to the Node
      * @type Boolean
      */
-  , isRelativeAnchorPoint: true
+  , get isRelativeAnchorPoint ()  { return this._isRelativeAnchorPoint }
+  , set isRelativeAnchorPoint (x) { this._isRelativeAnchorPoint = x; events.trigger(this, 'dirtytransform', {target: this, property: 'isRelativeAnchorPoint'}) }
+  , _isRelativeAnchorPoint: true
 
     /**
      * Has a property changed the requires recaculation of the transform matrix
@@ -222,7 +245,8 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
      * Remove a child node.
      *
      * If 'cleanup' is true all actions and scheduled methods will be removed
-     * from the child and its children.
+     * from the child and its children. You must set this to 'true' if you're
+     * removing the object forever or you will have a memory leak.
      *
      * @opt {cocos.nodes.Node} child The Node to remove
      * @opt {Boolean} [cleanup=false] Should a cleanup be performed after removing the Node

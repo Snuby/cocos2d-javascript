@@ -44,7 +44,7 @@ function Sprite (opts) {
         rect    = frame.rect
     }
 
-    evt.addPropertyListener(this, 'scaleX scaleY rect flipX flipY contentSize'.split(' '), 'change', this._updateQuad.bind(this))
+    evt.addListener(this, 'dirtytransform', this._updateQuad.bind(this))
     evt.addPropertyListener(this, 'textureAtlas', 'change', this._updateTextureQuad.bind(this))
 
     if (file || texture) {
