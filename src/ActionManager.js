@@ -129,6 +129,8 @@ ActionManager.inherit(Object, /** @lends cocos.ActionManager# */ {
         if (!element) {
             return
         }
+
+        delete this.targets[targetID]
         // Delete everything in array but don't replace it incase something else has a reference
         element.actions.splice(0, element.actions.length)
     },
