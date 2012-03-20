@@ -79,7 +79,6 @@ function Sprite (opts) {
 
 Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
     textureAtlas: null,
-    rect: null,
     dirty: true,
     recursiveDirty: true,
     quad: null,
@@ -88,6 +87,10 @@ Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
     offsetPosition: null,
     unflippedOffsetPositionFromCenter: null,
     untrimmedSize: null,
+
+    get rect ()  { return this._rect },
+    set rect (x) { this._rect = x; evt.trigger(this, 'dirtytransform', {target: this, property: 'rect'}) },
+    _rect: null,
 
     /**
      * @private
