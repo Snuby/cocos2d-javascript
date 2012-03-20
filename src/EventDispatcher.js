@@ -215,8 +215,13 @@ EventDispatcher.inherit(Object, /** @lends cocos.EventDispatcher# */ {
     // Keyboard events
     keyDown: function (evt) {
         var kc = evt.keyCode
-        if (!this.dispatchEvents || this._keysDown[kc]) {
+        if (!this.dispatchEvents) {
             return
+        }
+
+        // Repeating key
+        if (this._keysDown[kc]) {
+            return this.keyRepeat(evt)
         }
 
         this._keysDown[kc] = true
@@ -225,6 +230,18 @@ EventDispatcher.inherit(Object, /** @lends cocos.EventDispatcher# */ {
             var entry = this.keyboardDelegates[i]
             if (entry.delegate.keyDown) {
                 var swallows = entry.delegate.keyDown(evt)
+                if (swallows) {
+                    break
+                }
+            }
+        }
+    },
+
+    keyRepeat: function (evt) {
+        for (var i = 0; i < this.keyboardDelegates.length; i++) {
+            var entry = this.keyboardDelegates[i]
+            if (entry.delegate.keyRepeat) {
+                var swallows = entry.delegate.keyRepeat(evt)
                 if (swallows) {
                     break
                 }
