@@ -38,7 +38,7 @@ function TestLabelAtlas () {
 
     this.addChild({ child: label1
                   , tag: kTagSprite1
-                  , z:0
+                  , z: 0
                   })
 
 
@@ -54,7 +54,7 @@ function TestLabelAtlas () {
 
     this.addChild({ child: label2
                   , tag: kTagSprite2
-                  , z:0
+                  , z: 0
                   })
 
     this.schedule('step')

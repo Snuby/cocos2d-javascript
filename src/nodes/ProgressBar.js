@@ -16,6 +16,7 @@ function ProgressBar (opts) {
     ProgressBar.superclass.constructor.call(this, opts)
     var size = new geo.Size(272, 32)
     this.contentSize = size
+    this.anchorPoint = new geo.Point(0.5, 0.5)
 
     var s
     if (opts.emptyImage) {

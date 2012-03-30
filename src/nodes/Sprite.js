@@ -32,6 +32,8 @@ function Sprite (opts) {
       , rect         = opts.rect
       , frameName    = opts.frameName
 
+    this.anchorPoint = ccp(0.5, 0.5)
+
     this.offsetPosition = ccp(0, 0)
     this.unflippedOffsetPositionFromCenter = ccp(0, 0)
 

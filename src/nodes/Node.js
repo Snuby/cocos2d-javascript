@@ -18,7 +18,7 @@ var Scheduler     = require('../Scheduler').Scheduler
  */
 function Node () {
     this._contentSize = new geo.Size(0, 0)
-    this._anchorPoint = ccp(0.5, 0.5)
+    this._anchorPoint = ccp(0.0, 0.0)
     this.anchorPointInPixels = ccp(0, 0)
     this._position = ccp(0, 0)
     this.children = []

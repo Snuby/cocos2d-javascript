@@ -20,6 +20,7 @@ var util = require('util'),
  */
 function Label (opts) {
     Label.superclass.constructor.call(this, opts)
+    this.anchorPoint = ccp(0.5, 0.5)
 
     'fontSize fontName fontColor string'.w.forEach(function (name) {
         // Set property on init

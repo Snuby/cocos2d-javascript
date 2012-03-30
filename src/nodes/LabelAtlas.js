@@ -31,7 +31,7 @@ function LabelAtlas (opts) {
     this.mapStartChar = opts.startCharMap.charCodeAt(0)
     this.string = opts.string
 
-    this.contentSize = new geo.Size(opts.itemWidth * this.string.length, opts.itemHeight * this.string.length)
+    this.contentSize = new geo.Size(opts.itemWidth * this.string.length, opts.itemHeight)
 }
 
 LabelAtlas.inherit(AtlasNode, /** @lends cocos.nodes.LabelAtlas# */ {
