@@ -432,26 +432,10 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
             this._setNextScene()
         }
 
+        // TODO partial redrawing
         var rect = new geo.Rect(0, 0, this.winSize.width, this.winSize.height)
 
-        if (rect) {
-            context.beginPath()
-            context.rect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)
-            context.clip()
-            context.closePath()
-        }
-
         this._runningScene.visit(context, rect)
-
-        if (SHOW_REDRAW_REGIONS) {
-            if (rect) {
-                context.beginPath()
-                context.rect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)
-                context.fillStyle = "rgba(255, 0, 0, 0.5)"
-                //context.fill()
-                context.closePath()
-            }
-        }
 
         if (this.displayFPS) {
             this._showFPS()
