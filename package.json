@@ -18,7 +18,7 @@
                , "url": "https://github.com/ryanwilliams/cocos2d-javascript/blob/master/LICENSE"
                }]
 
-, "dependencies": { "jah": "0.2.0"
+, "dependencies": { "jah": "0.2.1"
                   }
 
 , "preferGlobal": true
