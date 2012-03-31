@@ -358,6 +358,18 @@ var util = {
         return namespace;
     },
 
+    requireAll: function () {
+        var mods = [].slice.call(arguments)
+          , namespace = {}
+          , parent = mods.shift()
+
+        mods.forEach(function (m) {
+            util.extend(namespace, window.require('./' + m, parent))
+        })
+
+        return namespace
+    },
+
     /**
      * Update an object's properties so they're readonly
      *
