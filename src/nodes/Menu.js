@@ -6,6 +6,8 @@ var util = require('util'),
     MenuItem = require('./MenuItem').MenuItem,
     geom = require('geometry'), ccp = geom.ccp
 
+var TouchDispatcher = require('../TouchDispatcher').TouchDispatcher
+
 /**
  * @private
  * @constant
@@ -17,6 +19,8 @@ var kMenuStateWaiting = 0
  * @constant
  */
 var kMenuStateTrackingTouch = 1
+
+var kMenuTouchPriority = -128
 
 /**
  * @class
@@ -32,7 +36,11 @@ function Menu (opts) {
 
     var items = opts.items
 
-    this.isMouseEnabled = true
+    if (Director.sharedDirector.isTouchScreen) {
+        this.isTouchEnabled = true
+    } else {
+        this.isMouseEnabled = true
+    }
 
     var s = Director.sharedDirector.winSize
 
@@ -65,6 +73,97 @@ Menu.inherit(Layer, /** @lends cocos.nodes.Menu# */ {
         Menu.superclass.addChild.call(this, opts)
     },
 
+    // Touch Events
+    registerWithTouchDispatcher: function () {
+        TouchDispatcher.sharedDispatcher.addTargetedDelegate(this, kMenuTouchPriority, true)
+    },
+
+    itemForTouch: function (event) {
+        var location = Director.sharedDirector.convertEventToCanvas({ locationInWindow: new geom.Point(event.touch.pageX, event.touch.pageY) })
+
+        var children = this.children
+        for (var i = 0, len = children.length; i < len; i++) {
+            var item = children[i]
+
+            if (item.visible && item.isEnabled) {
+                var local = item.convertToNodeSpace(location)
+
+                var r = item.rect
+                r.origin = ccp(0, 0)
+
+                if (geom.rectContainsPoint(r, local)) {
+                    return item
+                }
+
+            }
+        }
+
+        return null
+    },
+
+    touchBegan: function (evt) {
+        if (this.state != kMenuStateWaiting || !this.visible) {
+            return false
+        }
+
+        for (var c = this.parent; c; c = c.parent) {
+            if (!c.visible)
+                return false
+        }
+
+        var selectedItem = this.itemForTouch(evt)
+        this.selectedItem = selectedItem
+        if (selectedItem) {
+            selectedItem.selected()
+            this.state = kMenuStateTrackingTouch
+
+            return true
+        }
+
+        return false
+    },
+
+    touchEnded: function (evt) {
+        var selItem = this.selectedItem
+
+        if (selItem) {
+            selItem.unselected()
+            selItem.activate()
+        }
+
+        if (this.state != kMenuStateWaiting) {
+            this.state = kMenuStateWaiting
+        }
+    },
+
+    touchCancelled: function (evt) {
+        var selItem = this.selectedItem
+
+        if (selItem) {
+            selItem.unselected()
+        }
+
+        if (this.state != kMenuStateWaiting) {
+            this.state = kMenuStateWaiting
+        }
+    },
+
+    touchMoved: function (evt) {
+        var currentItem = this.itemForTouch(evt)
+
+        if (currentItem != this.selectedItem) {
+            if (this.selectedItem) {
+                this.selectedItem.unselected()
+            }
+            this.selectedItem = currentItem
+            if (this.selectedItem) {
+                this.selectedItem.selected()
+            }
+        }
+    },
+
+
+    // Mouse Events
     itemForMouseEvent: function (event) {
         var location = event.locationInCanvas
 

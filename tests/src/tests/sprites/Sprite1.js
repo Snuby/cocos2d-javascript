@@ -27,9 +27,17 @@ var TestCase      = require('../TestCase')
  * Example Sprite 1
  */
 function Sprite1 () {
+    if (Director.sharedDirector.isTouchScreen) {
+        this.subtitle = 'Tap screen'
+    }
+
     Sprite1.superclass.constructor.call(this)
 
-    this.isMouseEnabled = true
+    if (Director.sharedDirector.isTouchScreen) {
+        this.isTouchEnabled = true
+    } else {
+        this.isMouseEnabled = true
+    }
 
     var s = Director.sharedDirector.winSize
     this.addNewSprite(ccp(s.width / 2, s.height / 2))

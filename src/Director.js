@@ -6,6 +6,7 @@ var util   = require('util')
   , ccp    = geo.ccp
 
 var EventDispatcher = require('./EventDispatcher').EventDispatcher
+  , TouchDispatcher = require('./TouchDispatcher').TouchDispatcher
   , Scheduler       = require('./Scheduler').Scheduler
 
 /**
@@ -228,74 +229,35 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
 
         // Wrapper <div> which can be used for adding special HTML elements if required
         var container = this._container = document.createElement('div')
-        container.style.width = view.clientWidth + 'px'
-        container.style.height = view.clientHeight + 'px'
         container.style.position = 'relative'
         container.style.overflow = 'hidden'
         view.appendChild(container)
-        view = container
-
-
 
         var canvas = document.createElement('canvas')
         canvas.style.verticalAlign = 'bottom'
         this._canvas = canvas
-        canvas.setAttribute('width', view.clientWidth)
-        canvas.setAttribute('height', view.clientHeight)
 
         var context = canvas.getContext('2d')
         this._context = context
 
-        if (FLIP_Y_AXIS) {
-            context.translate(0, view.clientHeight)
-            context.scale(1, -1)
+        this.resize(view.clientWidth, view.clientHeight)
+
+        container.appendChild(canvas)
+
+        this._setupEventCapturing()
+
+        if (this._isFullscreen) {
+            this.fullscreen()
         }
+    }
 
-        view.appendChild(canvas)
+  , _setupEventCapturing: function () {
+        var document = this.document
+          , canvas = this.canvas
 
-        this._winSize = {width: view.clientWidth, height: view.clientHeight}
-
-
-        // Setup event handling
-
-        // Mouse events
         var eventDispatcher = EventDispatcher.sharedDispatcher
-          , mouseDown = function (evt) {
-                evt.locationInWindow = ccp(evt.clientX, evt.clientY)
-                evt.locationInCanvas = this.convertEventToCanvas(evt)
 
-                var mouseDragged = function (evt) {
-                        evt.locationInWindow = ccp(evt.clientX, evt.clientY)
-                        evt.locationInCanvas = this.convertEventToCanvas(evt)
-
-                        eventDispatcher.mouseDragged(evt)
-                    }.bind(this)
-                  , mouseUp = function (evt) {
-                        evt.locationInWindow = ccp(evt.clientX, evt.clientY)
-                        evt.locationInCanvas = this.convertEventToCanvas(evt)
-
-                        document.body.removeEventListener('mousemove', mouseDragged, false)
-                        document.body.removeEventListener('mouseup',   mouseUp,   false)
-
-
-                        eventDispatcher.mouseUp(evt)
-                    }.bind(this)
-
-                document.body.addEventListener('mousemove', mouseDragged, false)
-                document.body.addEventListener('mouseup',   mouseUp,   false)
-
-                eventDispatcher.mouseDown(evt)
-            }.bind(this)
-
-          , mouseMoved = function (evt) {
-                evt.locationInWindow = ccp(evt.clientX, evt.clientY)
-                evt.locationInCanvas = this.convertEventToCanvas(evt)
-
-                eventDispatcher.mouseMoved(evt)
-            }.bind(this)
-
-        canvas.addEventListener('mousedown', mouseDown, false)
-        canvas.addEventListener('mousemove', mouseMoved, false)
+        this._setupMouseEventCapturing()
 
         // Keyboard events
         function keyDown(evt) {
@@ -308,6 +270,51 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
 
         document.documentElement.addEventListener('keydown', keyDown, false)
         document.documentElement.addEventListener('keyup', keyUp, false)
+    }
+
+  , _setupMouseEventCapturing: function () {
+        var document = this.document
+          , canvas = this.canvas
+
+        var eventDispatcher = EventDispatcher.sharedDispatcher
+
+        var mouseDown = function (evt) {
+            evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+            evt.locationInCanvas = this.convertEventToCanvas(evt)
+
+            var mouseDragged = function (evt) {
+                evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+                evt.locationInCanvas = this.convertEventToCanvas(evt)
+
+                eventDispatcher.mouseDragged(evt)
+            }.bind(this)
+
+            var mouseUp = function (evt) {
+                evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+                evt.locationInCanvas = this.convertEventToCanvas(evt)
+
+                document.body.removeEventListener('mousemove', mouseDragged, false)
+                document.body.removeEventListener('mouseup',   mouseUp,   false)
+
+
+                eventDispatcher.mouseUp(evt)
+            }.bind(this)
+
+            document.body.addEventListener('mousemove', mouseDragged, false)
+            document.body.addEventListener('mouseup',   mouseUp,   false)
+
+            eventDispatcher.mouseDown(evt)
+        }.bind(this)
+
+        var mouseMoved = function (evt) {
+            evt.locationInWindow = ccp(evt.clientX, evt.clientY)
+            evt.locationInCanvas = this.convertEventToCanvas(evt)
+
+            eventDispatcher.mouseMoved(evt)
+        }.bind(this)
+
+        canvas.addEventListener('mousedown', mouseDown, false)
+        canvas.addEventListener('mousemove', mouseMoved, false)
     }
 
     /**
