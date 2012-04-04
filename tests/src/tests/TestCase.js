@@ -43,6 +43,8 @@ function TestCase () {
         this.addChild({ child: label
                       , z: 1
                       })
+
+        this.titleLabel = label
     }
 
 
@@ -57,6 +59,8 @@ function TestCase () {
         this.addChild({ child: label
                       , z: 1
                       })
+
+        this.subtitleLabel = label
     }
 
 
@@ -83,6 +87,9 @@ function TestCase () {
     this.addChild({ child: menu
                   , z: 1
                   })
+
+    this.menu = menu
+    events.addListener(Director.sharedDirector, 'resize', this.adjustPositions.bind(this))
 }
 
 TestCase.inherit(Layer, /** @lends TestCase# */ {
@@ -97,6 +104,24 @@ TestCase.inherit(Layer, /** @lends TestCase# */ {
      * @type String
      */
   , subtitle: null
+
+
+    /**
+     * Repositions labels and menus when view resizes
+     */
+  , adjustPositions: function () {
+        var s = Director.sharedDirector.winSize
+        this.titleLabel.position = new Point(s.width / 2, s.height - 50)
+
+        if (this.subtitleLabel) {
+            this.subtitleLabel.position = new Point(s.width / 2, s.height - 80)
+        }
+
+
+        this.menu.children[0].position = new Point(s.width / 2 - 100, 30)
+        this.menu.children[1].position = new Point(s.width / 2, 30)
+        this.menu.children[2].position = new Point(s.width / 2 + 100, 30)
+    }
 })
 
 module.exports = TestCase

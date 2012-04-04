@@ -83,7 +83,7 @@ TestSuite.inherit(Object, /** @lends TestSuite# */ {
      * Restart the current test.
      */
   , restart: function () {
-      this.run()
+        this.run()
     }
 })
 

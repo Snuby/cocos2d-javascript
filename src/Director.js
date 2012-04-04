@@ -33,7 +33,7 @@ function Director () {
     this.document = this.window.document
 
     // Prevent writing to some properties
-    util.makeReadonly(this, 'canvas context sceneStack winSize isReady document window container'.w)
+    util.makeReadonly(this, 'canvas context sceneStack winSize isReady document window container isTouchScreen isMobile'.w)
 }
 
 Director.inherit(Object, /** @lends cocos.Director# */ {
@@ -138,12 +138,28 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
   , isReady: false
 
     /**
+     * Is this running on a touchscreen device. e.g. iPhone or iPad
+     * @type Boolean
+     * @readonly
+     */
+  , isTouchScreen: false
+
+    /**
+     * Are we running on a mobile device?
+     * @type Boolean
+     * @readonly
+     */
+  , isMobile: false
+
+
+    /**
      * Number of milliseconds since last frame
      * @type Float
      * @readonly
      */
   , dt: 0
 
+  , orientation: 'unknown'
 
     /**
      * @private
@@ -161,6 +177,39 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * @type cocos.nodes.Scene
      */
   , _nextScene: null
+
+  , _forcedOrientation: null
+
+    /**
+     * Make the canvas fullscreen.
+     * On mobile devices this will try to set the viewport to avoid scaling the canvas
+     */
+  , fullscreen: function () {
+        throw new Error("Fullscreen is not implemented on non-mobile devices yet")
+    }
+
+  , resize: function (width, height) {
+        if (!this.container) {
+            return
+        }
+
+        events.trigger(this, 'beforeresize', {newSize: new geo.Size(width, height)})
+
+        this.container.style.width = width + 'px'
+        this.container.style.height = height + 'px'
+        this.canvas.width = width
+        this.canvas.height = height
+
+        this._winSize = new geo.Size(width, height)
+
+
+        if (FLIP_Y_AXIS) {
+            this.context.translate(0, height)
+            this.context.scale(1, -1)
+        }
+
+        events.trigger(this, 'resize')
+    }
 
     /**
      * Append to an HTML element. It will create this canvas tag and attach
@@ -528,13 +577,146 @@ Object.defineProperty(Director, 'sharedDirector', {
      */
     get: function () {
         if (!Director._instance) {
-            Director._instance = new this()
+            if (window.navigator.userAgent.match(/(iPhone|iPod|iPad|Android)/)) {
+                Director._instance = new DirectorTouchScreen()
+            } else {
+                Director._instance = new this()
+            }
         }
 
         return Director._instance
     }
 
   , enumerable: true
+})
+
+function DirectorTouchScreen () {
+    DirectorTouchScreen.superclass.constructor.call(this)
+}
+
+/**
+ * @memberOf cocos
+ * @extends cocos.Director
+ */
+DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
+    isTouchScreen: true
+
+  , isMobile: true
+
+  , fullscreen: function () {
+        this._isFullscreen = true
+        if (!this._container) {
+            return // Wait to be attached to view
+        }
+
+        var viewport = this.document.querySelector('meta[name=viewport]')
+        if (!viewport) {
+            viewport = this.document.createElement('meta')
+            viewport.setAttribute('name', 'viewport')
+            this.document.querySelector('head').appendChild(viewport)
+        }
+
+        this.container.style.position = 'fixed'
+        this.container.style.left     = 0
+        this.container.style.top      = 0
+
+        events.addListener(this, 'orientationchange', this._adjustFullscreen.bind(this))
+        this.document.body.addEventListener('touchstart', function (e) {
+            this.window.scrollTo(0, 0)
+            e.preventDefault()
+        }.bind(this))
+        this._adjustFullscreen()
+    }
+
+  , _adjustFullscreen: function () {
+        if (!this._container) {
+            return
+        }
+        if (this._forcedOrientation == 'landscape' || this.orientation.match(/landscape/)) {
+            this.resize(480, 268)
+        } else {
+            this.resize(320, 416)
+        }
+
+        var viewport = this.document.querySelector('meta[name=viewport]')
+        viewport.setAttribute('content', 'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=' + this._winSize.width + ', height=' + this._winSize.height)
+        this.window.scrollTo(0, 0)
+    }
+
+    /**
+     * Forces the screen orientation on a mobile device
+     */
+  , forceOrientation: function (orientation) {
+        this._forcedOrientation = orientation
+        if (this._isFullscreen) {
+            this._adjustFullscreen()
+        }
+    }
+
+  , _setupEventCapturing: function () {
+        var document = this.document
+
+        this._setupTouchEventCapturing()
+
+        // Orientation detection
+        if (typeof top.window.orientation != 'undefined') {
+            this._updateOrientation()
+            document.body.addEventListener('orientationchange', this._updateOrientation.bind(this), false)
+        }
+
+    }
+
+  , _setupTouchEventCapturing: function () {
+        var document = this.document
+          , canvas = this.canvas
+
+        // Touch events
+        var eventDispatcher = TouchDispatcher.sharedDispatcher
+
+        var touchStart = function (evt) {
+            eventDispatcher.touchesBegan(evt)
+        }.bind(this)
+
+        var touchMove = function (evt) {
+            eventDispatcher.touchesMoved(evt)
+        }.bind(this)
+
+        var touchEnd = function (evt) {
+            eventDispatcher.touchesEnded(evt)
+        }.bind(this)
+
+        var touchCancel = function (evt) {
+            eventDispatcher.touchesCancelled(evt)
+        }.bind(this)
+
+        canvas.addEventListener('touchstart',  touchStart,  false)
+        canvas.addEventListener('touchmove',   touchMove,   false)
+        canvas.addEventListener('touchend',    touchEnd,    false)
+        canvas.addEventListener('touchcancel', touchCancel, false)
+    }
+
+  , _updateOrientation: function () {
+        switch (top.window.orientation) {
+        case 0:
+            this.orientation = 'portrait'
+            break
+
+        case 90:
+            this.orientation = 'landscapeLeft'
+            break
+
+        case -90:
+            this.orientation = 'landscapeRight'
+            break
+
+        case 180:
+            this.orientation = 'portraitUpsideDown'
+            break
+        }
+
+        events.trigger(this, 'orientationchange')
+    }
+
 })
 
 /**
