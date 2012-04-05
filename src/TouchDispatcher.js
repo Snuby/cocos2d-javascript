@@ -182,18 +182,25 @@ TouchDispatcher.inherit(Object, /** @lends cocos.TouchDispatcher# */ {
   , ontouches: function (evt, touchType) {
         this._locked = true
 
+        var director = require('./Director').Director.sharedDirector
+
         var i, j, touch, handler, idx
 
         // Can't modify the evt.touches object directly -- and we only need to if we're doing both types of handlers
         var needsMutableSet = this.targetedHandlers.length && this.standardHandlers.length
           , mutableTouches = needsMutableSet ? Array.prototype.splice.call(evt.changedTouches, 0) : evt.changedTouches
 
+        for (i = 0; i < mutableTouches.length; i++) {
+            touch = mutableTouches[i]
+            touch.locationInCanvas = director.convertTouchToCanvas(touch)
+        }
+
         // Process Targeted handlers first
         if (this.targetedHandlers.length > 0) {
-
             var claimed = false
             for (i = 0; i < mutableTouches.length; i++) {
                 touch = mutableTouches[i]
+
                 for (j = 0; j < this.targetedHandlers.length; j++) {
                     handler = this.targetedHandlers[j]
 
@@ -219,12 +226,16 @@ TouchDispatcher.inherit(Object, /** @lends cocos.TouchDispatcher# */ {
                             if (handler.delegate.touchEnded) handler.delegate.touchEnded({touch: touch, originalEvent: evt})
                             idx = handler.claimedTouches.indexOf(touch)
                             handler.claimedTouches.splice(idx, 1)
+                            // Removed item, so knock loop back one
+                            i--
                             break
 
                         case kCCTouchCancelled:
                             if (handler.delegate.touchCancelled) handler.delegate.touchCancelled({touch: touch, originalEvent: evt})
                             idx = handler.claimedTouches.indexOf(touch)
                             handler.claimedTouches.splice(idx, 1)
+                            // Removed item, so knock loop back one
+                            i--
                             break
                         }
                     }
@@ -240,7 +251,33 @@ TouchDispatcher.inherit(Object, /** @lends cocos.TouchDispatcher# */ {
             }
         }
 
-        // TODO Standard touch handling
+        // Standard touch handling
+        if (this.standardHandlers.length > 0 && mutableTouches.length > 0) {
+            for (j = 0; j < this.standardHandlers.length; j++) {
+                handler = this.standardHandlers[j]
+                switch (touchType) {
+                case kCCTouchBegan:
+                    if (handler.delegate.touchesBegan)
+                        handler.delegate.touchesBegan({touches: mutableTouches, originalEvent: evt})
+                    break
+
+                case kCCTouchMoved:
+                    if (handler.delegate.touchesMoved)
+                        handler.delegate.touchesMoved({touches: mutableTouches, originalEvent: evt})
+                    break
+
+                case kCCTouchEnded:
+                    if (handler.delegate.touchesEnded)
+                        handler.delegate.touchesEnded({touches: mutableTouches, originalEvent: evt})
+                    break
+
+                case kCCTouchCancelled:
+                    if (handler.delegate.touchesCancelled)
+                        handler.delegate.touchesCancelled({touches: mutableTouches, originalEvent: evt})
+                    break
+                }
+            }
+        }
 
         this._locked = false
         if (this._toRemove)  {

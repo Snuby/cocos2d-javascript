@@ -525,6 +525,10 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
       * @param {MouseEvent} evt
       */
   , convertEventToCanvas: function (evt) {
+        return this.convertLocationToCanvas(evt.locationInWindow)
+    }
+
+  , convertLocationToCanvas: function (loc) {
         var x = this.canvas.offsetLeft - document.documentElement.scrollLeft
           , y = this.canvas.offsetTop - document.documentElement.scrollTop
 
@@ -534,12 +538,16 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
             y += o.offsetTop - o.scrollTop
         }
 
-        var p = geo.ccpSub(evt.locationInWindow, ccp(x, y))
+        var p = geo.ccpSub(loc, ccp(x, y))
         if (FLIP_Y_AXIS) {
             p.y = this.canvas.height - p.y
         }
 
         return p
+    }
+
+  , convertTouchToCanvas: function (touch) {
+        return this.convertLocationToCanvas(new geo.Point(touch.pageX, touch.pageY))
     }
 
     /**

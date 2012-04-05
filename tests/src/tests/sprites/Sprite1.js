@@ -104,6 +104,13 @@ Sprite1.inherit(TestCase, /** @lends Sprite1# */ {
 
         return true
     }
+
+  , touchesEnded: function (event) {
+        var location = event.touches[0].locationInCanvas
+        this.addNewSprite(location)
+
+        return true
+    }
 })
 
 module.exports = Sprite1
