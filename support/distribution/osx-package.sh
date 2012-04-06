@@ -18,7 +18,7 @@ fi
 
 
 # Create the .pkg
-/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker \
+/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker \
     -v \
     -d "OSX Package.pmdoc" \
     -o "build/dmg/$1.pkg" \
