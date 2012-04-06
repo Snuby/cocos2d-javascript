@@ -42,7 +42,7 @@ function SpriteAnimationFlip () {
                      , new SpriteFrame({ texture: texture, rect: new Rect(132 * 1, 132 * 1, 132, 132) })
                      ]
 
-    var sprite = new Sprite({ frame: animFrames[0] })
+    var sprite = this.sprite = new Sprite({ frame: animFrames[0] })
     sprite.position = ccp(s.width / 2 - 80, s.height / 2)
 
     this.addChild(sprite)
@@ -62,6 +62,11 @@ function SpriteAnimationFlip () {
 
 SpriteAnimationFlip.inherit(TestCase, /** @lends SpriteAnimationFlip# */ {
     title: 'Sprite Animation + Flip'
+  , adjustPositions: function () {
+        SpriteAnimationFlip.superclass.adjustPositions.call(this)
+        var s = Director.sharedDirector.winSize
+        this.sprite.position = ccp(s.width / 2 - 80, s.height / 2)
+  }
 })
 
 module.exports = SpriteAnimationFlip

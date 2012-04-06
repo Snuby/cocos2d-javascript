@@ -35,13 +35,15 @@ function SpriteAnchorPoint () {
       , copy
       , i
 
+    this.sprites = []
+    this.points = []
     for (i = 0; i < 3; i++) {
-        sprite = new Sprite({ file: path.join(__dirname, '../resources/grossini_dance_atlas.png')
-                            , rect: new Rect(85 * i, 121 * 1, 85, 121)
-                            })
+        this.sprites[i] = sprite = new Sprite({ file: path.join(__dirname, '../resources/grossini_dance_atlas.png')
+                                              , rect: new Rect(85 * i, 121 * 1, 85, 121)
+                                              })
         sprite.position = ccp(s.width / 4 * (i + 1), s.height / 2)
 
-        point = new Sprite({ file: path.join(__dirname, '../resources/r1.png') })
+        this.points[i] = point = new Sprite({ file: path.join(__dirname, '../resources/r1.png') })
         point.scale = 0.25
         point.position = sprite.position
         this.addChild({ child: point
@@ -60,8 +62,6 @@ function SpriteAnchorPoint () {
             break
         }
 
-        point.position = sprite.position
-
         copy = action.copy()
         sprite.runAction(copy)
         this.addChild({ child: sprite
@@ -72,6 +72,17 @@ function SpriteAnchorPoint () {
 
 SpriteAnchorPoint.inherit(TestCase, /** @lends SpriteAnchorPoint# */ {
     title: 'Sprite Anchor Point'
+  , adjustPositions: function () {
+        SpriteAnchorPoint.superclass.adjustPositions.call(this)
+        var s = Director.sharedDirector.winSize
+
+        var sprite, point, i
+        for (i = 0; i < this.sprites.length; i++) {
+            sprite = this.sprites[i]
+            point = this.points[i]
+            point.position = sprite.position = ccp(s.width / 4 * (i + 1), s.height / 2)
+        }
+    }
 })
 
 module.exports = SpriteAnchorPoint

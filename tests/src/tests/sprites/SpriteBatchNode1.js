@@ -29,9 +29,17 @@ var kTagSpriteBatchNode = 1
  * Example SpriteBatchNode 1
  */
 function SpriteBatchNode1 () {
+    if (Director.sharedDirector.isTouchScreen) {
+        this.subtitle = 'Tap screen'
+    }
+
     SpriteBatchNode1.superclass.constructor.call(this)
 
-    this.isMouseEnabled = true
+    if (Director.sharedDirector.isTouchScreen) {
+        this.isTouchEnabled = true
+    } else {
+        this.isMouseEnabled = true
+    }
 
     var batch = new SpriteBatchNode({ file: path.join(__dirname, '../resources/grossini_dance_atlas.png')
                                     , size: new Size(480, 320)
@@ -101,6 +109,13 @@ SpriteBatchNode1.inherit(TestCase, /** @lends SpriteBatchNode1# */ {
 
   , mouseUp: function (event) {
         var location = Director.sharedDirector.convertEventToCanvas(event)
+        this.addNewSprite(location)
+
+        return true
+    }
+
+  , touchesEnded: function (event) {
+        var location = event.touches[0].locationInCanvas
         this.addNewSprite(location)
 
         return true

@@ -101,7 +101,7 @@ function SpriteAnimationCache () {
     var seq = new Sequence({ actions: [animN, animG, animB] })
 
     // create an sprite without texture
-    var grossini = new Sprite()
+    var grossini = this.sprite = new Sprite()
 
     var winSize = Director.sharedDirector.winSize
 
@@ -117,6 +117,14 @@ function SpriteAnimationCache () {
 SpriteAnimationCache.inherit(TestCase, /** @lends SpriteAnimationCache# */ {
     title: 'AnimationCache'
   , subtitle: 'Sprite should be animated'
+
+  , adjustPositions: function () {
+        SpriteAnimationCache.superclass.adjustPositions.call(this)
+        var s = Director.sharedDirector.winSize
+
+        this.sprite.position = ccp(s.width / 2, s.height / 2)
+  }
+
 })
 
 

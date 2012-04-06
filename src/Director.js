@@ -647,6 +647,7 @@ DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
         if (!this._container) {
             return
         }
+
         if (this._forcedOrientation == 'landscape' || this.orientation.match(/landscape/)) {
             this.resize(480, 268)
         } else {
@@ -655,6 +656,17 @@ DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
 
         var viewport = this.document.querySelector('meta[name=viewport]')
         viewport.setAttribute('content', 'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=' + this._winSize.width + ', height=' + this._winSize.height)
+
+        // Rotate canvas to fake orientation
+        /* TODO
+        if (this._forcedOrientation == 'landscape' && !this.orientation.match(/landscape/)) {
+            this.container.style.WebkitTransformOrigin = '0 0'
+            this.container.style.WebkitTransform = 'translate(320px, 0) rotate(90deg)'
+        } else {
+            this.container.style.WebkitTransform = 'none'
+        }
+        */
+
         this.window.scrollTo(0, 0)
     }
 

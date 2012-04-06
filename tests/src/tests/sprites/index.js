@@ -25,9 +25,6 @@ exports.main = function () {
     if (director.isTouchScreen) {
         director.fullscreen()
     }
-    if (director.isMobile) {
-        director.forceOrientation('landscape')
-    }
 
     // Start the first test when everything has loaded
     events.addListener(director, 'ready', function () {
