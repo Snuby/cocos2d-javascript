@@ -1,0 +1,7 @@
+{ "jahProject": { "version": "${jahVersion}" }
+, "libs": ["cocos2d"]
+, "externalize": { "cocos2d": "cocos2d.js"
+                 , "jah": "cocos2d.js"
+                 , "/libs/chipmunk.js": "chipmunk.js"
+                 }
+}
