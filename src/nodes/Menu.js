@@ -79,7 +79,7 @@ Menu.inherit(Layer, /** @lends cocos.nodes.Menu# */ {
     },
 
     itemForTouch: function (event) {
-        var location = Director.sharedDirector.convertEventToCanvas({ locationInWindow: new geom.Point(event.touch.pageX, event.touch.pageY) })
+        var location = Director.sharedDirector.convertTouchToCanvas(event.touch)
 
         var children = this.children
         for (var i = 0, len = children.length; i < len; i++) {

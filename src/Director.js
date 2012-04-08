@@ -528,14 +528,14 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
         return this.convertLocationToCanvas(evt.locationInWindow)
     }
 
-  , convertLocationToCanvas: function (loc) {
-        var x = this.canvas.offsetLeft - document.documentElement.scrollLeft
-          , y = this.canvas.offsetTop - document.documentElement.scrollTop
+  , convertLocationToCanvas: function (loc, noScroll) {
+        var x = this.canvas.offsetLeft - (noScroll ? 0 : document.documentElement.scrollLeft)
+          , y = this.canvas.offsetTop  - (noScroll ? 0 : document.documentElement.scrollTop)
 
         var o = this.canvas
         while ((o = o.offsetParent)) {
-            x += o.offsetLeft - o.scrollLeft
-            y += o.offsetTop - o.scrollTop
+            x += o.offsetLeft - (noScroll ? 0 : o.scrollLeft)
+            y += o.offsetTop  - (noScroll ? 0 : o.scrollTop)
         }
 
         var p = geo.ccpSub(loc, ccp(x, y))
@@ -547,7 +547,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
     }
 
   , convertTouchToCanvas: function (touch) {
-        return this.convertLocationToCanvas(new geo.Point(touch.pageX, touch.pageY))
+        return this.convertLocationToCanvas(new geo.Point(touch.pageX, touch.pageY), true)
     }
 
     /**
