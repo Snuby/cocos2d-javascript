@@ -22,7 +22,7 @@ exports.main = function () {
     var director = Director.sharedDirector
     director.displayFPS = true
 
-    if (director.isTouchScreen) {
+    if (window.navigator.userAgent.match(/(iPhone|iPod)/)) {
         director.fullscreen()
     }
 

@@ -42,7 +42,7 @@ function SpriteBatchNode1 () {
     }
 
     var batch = new SpriteBatchNode({ file: path.join(__dirname, '../resources/grossini_dance_atlas.png')
-                                    , size: new Size(480, 320)
+                                    , size: Director.sharedDirector.winSize
                                     })
     this.addChild({ child: batch
                   , tag: kTagSpriteBatchNode

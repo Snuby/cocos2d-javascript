@@ -607,6 +607,18 @@ Object.defineProperty(Director, 'sharedDirector', {
 
 function DirectorTouchScreen () {
     DirectorTouchScreen.superclass.constructor.call(this)
+
+    // Hardcode some viewport sizes for iOS devices
+    var ua = window.navigator.userAgent
+    if (ua.match(/(iPhone|iPod)/)) {
+        this.viewportSize = { portrait:  new geo.Size(320, 416)
+                            , landscape: new geo.Size(480, 268)
+                            }
+    } else if (ua.match(/(iPad)/)) {
+        this.viewportSize = { portrait:  new geo.Size(768, 928)
+                            , landscape: new geo.Size(1024, 672)
+                            }
+    }
 }
 
 /**
@@ -617,6 +629,8 @@ DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
     isTouchScreen: true
 
   , isMobile: true
+
+  , viewportSize: null
 
   , fullscreen: function () {
         this._isFullscreen = true
@@ -648,11 +662,13 @@ DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
             return
         }
 
+        var vp
         if (this._forcedOrientation == 'landscape' || this.orientation.match(/landscape/)) {
-            this.resize(480, 268)
+            vp = this.viewportSize.landscape
         } else {
-            this.resize(320, 416)
+            vp = this.viewportSize.portrait
         }
+        this.resize(vp.width, vp.height)
 
         var viewport = this.document.querySelector('meta[name=viewport]')
         viewport.setAttribute('content', 'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=' + this._winSize.width + ', height=' + this._winSize.height)
