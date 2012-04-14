@@ -31,7 +31,7 @@ function TargetedTouchHandler (delegate, priority, swallowsTouches) {
     TargetedTouchHandler.superclass.constructor.call(this, delegate, priority)
 
     this.swallowsTouches = swallowsTouches
-    this.claimedTouches = []
+    this.claimedTouches = {}
 }
 TargetedTouchHandler.inherit(TouchHandler)
 
@@ -211,11 +211,11 @@ TouchDispatcher.inherit(Object, /** @lends cocos.TouchDispatcher# */ {
                             claimed = handler.delegate.touchBegan({touch: touch, originalEvent: evt})
                         }
                         if (claimed) {
-                            handler.claimedTouches.push(touch)
+                            handler.claimedTouches[touch.identifier] = touch
                         }
                     }
                     // Touch move, end, cancel
-                    else if (handler.claimedTouches.indexOf(touch) > -1) {
+                    else if (handler.claimedTouches[touch.identifier]) {
                         claimed = true
                         switch (touchType) {
                         case kCCTouchMoved:
@@ -223,19 +223,14 @@ TouchDispatcher.inherit(Object, /** @lends cocos.TouchDispatcher# */ {
                             break
 
                         case kCCTouchEnded:
+                            console.log('touch end')
                             if (handler.delegate.touchEnded) handler.delegate.touchEnded({touch: touch, originalEvent: evt})
-                            idx = handler.claimedTouches.indexOf(touch)
-                            handler.claimedTouches.splice(idx, 1)
-                            // Removed item, so knock loop back one
-                            i--
+                            delete handler.claimedTouches[touch.identifier]
                             break
 
                         case kCCTouchCancelled:
                             if (handler.delegate.touchCancelled) handler.delegate.touchCancelled({touch: touch, originalEvent: evt})
-                            idx = handler.claimedTouches.indexOf(touch)
-                            handler.claimedTouches.splice(idx, 1)
-                            // Removed item, so knock loop back one
-                            i--
+                            delete handler.claimedTouches[touch.identifier]
                             break
                         }
                     }
@@ -244,6 +239,8 @@ TouchDispatcher.inherit(Object, /** @lends cocos.TouchDispatcher# */ {
                         if (needsMutableSet) {
                             idx = mutableTouches.indexOf(touch)
                             mutableTouches.splice(idx, 1)
+                            // Removed item, so knock loop back one
+                            i--
                         }
                         break
                     }
