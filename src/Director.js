@@ -331,7 +331,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
 
         var preloader = this.preloadScene
         if (!preloader) {
-            var PreloadScene = require('./nodes/PreloadScene').PreloadScene
+            var PreloadScene = this.preloadSceneConstructor || require('./nodes/ProgressBarPreloadScene').ProgressBarPreloadScene
             preloader = new PreloadScene()
             this.preloadScene = preloader
         }
