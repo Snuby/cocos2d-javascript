@@ -1,13 +1,14 @@
 'use strict'
 
-var util = require('util'),
-    evt = require('events'),
-    Director = require('../Director').Director,
-    SpriteFrameCache = require('../SpriteFrameCache').SpriteFrameCache,
-    TextureAtlas = require('../TextureAtlas').TextureAtlas,
-    Node = require('./Node').Node,
-    geo = require('geometry'),
-    ccp = geo.ccp
+var util = require('util')
+  , evt  = require('events')
+  , geo  = require('geometry')
+  , ccp  = geo.ccp
+
+var Director         = require('../Director').Director
+  , SpriteFrameCache = require('../SpriteFrameCache').SpriteFrameCache
+  , TextureAtlas     = require('../TextureAtlas').TextureAtlas
+  , Node             = require('./Node').Node
 
 /**
  * @class
@@ -59,17 +60,16 @@ function Sprite (opts) {
     }
 
     if (!rect && textureAtlas) {
-        rect = {origin: ccp(0, 0), size: {width: textureAtlas.texture.size.width, height: textureAtlas.texture.size.height}}
+        rect = new geo.Rect(0, 0, textureAtlas.texture.size.width, textureAtlas.texture.size.height)
     }
 
     if (rect) {
         this.rect = rect
         this.contentSize = rect.size
 
-        this.quad = {
-            drawRect: {origin: ccp(0, 0), size: rect.size},
-            textureRect: rect
-        }
+        this.quad = { drawRect: {origin: ccp(0, 0), size: rect.size}
+                    , textureRect: rect
+                    }
     }
 
     this.textureAtlas = textureAtlas
@@ -80,24 +80,28 @@ function Sprite (opts) {
 }
 
 Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
-    textureAtlas: null,
-    dirty: true,
-    recursiveDirty: true,
-    quad: null,
-    flipX: false,
-    flipY: false,
-    offsetPosition: null,
-    unflippedOffsetPositionFromCenter: null,
-    untrimmedSize: null,
+    textureAtlas: null
+  , dirty: true
+  , recursiveDirty: true
+  , quad: null
+  , flipX: false
+  , flipY: false
+  , offsetPosition: null
+  , unflippedOffsetPositionFromCenter: null
+  , untrimmedSize: null
 
-    get rect ()  { return this._rect },
-    set rect (x) { this._rect = x; evt.trigger(this, 'dirtytransform', {target: this, property: 'rect'}) },
-    _rect: null,
+    /**
+     * The rectangle area in the source image where the sprite is
+     * @type geometry.Rect
+     */
+  , get rect ()  { return this._rect }
+  , set rect (x) { this._rect = x; evt.trigger(this, 'dirtytransform', {target: this, property: 'rect'}) }
+  , _rect: null
 
     /**
      * @private
      */
-    _updateTextureQuad: function (obj, key, texture, oldTexture) {
+  , _updateTextureQuad: function (obj, key, texture, oldTexture) {
         if (oldTexture) {
             oldTexture.removeQuad({quad: this.quad})
         }
@@ -105,12 +109,12 @@ Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
         if (texture) {
             texture.insertQuad({quad: this.quad})
         }
-    },
+    }
 
     /**
      * @type geometry.Rect
      */
-    set textureCoords (rect) {
+  , set textureCoords (rect) {
         var quad = this.quad
         if (!quad) {
             quad = {
@@ -122,15 +126,15 @@ Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
         quad.textureRect = util.copy(rect)
 
         this.quad = quad
-    },
+    }
 
     /**
      * @type geometry.Rect
      */
-    set textureRect (opts) {
-        var rect = opts.rect,
-            rotated = !!opts.rotated,
-            untrimmedSize = opts.untrimmedSize || rect.size
+  , set textureRect (opts) {
+        var rect = opts.rect
+          , rotated = !!opts.rotated
+          , untrimmedSize = opts.untrimmedSize || rect.size
 
         this.contentSize = untrimmedSize
         this.rect = util.copy(rect)
@@ -163,20 +167,19 @@ Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
         }
 
         this.quad = quad
-    },
+    }
 
     /**
      * @private
      */
-    _updateQuad: function () {
+  , _updateQuad: function () {
         if (!this.rect) {
             return
         }
         if (!this.quad) {
-            this.quad = {
-                drawRect: geo.rectMake(0, 0, 0, 0), 
-                textureRect: geo.rectMake(0, 0, 0, 0)
-            }
+            this.quad = { drawRect: geo.rectMake(0, 0, 0, 0)
+                        , textureRect: geo.rectMake(0, 0, 0, 0)
+                        }
         }
 
         var relativeOffset = util.copy(this.unflippedOffsetPositionFromCenter)
@@ -204,9 +207,9 @@ Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
             this.quad.drawRect.size.height *= -1
             this.quad.drawRect.origin.y = -this.rect.size.height
         }
-    },
+    }
 
-    updateTransform: function (ctx) {
+  , updateTransform: function (ctx) {
         if (!this.useSpriteSheet) {
             throw "updateTransform is only valid when Sprite is being rendered using a SpriteSheet"
         }
@@ -218,38 +221,36 @@ Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
         }
 
         // TextureAtlas has hard reference to this quad so we can just update it directly
-        this.quad.drawRect.origin = {
-            x: this.position.x - this.anchorPointInPixels.x * this.scaleX,
-            y: this.position.y - this.anchorPointInPixels.y * this.scaleY
-        }
-        this.quad.drawRect.size = {
-            width: this.rect.size.width * this.scaleX,
-            height: this.rect.size.height * this.scaleY
-        }
+        this.quad.drawRect.origin = new geo.Point( this.position.x - this.anchorPointInPixels.x * this.scaleX
+                                                 , this.position.y - this.anchorPointInPixels.y * this.scaleY
+                                                 )
+        this.quad.drawRect.size = new geo.Size( this.rect.size.width * this.scaleX
+                                              , this.rect.size.height * this.scaleY
+                                              )
 
         this.dirty = false
         this.recursiveDirty = false
-    },
+    }
 
-    draw: function (ctx) {
+  , draw: function (ctx) {
         if (!this.quad) {
             return
         }
         this.textureAtlas.drawQuad(ctx, this.quad)
-    },
+    }
 
-    isFrameDisplayed: function (frame) {
+  , isFrameDisplayed: function (frame) {
         if (!this.rect || !this.textureAtlas) {
             return false
         }
         return (frame.texture === this.textureAtlas.texture && geo.rectEqualToRect(frame.rect, this.rect))
-    },
+    }
 
 
     /**
      * @type cocos.SpriteFrame
      */
-    set displayFrame (frame) {
+  , set displayFrame (frame) {
         if (!frame) {
             delete this.quad
             return

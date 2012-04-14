@@ -439,6 +439,10 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
         this.children.forEach(function (child) { child.onExit() })
     }
 
+    /**
+     * Stop and remove all actions and scheduled method calls on itself and
+     * children
+     */
   , cleanup: function () {
         this.stopAllActions()
         this.unscheduleAllSelectors()
@@ -449,13 +453,25 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
         Scheduler.sharedScheduler.resumeTarget(this)
         ActionManager.sharedManager.resumeTarget(this)
     }
+
+    /**
+     * Temporarily pause scheduled methods and actions
+     */
   , pauseSchedulerAndActions: function () {
         Scheduler.sharedScheduler.pauseTarget(this)
         ActionManager.sharedManager.pauseTarget(this)
     }
+
+    /**
+     * Remove a specific scheduled method call
+     */
   , unscheduleSelector: function (selector) {
         Scheduler.sharedScheduler.unschedule({target: this, method: selector})
     }
+
+    /**
+     * Remove all scheduled methods calls
+     */
   , unscheduleAllSelectors: function () {
         Scheduler.sharedScheduler.unscheduleAllSelectorsForTarget(this)
     }
@@ -469,7 +485,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
 
     /**
      * Called automatically every frame and triggers the call to 'draw' this
-     * node and its chidlren in the correct order.
+     * node and its children in the correct order.
      *
      * For custom drawing override the 'draw' method. Only override this if you
      * really need to do something special.

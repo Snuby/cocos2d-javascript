@@ -119,15 +119,15 @@ var geometry = {
     Rect: function (x, y, w, h) {
         /**
          * Coordinate in 2D space
-         * @type {geometry.Point}
+         * @type geometry.Point
          */
         this.origin = new geometry.Point(x, y)
 
         /**
          * Size in 2D space
-         * @type {geometry.Size}
+         * @type geometry.Size
          */
-        this.size   = new geometry.Size(w, h)
+        this.size = new geometry.Size(w, h)
     },
 
     /**
@@ -589,7 +589,7 @@ Object.defineProperty(geometry.Point, 'zero', {
      * Point(0, 0)
      *
      * @memberOf geometry.Point
-     * @getter {geometry.Point} zero
+     * @getter geometry.Point zero
      */
     get: function () {
         return new geometry.Point(0, 0)

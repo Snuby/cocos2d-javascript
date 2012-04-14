@@ -1,7 +1,7 @@
 'use strict'
 
-var util = require('util'),
-    geo = require('geometry')
+var util = require('util')
+  , geo = require('geometry')
 
 
 var kCCTouchSelectorBeganBit = 1 << 0
@@ -37,7 +37,7 @@ TargetedTouchHandler.inherit(TouchHandler)
 
 /**
  * @class
- * This singleton is responsible for dispatching Mouse and Keyboard events.
+ * This singleton is responsible for dispatching Touch events on some devices
  *
  * @memberOf cocos
  * @singleton

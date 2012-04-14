@@ -160,6 +160,11 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      */
   , dt: 0
 
+    /**
+     * The current orientation. Only available on mobile devices
+     * @type String
+     * @readonly
+     */
   , orientation: 'unknown'
 
     /**
@@ -189,6 +194,12 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
         throw new Error("Fullscreen is not implemented on non-mobile devices yet")
     }
 
+    /**
+     * Resize the canvas to any size
+     *
+     * @param {Float} width The new width of the canvas
+     * @param {Float} height The new height of the canvas
+     */
   , resize: function (width, height) {
         if (!this.container) {
             return
@@ -322,7 +333,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * also preloading all assets.
      *
      * If you wish to customise the preload scene first inherit from cocos.nodes.PreloadScene
-     * and then set Director#preloadScene to an instance of your PreloadScene
+     * and then set Director.sharedDirector.preloadScene to an instance of your PreloadScene
      */
   , runPreloadScene: function () {
         if (!this.canvas) {
@@ -350,7 +361,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * only your FIRST scene. Don't call it if there is already a running
      * scene.
      *
-     * @param {cocos.Scene} scene The scene to start
+     * @param {cocos.nodes.Scene} scene The scene to start
      */
   , runWithScene: function (scene) {
         var Scene = require('./nodes/Scene').Scene
@@ -370,7 +381,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
      * Replaces the running scene with a new one. The running scene is
      * terminated. ONLY call it if there is a running scene.
      *
-     * @param {cocos.Scene} scene The scene to replace with
+     * @param {cocos.nodes.Scene} scene The scene to replace with
      */
   , replaceScene: function (scene) {
         var Scene = require('./nodes/Scene').Scene
@@ -605,6 +616,13 @@ Object.defineProperty(Director, 'sharedDirector', {
   , enumerable: true
 })
 
+/**
+ * @class
+ * The Director singleton used on touch screen devices such as the iPhone, iPod and iPad
+ *
+ * @memberOf cocos
+ * @extends cocos.Director
+ */
 function DirectorTouchScreen () {
     DirectorTouchScreen.superclass.constructor.call(this)
 
@@ -621,10 +639,6 @@ function DirectorTouchScreen () {
     }
 }
 
-/**
- * @memberOf cocos
- * @extends cocos.Director
- */
 DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
     isTouchScreen: true
 
@@ -632,6 +646,9 @@ DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
 
   , viewportSize: null
 
+    /**
+     * Force the device to prevent scaling and expand the canvas to fill the entire available screen area
+     */
   , fullscreen: function () {
         this._isFullscreen = true
         if (!this._container) {
@@ -657,6 +674,9 @@ DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
         this._adjustFullscreen()
     }
 
+    /**
+     * @private
+     */
   , _adjustFullscreen: function () {
         if (!this._container) {
             return
@@ -763,8 +783,10 @@ DirectorTouchScreen.inherit(Director, /** @lends cocos.DirectorTouchScreen */ {
 })
 
 /**
+ * @class
+ * Pretends to run at a constant frame rate even if it slows down
+ *
  * @memberOf cocos
- * @class Pretends to run at a constant frame rate even if it slows down
  * @extends cocos.Director
  */
 function DirectorFixedSpeed () {

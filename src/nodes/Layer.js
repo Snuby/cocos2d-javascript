@@ -49,11 +49,24 @@ function Layer () {
 }
 
 Layer.inherit(Node, /** @lends cocos.nodes.Layer# */ {
+    /**
+     * When true causes this layer to receive mouse events
+     * @type Boolean
+     */
     isMouseEnabled: false
+
+    /**
+     * When true causes this layer to receive keyboard events
+     * @type Boolean
+     */
   , isKeyboardEnabled: false
   , mouseDelegatePriority: 0
   , keyboardDelegatePriority: 0
 
+    /**
+     * When true on touch screen devices causes this layer to receive touch events
+     * @type Boolean
+     */
   , get isTouchEnabled () {
         return this._isTouchEnabled
     }
@@ -75,6 +88,10 @@ Layer.inherit(Node, /** @lends cocos.nodes.Layer# */ {
     }
   , _isTouchEnabled: false
 
+    /**
+     * Override this method in your layer if you wish to change the type of
+     * touch event dispatchment you want
+     */
   , registerWithTouchDispatcher: function () {
         TouchDispatcher.sharedDispatcher.addStandardDelegate(this, 0)
     }
