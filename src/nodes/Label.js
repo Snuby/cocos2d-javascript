@@ -45,7 +45,7 @@ Label.inherit(Node, /** @lends cocos.nodes.Label# */ {
      * @type String
      */
     get font () {
-        return this.fontSize + 'px ' + this.fontName
+        return this.fontSize + 'px __cc2d_' + this.fontName + ',' + this.fontName
     },
 
     draw: function (context) {

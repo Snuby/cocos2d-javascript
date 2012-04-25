@@ -3,6 +3,8 @@ var path = require('path')
 exports.main = function () {
     require.paths.push(path.join(__dirname, 'libs'))
 
+    require('./remote_resources_patch')
+
     require('./js_extensions')
 
     // Link to the parent window's XHR object, IE9 will fail with cross-origin
