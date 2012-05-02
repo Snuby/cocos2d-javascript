@@ -258,6 +258,12 @@ ScaleBy.inherit(ScaleTo, /** @lends cocos.actions.ScaleBy# */ {
         this.deltaY = this.startScaleY * this.endScaleY - this.startScaleY
     },
 
+    copy: function () {
+        return new ScaleBy({ duration: this.duration,
+                                 scaleX: this.endScaleX,
+                                 scaleY: this.endScaleY})
+    },
+
     reverse: function () {
         return new ScaleBy({duration: this.duration, scaleX: 1 / this.endScaleX, scaleY: 1 / this.endScaleY})
     }
