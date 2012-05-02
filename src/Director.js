@@ -214,6 +214,11 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
 
         this._winSize = new geo.Size(width, height)
 
+        var viewWidth = this.container.offsetWidth
+          , viewHeight = this.container.offsetHeight
+        this._viewSize = new geo.Size(viewWidth, viewHeight)
+        this._viewScale = new geo.Size(width / viewWidth, height / viewHeight)
+
 
         if (FLIP_Y_AXIS) {
             this.context.translate(0, height)
@@ -551,8 +556,11 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
 
         var p = geo.ccpSub(loc, ccp(x, y))
         if (FLIP_Y_AXIS) {
-            p.y = this.canvas.height - p.y
+            p.y = this._viewSize.height - p.y
         }
+
+        p.x = p.x * this._viewScale.width
+        p.y = p.y * this._viewScale.height
 
         return p
     }
