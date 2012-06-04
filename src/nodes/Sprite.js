@@ -1,7 +1,7 @@
 'use strict'
 
 var util = require('util')
-  , evt  = require('events')
+  , events  = require('events')
   , geo  = require('geometry')
   , ccp  = geo.ccp
 
@@ -26,6 +26,7 @@ function Sprite (opts) {
     opts = opts || {}
 
     var file         = opts.file
+      , url          = opts.url
       , textureAtlas = opts.textureAtlas
       , texture      = opts.texture
       , frame        = opts.frame
@@ -47,11 +48,11 @@ function Sprite (opts) {
         rect    = frame.rect
     }
 
-    evt.addListener(this, 'dirtytransform', this._updateQuad.bind(this))
-    evt.addPropertyListener(this, 'textureAtlas', 'change', this._updateTextureQuad.bind(this))
+    events.addListener(this, 'dirtytransform', this._updateQuad.bind(this))
+    events.addPropertyListener(this, 'textureAtlas', 'change', this._updateTextureQuad.bind(this))
 
-    if (file || texture) {
-        textureAtlas = new TextureAtlas({file: file, texture: texture})
+    if (url || file || texture) {
+        textureAtlas = new TextureAtlas({ url: url, file: file, texture: texture })
     } else if (spritesheet) {
         textureAtlas = spritesheet.textureAtlas
         this.useSpriteSheet = true
@@ -60,7 +61,16 @@ function Sprite (opts) {
     }
 
     if (!rect && textureAtlas) {
-        rect = new geo.Rect(0, 0, textureAtlas.texture.size.width, textureAtlas.texture.size.height)
+        if (!url) {
+            rect = new geo.Rect(0, 0, textureAtlas.texture.size.width, textureAtlas.texture.size.height)
+        } else {
+            // Loading remote image, wait for it to finish before setting rect
+            events.addListener(textureAtlas, 'load', function () {
+                if (!this.rect) {
+                    this.rect = new geo.Rect(0, 0, textureAtlas.texture.size.width, textureAtlas.texture.size.height)
+                }
+            }.bind(this))
+        }
     }
 
     if (rect) {
@@ -95,7 +105,18 @@ Sprite.inherit(Node, /** @lends cocos.nodes.Sprite# */{
      * @type geometry.Rect
      */
   , get rect ()  { return this._rect }
-  , set rect (x) { this._rect = x; evt.trigger(this, 'dirtytransform', {target: this, property: 'rect'}) }
+  , set rect (x) {
+      this._rect = x;
+      if (!this.quad) {
+        this.quad = { drawRect: {origin: ccp(0, 0), size: this._rect.size}
+                    , textureRect: this._rect
+                    }
+      }
+      if (!this.contentSize || (this.contentSize.width == 0 && this.contentSize.height == 0)) {
+        this.contentSize = this._rect.size
+      }
+      events.trigger(this, 'dirtytransform', {target: this, property: 'rect'})
+  }
   , _rect: null
 
     /**

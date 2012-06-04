@@ -1,6 +1,7 @@
 'use strict'
 
 var util = require('util'),
+    events = require('events'),
     Texture2D = require('./Texture2D').Texture2D
 
 
@@ -17,21 +18,26 @@ var util = require('util'),
  *
  * @memberOf cocos
  *
- * @opt {String} file The file path of the image to use as a texture
+ * @opt {String} [url] Remote URL of the image to use as a texture
+ * @opt {String} [file] Local file path of the image to use as a texture
  * @opt {Texture2D|HTMLImageElement} [data] Image data to read from
  * @opt {CanvasElement} [canvas] A canvas to use as a texture
  */
 function TextureAtlas (opts) {
-    var file = opts.file,
-        data = opts.data,
-        texture = opts.texture,
-        canvas = opts.canvas
+    var file    = opts.file
+      , url     = opts.url
+      , data    = opts.data
+      , texture = opts.texture
+      , canvas  = opts.canvas
 
     if (canvas) {
         // If we've been given a canvas element then we'll use that for our image
         this.imgElement = canvas
     } else {
-        texture = new Texture2D({texture: texture, file: file, data: data})
+        texture = new Texture2D({ url: url, texture: texture, file: file, data: data })
+        events.addListenerOnce(texture, 'load', function () {
+            events.trigger(this, 'load')
+        }.bind(this))
         this.texture = texture
         this.imgElement = texture.imgElement
     }
@@ -96,6 +102,7 @@ TextureAtlas.inherit(Object, /** @lends cocos.TextureAtlas# */ {
         }
 
         ctx.scale(scaleX, scaleY)
+
 
         var img = this.imgElement
         ctx.drawImage(img,

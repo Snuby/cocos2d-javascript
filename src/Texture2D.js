@@ -13,11 +13,16 @@ var util = require('util'),
  * @opt {Texture2D|HTMLImageElement} [data] Image data to read from
  */
 function Texture2D (opts) {
-    var file = opts.file,
-        data = opts.data,
-        texture = opts.texture
+    var file    = opts.file
+      , url     = opts.url
+      , data    = opts.data
+      , texture = opts.texture
 
-    if (file) {
+    if (url) {
+        this.name = url
+        data = new Image()
+        data.src = url
+    } else if (file) {
         this.name = file
         data = resource(file)
     } else if (texture) {
@@ -28,8 +33,11 @@ function Texture2D (opts) {
     this.size = {width: 0, height: 0}
 
     if (data instanceof RemoteResource) {
-        events.addListenerOnce(data, 'load', this.dataDidLoad.bind(this))
+        events.addListenerOnce(data, 'load', this.dataDidLoad.bind(this, data))
         this.imgElement = data.load()
+    } else if (url) {
+        this.imgElement = data
+        this.imgElement.onload = this.dataDidLoad.bind(this, data)
     } else {
         this.imgElement = data
         this.dataDidLoad(data)
