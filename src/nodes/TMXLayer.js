@@ -218,7 +218,7 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
         var overlap = this.mapTileSize.height - this.tileset.tileSize.height
         var x = Math.floor(pos.x * this.mapTileSize.width + 0.49)
         var y
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             y = Math.floor((this.layerSize.height - pos.y - 1) * this.mapTileSize.height + 0.49)
         } else {
             y = Math.floor(pos.y * this.mapTileSize.height + 0.49) + overlap
@@ -230,13 +230,13 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
         var mapTileSize = this.mapTileSize,
             layerSize = this.layerSize
 
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             return ccp(
                 mapTileSize.width  / 2 * (layerSize.width + pos.x - pos.y - 1),
                 mapTileSize.height / 2 * ((layerSize.height * 2 - pos.x - pos.y) - 2)
             )
         } else {
-            throw "Isometric tiles without FLIP_Y_AXIS is currently unsupported"
+            throw "Isometric tiles without cc.FLIP_Y_AXIS is currently unsupported"
         }
     },
 

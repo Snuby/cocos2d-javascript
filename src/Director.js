@@ -220,7 +220,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
         this._viewScale = new geo.Size(width / viewWidth, height / viewHeight)
 
 
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             this.context.translate(0, height)
             this.context.scale(1, -1)
         }
@@ -555,7 +555,7 @@ Director.inherit(Object, /** @lends cocos.Director# */ {
         }
 
         var p = geo.ccpSub(loc, ccp(x, y))
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             p.y = this._viewSize.height - p.y
         }
 

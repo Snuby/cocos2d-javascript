@@ -167,7 +167,7 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
                 }
             }
 
-            if (SHOW_REDRAW_REGIONS) {
+            if (cc.SHOW_REDRAW_REGIONS) {
                 if (rect) {
                     this.renderTexture.context.beginPath()
                     this.renderTexture.context.rect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)

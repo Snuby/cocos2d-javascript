@@ -85,7 +85,7 @@ SpriteFrameCache.inherit(Object, /** @lends cocos.SpriteFrameCache# */ {
                         //console.log("cocos2d: WARNING: originalWidth/Height not found on the CCSpriteFrame. AnchorPoint won't work as expected. Regenerate the .plist")
                     }
 
-                    if (FLIP_Y_AXIS) {
+                    if (cc.FLIP_Y_AXIS) {
                         oy *= -1
                     }
 
@@ -108,7 +108,7 @@ SpriteFrameCache.inherit(Object, /** @lends cocos.SpriteFrameCache# */ {
                         offset     = geo.pointFromString(frameDict.offset),
                         sourceSize = geo.sizeFromString(frameDict.sourceSize)
 
-                    if (FLIP_Y_AXIS) {
+                    if (cc.FLIP_Y_AXIS) {
                         offset.y *= -1
                     }
 
@@ -129,7 +129,7 @@ SpriteFrameCache.inherit(Object, /** @lends cocos.SpriteFrameCache# */ {
                         textureRotated   = frameDict.textureRotated
 
 
-                    if (FLIP_Y_AXIS) {
+                    if (cc.FLIP_Y_AXIS) {
                         spriteOffset.y *= -1
                     }
 

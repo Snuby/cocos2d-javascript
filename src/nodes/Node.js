@@ -548,7 +548,7 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
         }
 
         // Rotate
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             context.rotate(-geo.degreesToRadians(this.rotation))
         } else {
             context.rotate(geo.degreesToRadians(this.rotation))

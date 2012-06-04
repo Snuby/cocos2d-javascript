@@ -53,7 +53,7 @@ RenderTexture.inherit(Node, /** @lends cocos.nodes.RenderTexture# */ {
 
         canvas.width  = size.width
         canvas.height = size.height
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             this.context.scale(1, -1)
             this.context.translate(0, -canvas.height)
         }
@@ -72,7 +72,7 @@ RenderTexture.inherit(Node, /** @lends cocos.nodes.RenderTexture# */ {
             this.context.clearRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)
         } else {
             this.canvas.width = this.canvas.width
-            if (FLIP_Y_AXIS) {
+            if (cc.FLIP_Y_AXIS) {
                 this.context.scale(1, -1)
                 this.context.translate(0, -this.canvas.height)
             }

@@ -49,7 +49,7 @@ Label.inherit(Node, /** @lends cocos.nodes.Label# */ {
     },
 
     draw: function (context) {
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             context.save()
 
             // Flip Y axis
@@ -67,7 +67,7 @@ Label.inherit(Node, /** @lends cocos.nodes.Label# */ {
             context.mozDrawText(this.string)
         }
 
-        if (FLIP_Y_AXIS) {
+        if (cc.FLIP_Y_AXIS) {
             context.restore()
         }
     },

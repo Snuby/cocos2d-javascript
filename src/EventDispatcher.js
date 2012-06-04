@@ -150,7 +150,7 @@ EventDispatcher.inherit(Object, /** @lends cocos.EventDispatcher# */ {
         if (this._previousMouseMovePosition) {
             evt.deltaX = evt.clientX - this._previousMouseMovePosition.x
             evt.deltaY = evt.clientY - this._previousMouseMovePosition.y
-            if (FLIP_Y_AXIS) {
+            if (cc.FLIP_Y_AXIS) {
                 evt.deltaY *= -1
             }
         } else {
@@ -177,7 +177,7 @@ EventDispatcher.inherit(Object, /** @lends cocos.EventDispatcher# */ {
         if (this._previousMouseDragPosition) {
             evt.deltaX = evt.clientX - this._previousMouseDragPosition.x
             evt.deltaY = evt.clientY - this._previousMouseDragPosition.y
-            if (FLIP_Y_AXIS) {
+            if (cc.FLIP_Y_AXIS) {
                 evt.deltaY *= -1
             }
         } else {
