@@ -3,7 +3,7 @@
 var util = require('util'),
     path = require('path')
 
-var modules = 'TextureAtlas Texture2D SpriteFrame SpriteFrameCache Director Animation AnimationCache Scheduler ActionManager TMXXMLParser'.split(' ')
+var modules = 'nodes actions TextureAtlas Texture2D SpriteFrame SpriteFrameCache Director Animation AnimationCache Scheduler ActionManager TMXXMLParser'.split(' ')
 
 /**
  * @namespace All cocos2d objects live in this namespace
