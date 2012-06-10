@@ -219,12 +219,20 @@ BatchNode.inherit(Node, /** @lends cocos.nodes.BatchNode# */ {
 function SpriteBatchNode (opts) {
     SpriteBatchNode.superclass.constructor.call(this, opts)
 
-    var file         = opts.file,
-        textureAtlas = opts.textureAtlas,
-        texture      = opts.texture
+    var file         = opts.file
+      , url          = opts.url
+      , textureAtlas = opts.textureAtlas
+      , texture      = opts.texture
 
-    if (file || texture) {
-        textureAtlas = new TextureAtlas({file: file, texture: texture})
+    if (url || file || texture) {
+        this.ready = url ? false : true
+        textureAtlas = new TextureAtlas({url: url, file: file, texture: texture})
+
+        if (!this.ready) {
+            events.addListenerOnce(textureAtlas, 'load', function () {
+                this.ready = true
+            }.bind(this))
+        }
     }
 
     this.textureAtlas = textureAtlas

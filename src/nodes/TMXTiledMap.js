@@ -24,31 +24,65 @@ function TMXTiledMap (opts) {
 
     this.anchorPoint = ccp(0, 0)
 
-    var mapInfo = new TMXMapInfo(opts.file)
+    var mapInfo
 
-    this.mapSize        = mapInfo.mapSize
-    this.tileSize       = mapInfo.tileSize
-    this.mapOrientation = mapInfo.orientation
-    this.objectGroups   = mapInfo.objectGroups
-    this.properties     = mapInfo.properties
-    this.tileProperties = mapInfo.tileProperties
+    var initialize = function () {
+        this.mapSize        = mapInfo.mapSize
+        this.tileSize       = mapInfo.tileSize
+        this.mapOrientation = mapInfo.orientation
+        this.objectGroups   = mapInfo.objectGroups
+        this.properties     = mapInfo.properties
+        this.tileProperties = mapInfo.tileProperties
 
-    // Add layers to map
-    var idx = 0
-    mapInfo.layers.forEach(function (layerInfo) {
-        if (layerInfo.visible) {
-            var child = this.parseLayer({layerInfo: layerInfo, mapInfo: mapInfo})
-            this.addChild({child: child, z: idx, tag: idx})
+        // Add layers to map
+        var idx = 0
+        mapInfo.layers.forEach(function (layerInfo) {
+            if (layerInfo.visible) {
+                var child = this.parseLayer({layerInfo: layerInfo, mapInfo: mapInfo})
+                this.addChild({child: child, z: idx, tag: idx})
 
-            var childSize   = child.contentSize
-            var currentSize = this.contentSize
-            currentSize.width  = Math.max(currentSize.width,  childSize.width)
-            currentSize.height = Math.max(currentSize.height, childSize.height)
-            this.contentSize = currentSize
+                var childSize   = child.contentSize
+                var currentSize = this.contentSize
+                currentSize.width  = Math.max(currentSize.width,  childSize.width)
+                currentSize.height = Math.max(currentSize.height, childSize.height)
+                this.contentSize = currentSize
 
-            idx++
+                idx++
+            }
+        }.bind(this))
+    }.bind(this)
+
+
+    if (opts.file) {
+        mapInfo = new TMXMapInfo({file: opts.file})
+        initialize()
+    } else if (opts.url) {
+        var xhr = new XMLHttpRequest
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                var url = opts.url
+
+                // Create absolute URL
+                if (/^\/\//.test(url)) {
+                    // URL prefixed with double slash
+                    url = window.location.protocol + url
+                } else if (/^\//.test(url)) {
+                    // URL with single slash prefix
+                    url = window.location.protocol + "//" + window.location.hostname + url
+                } else {
+                    url = window.location.href.replace(/\/[^\/]*$/, '/') + url
+                }
+
+                mapInfo = new TMXMapInfo({filename: url, xml: xhr.responseText})
+                initialize()
+            }
         }
-    }.bind(this))
+        xhr.open('GET', opts.url, true)
+        xhr.send(null)
+    } else if (opts.xml) {
+        mapInfo = new TMXMapInfo({xml: opts.xml})
+        initialize()
+    }
 }
 
 
@@ -62,7 +96,10 @@ TMXTiledMap.inherit(Node, /** @lends cocos.nodes.TMXTiledMap# */ {
 
     parseLayer: function (opts) {
         var tileset = this.tilesetForLayer(opts)
-        var layer = new TMXLayer({tilesetInfo: tileset, layerInfo: opts.layerInfo, mapInfo: opts.mapInfo})
+        var layer = new TMXLayer({ tilesetInfo: tileset
+                                 , layerInfo: opts.layerInfo
+                                 , mapInfo: opts.mapInfo
+                                 })
 
         layer.setupTiles()
 

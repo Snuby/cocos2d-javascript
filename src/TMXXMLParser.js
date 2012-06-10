@@ -1,13 +1,14 @@
 'use strict'
 
-var util = require('util'),
-    path = require('path'),
-    ccp = require('geometry').ccp,
-    base64 = require('base64'),
-    gzip   = require('gzip'),
-    TMXOrientationOrtho = require('./TMXOrientation').TMXOrientationOrtho,
-    TMXOrientationHex = require('./TMXOrientation').TMXOrientationHex,
-    TMXOrientationIso = require('./TMXOrientation').TMXOrientationIso
+var util = require('util')
+  , uri = require('uri')
+  , path = require('path')
+  , ccp = require('geometry').ccp
+  , base64 = require('base64')
+  , gzip   = require('gzip')
+  , TMXOrientationOrtho = require('./TMXOrientation').TMXOrientationOrtho
+  , TMXOrientationHex = require('./TMXOrientation').TMXOrientationHex
+  , TMXOrientationIso = require('./TMXOrientation').TMXOrientationIso
 
 /**
  * @class
@@ -137,15 +138,15 @@ TMXObjectGroup.inherit(Object, /** @lends cocos.TMXObjectGroup# */ {
  *
  * @param {String} tmxFile The file path of the TMX file to load
  */
-function TMXMapInfo (tmxFile) {
+function TMXMapInfo (opts) {
     this.tilesets = []
     this.layers = []
     this.objectGroups = []
     this.properties = {}
     this.tileProperties = {}
-    this.filename = tmxFile
+    this.filename = opts.filename || opts.file || ''
 
-    this.parseXMLFile(tmxFile)
+    this.parseXMLFile(opts)
 }
 
 TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
@@ -159,9 +160,14 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
     properties: null,
     tileProperties: null,
 
-    parseXMLFile: function (xmlFile) {
-        var parser = new DOMParser(),
-            doc = parser.parseFromString(resource(xmlFile), 'text/xml')
+    parseXMLFile: function (opts) {
+        var parser = new DOMParser()
+          , doc
+
+        if (opts.file)
+            doc = parser.parseFromString(resource(opts.file), 'text/xml')
+        else if (opts.xml)
+            doc = parser.parseFromString(opts.xml, 'text/xml')
 
         // PARSE <map>
         var map = doc.documentElement
@@ -198,7 +204,8 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
             // happen AFTER 'firstGID' is obtained because firstGID is stored
             // in the main .tmx file, not the .tsx
             if (externalTilesetName) {
-                var externalTilesetPath = path.join(path.dirname(xmlFile), externalTilesetName)
+                // FIXME needs to support opts.url too
+                var externalTilesetPath = path.join(path.dirname(opts.file), externalTilesetName)
                 t = parser.parseFromString(resource(externalTilesetPath), 'text/xml').documentElement
             }
 
@@ -220,7 +227,13 @@ TMXMapInfo.inherit(Object, /** @lends cocos.TMXMapInfo# */ {
             if (externalTilesetName) {
                 tileset.sourceImage = path.join(path.dirname(externalTilesetPath), image.getAttribute('source'))
             } else {
-                tileset.sourceImage = path.join(path.dirname(this.filename), image.getAttribute('source'))
+                // Check of URL or file path
+                if (uri.isURL(this.filename)) {
+                    var base = path.dirname(this.filename)
+                    tileset.sourceImage = path.dirname(this.filename) + '/' + image.getAttribute('source')
+                } else {
+                    tileset.sourceImage = path.join(path.dirname(this.filename), image.getAttribute('source'))
+                }
             }
 
             this.tilesets.push(tileset)

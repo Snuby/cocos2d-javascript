@@ -43,6 +43,10 @@ Node.inherit(Object, /** @lends cocos.nodes.Node# */ {
   , set position (x) { this._position = x; events.trigger(this, 'dirtytransform', {target: this, property: 'position'}) }
   , _position: null
 
+  , get ready () { return this._ready }
+  , set ready (x) { this._ready = !!x; x && events.trigger(this, 'ready', {target: this}) }
+  , _ready: true
+
     /**
      * Parent node
      * @type cocos.nodes.Node

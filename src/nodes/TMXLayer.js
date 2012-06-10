@@ -1,15 +1,16 @@
 'use strict'
 
-var util = require('util'),
-    events = require('events'),
-    SpriteBatchNode = require('./BatchNode').SpriteBatchNode,
-    Sprite = require('./Sprite').Sprite,
-    TMXOrientationOrtho = require('../TMXOrientation').TMXOrientationOrtho,
-    TMXOrientationHex   = require('../TMXOrientation').TMXOrientationHex,
-    TMXOrientationIso   = require('../TMXOrientation').TMXOrientationIso,
-    geo    = require('geometry'),
-    ccp    = geo.ccp,
-    Node = require('./Node').Node
+var util = require('util')
+  , uri = require('uri')
+  , events = require('events')
+  , SpriteBatchNode = require('./BatchNode').SpriteBatchNode
+  , Sprite = require('./Sprite').Sprite
+  , TMXOrientationOrtho = require('../TMXOrientation').TMXOrientationOrtho
+  , TMXOrientationHex   = require('../TMXOrientation').TMXOrientationHex
+  , TMXOrientationIso   = require('../TMXOrientation').TMXOrientationIso
+  , geo    = require('geometry')
+  , ccp    = geo.ccp
+  , Node = require('./Node').Node
 
 
 
@@ -41,7 +42,12 @@ function TMXLayer (opts) {
         tex = tilesetInfo.sourceImage
     }
 
-    TMXLayer.superclass.constructor.call(this, {file: tex})
+    if (uri.isURL(tex)) {
+        TMXLayer.superclass.constructor.call(this, {url: tex})
+    } else {
+        TMXLayer.superclass.constructor.call(this, {file: tex})
+    }
+
 
     this.anchorPoint = ccp(0, 0)
 
@@ -91,9 +97,11 @@ TMXLayer.inherit(SpriteBatchNode, /** @lends cocos.nodes.TMXLayer# */ {
     },
 
     setupTiles: function () {
-        events.addPropertyListener(this.texture, 'contentSize', 'change', function (e) {
-            this.tileset.imageSize = this.texture.contentSize
-        }.bind(this))
+        if (!this.ready) {
+            events.addListenerOnce(this, 'ready', this.setupTiles.bind(this))
+            return
+        }
+
         this.tileset.imageSize = this.texture.contentSize
 
         this.parseInternalProperties()
