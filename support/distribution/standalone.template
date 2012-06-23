@@ -53,4 +53,6 @@
 
 
     })();
+
+    __jah__.__triggerReady()
 })({STANDALONE: true})
