@@ -2,7 +2,7 @@ module.exports = {
     // Enable BObject's get/set/extend/etc methods
     ENABLE_DEPRECATED_METHODS: false,
 
-    // Invert the Y axis so origin is at the bottom left
+    // Invert the Y axis so origin is at the bottom left (same as cocos2d-iphone)
     FLIP_Y_AXIS: true,
 
     // No implemented yet

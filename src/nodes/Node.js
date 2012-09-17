@@ -16,11 +16,12 @@ var Scheduler     = require('../Scheduler').Scheduler
  *
  * @memberOf cocos.nodes
  */
-function Node () {
-    this._contentSize = new geo.Size(0, 0)
-    this._anchorPoint = ccp(0.0, 0.0)
-    this.anchorPointInPixels = ccp(0, 0)
-    this._position = ccp(0, 0)
+function Node (options) {
+    options = options || {}
+    this._contentSize = options.contentSize || new geo.Size(0, 0)
+    this._anchorPoint = options.anchorPoint || ccp(0.0, 0.0)
+    this._updateAnchorPointInPixels() // Sets this.anchorPointInPixels
+    this._position = options.position || ccp(0, 0)
     this.children = []
 
     events.addListener(this, 'dirtytransform', this._dirtyTransform.bind(this))
