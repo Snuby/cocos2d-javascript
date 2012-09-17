@@ -1,4 +1,5 @@
 { "jahProject": { "version": "${jahVersion}" }
+, "compileCoffee": true
 , "libs": ["cocos2d"]
 , "externalize": { "cocos2d": "cocos2d.js"
                  , "jah": "cocos2d.js"

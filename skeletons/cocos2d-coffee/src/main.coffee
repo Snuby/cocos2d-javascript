@@ -1,14 +1,15 @@
-# Pull in the modules we're going to use
-cocos  = require 'cocos2d'    # Import the cocos2d module
-nodes  = cocos.nodes          # Convenient access to 'nodes'
-events = require 'events'     # Import the events module
-geo    = require 'geometry'   # Import the geometry module
+# Import in the modules we're going to use
+cocos  = require 'cocos2d'
+nodes  = cocos.nodes
+events = require 'events'
+geo    = require 'geometry'
 
 # Convenient access to some constructors
-Director = cocos.Director
-Scene    = nodes.Scene
+{Director} = cocos
+{Scene}    = nodes
 
-${classname} = require('./${classname}').${classname}
+# Import our class
+{${classname}} = require './${filename}'
 
 # Initialise application
 @main = ->
