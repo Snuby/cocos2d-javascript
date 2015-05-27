@@ -1,3 +1,5 @@
+**This is no longer supported. You probably want https://github.com/cocos2d/cocos2d-js instead.**
+
 What is Cocos2D JavaScript?
 ===========================
 
